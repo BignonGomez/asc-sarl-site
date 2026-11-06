@@ -1,0 +1,34 @@
+---
+/** Bouton-lien. Variantes : primary (rouge), secondary (contour vert), light (contour blanc sur fond sombre), white (fond blanc). */
+import { ArrowRight } from '@lucide/astro';
+import { url } from '../../lib/url';
+
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary' | 'light' | 'white';
+  size?: 'md' | 'lg';
+  arrow?: boolean;
+  class?: string;
+}
+const { href, variant = 'primary', size = 'md', arrow = false, class: extra = '' } = Astro.props;
+
+const variants = {
+  primary: 'bg-brand text-white hover:bg-brand-hover shadow-[0_10px_24px_-14px_rgb(174_36_69/0.8)]',
+  secondary: 'border-[1.5px] border-forest text-forest hover:bg-forest hover:text-white',
+  light: 'border-[1.5px] border-white/70 text-white hover:bg-white hover:text-forest-night',
+  white: 'bg-white text-brand hover:bg-brand-soft',
+};
+const sizes = { md: 'min-h-12 px-6 text-[0.9375rem]', lg: 'min-h-14 px-7 text-base' };
+---
+<a
+  href={url(href)}
+  class:list={[
+    'group/btn inline-flex items-center justify-center gap-2.5 rounded-ui font-semibold tracking-[0.005em] whitespace-nowrap transition-[background-color,color,border-color,transform] duration-200 active:translate-y-px',
+    variants[variant],
+    sizes[size],
+    extra,
+  ]}
+>
+  <slot />
+  {arrow && <ArrowRight size={18} aria-hidden="true" class="transition-transform duration-200 group-hover/btn:translate-x-0.5" />}
+</a>

@@ -1,0 +1,48 @@
+---
+import { MapPin, CalendarDays } from '@lucide/astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import ArrowLink from '../ui/ArrowLink.astro';
+import PhotoPlaceholder from '../ui/PhotoPlaceholder.astro';
+import { url } from '../../lib/url';
+---
+<section aria-labelledby="realisations-title" class="section-y bg-mineral">
+  <div class="container-site">
+    <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <SectionHeading
+        id="realisations-title"
+        title="Nos réalisations"
+        intro="ASC SARL présente ses missions en distinguant clairement celles qui sont achevées de celles qui sont en cours d'exécution."
+      />
+      <div class="shrink-0" data-reveal>
+        <ArrowLink href="/realisations/missions-en-cours">Voir toutes nos réalisations</ArrowLink>
+      </div>
+    </div>
+
+    <article class="group relative mt-14 grid overflow-hidden rounded-card border border-line bg-white shadow-card transition-[box-shadow,border-color] duration-300 hover:border-forest/40 hover:shadow-lift lg:mt-16 lg:grid-cols-12" data-reveal>
+      <PhotoPlaceholder context="Site d'Allahé" class="aspect-[16/10] lg:col-span-5 lg:aspect-auto lg:min-h-[22rem]" />
+      <div class="flex flex-col justify-center p-7 sm:p-10 lg:col-span-7 lg:p-14">
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-small">
+          <span class="inline-flex items-center gap-2 rounded-ui bg-status-ongoing-bg px-3 py-1 font-semibold text-status-ongoing">
+            <span aria-hidden="true" class="size-2 rounded-full bg-[#e0a100]"></span>
+            En cours
+          </span>
+          <span class="inline-flex items-center gap-2 text-muted">
+            <CalendarDays size={16} aria-hidden="true" /> Contrat notifié en juillet 2026
+          </span>
+        </div>
+        <h3 class="mt-6 text-h3 text-forest">
+          <a href={url('/realisations/missions-en-cours')} class="after:absolute after:inset-0 focus-visible:outline-none">
+            Formation de jeunes à la production piscicole et maraîchère intégrée et renforcement des capacités des responsables de filières agricoles
+          </a>
+        </h3>
+        <p class="mt-5 inline-flex items-center gap-2 text-body text-muted">
+          <MapPin size={18} aria-hidden="true" class="shrink-0 text-forest" /> Commune de Za-Kpota, département du Zou
+        </p>
+        <ul class="mt-6 flex flex-wrap gap-2" aria-label="Domaines">
+          <li class="rounded-ui border border-forest-mist bg-forest-soft px-3 py-1 text-small font-medium text-forest">Agriculture durable</li>
+          <li class="rounded-ui border border-forest-mist bg-forest-soft px-3 py-1 text-small font-medium text-forest">Formation</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</section>

@@ -1,0 +1,20 @@
+---
+import { Landmark } from '@lucide/astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+---
+<section aria-labelledby="partenaires-title" class="section-y bg-white">
+  <div class="container-site">
+    <SectionHeading id="partenaires-title" title="Partenaires et collaborations" />
+    <ul class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-reveal>
+      <li class="flex min-h-32 items-center gap-5 rounded-card border border-dashed border-forest/30 bg-mineral px-6 py-6">
+        <span class="flex size-14 shrink-0 items-center justify-center rounded-ui bg-white text-forest ring-1 ring-line">
+          <Landmark size={24} stroke-width={1.75} aria-hidden="true" />
+        </span>
+        <span class="text-small text-muted">
+          <span class="block font-semibold text-ink">Commune de Za-Kpota</span>
+          Logo à fournir (sous réserve d'autorisation)
+        </span>
+      </li>
+    </ul>
+  </div>
+</section>

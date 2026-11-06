@@ -1,0 +1,41 @@
+---
+import { FileText, Search, DraftingCompass, Handshake, BadgeCheck } from '@lucide/astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import ArrowLink from '../ui/ArrowLink.astro';
+
+const steps = [
+  { icon: FileText, title: 'Comprendre le besoin', text: 'Analyse de la demande, des objectifs et des termes de référence.' },
+  { icon: Search, title: 'Diagnostiquer', text: 'Collecte et analyse des données documentaires et de terrain.' },
+  { icon: DraftingCompass, title: 'Concevoir', text: "Élaboration de solutions adaptées au contexte d'intervention." },
+  { icon: Handshake, title: 'Accompagner', text: 'Restitution des résultats, appui technique et suivi de la mise en œuvre.' },
+  { icon: BadgeCheck, title: 'Évaluer et capitaliser', text: 'Appréciation des résultats et capitalisation des enseignements.' },
+];
+---
+<section aria-labelledby="approche-title" class="section-y bg-white">
+  <div class="container-site">
+    <SectionHeading id="approche-title" title="Notre approche" />
+
+    <ol class="relative mt-14 grid gap-10 lg:mt-20 lg:grid-cols-5 lg:gap-8">
+      <!-- Ligne de liaison (bureau) -->
+      <span aria-hidden="true" class="absolute left-7 right-[10%] top-7 hidden h-px bg-gradient-to-r from-forest/40 via-forest/20 to-transparent lg:block"></span>
+      <!-- Ligne de liaison (mobile) -->
+      <span aria-hidden="true" class="absolute bottom-8 left-7 top-7 w-px bg-forest/20 lg:hidden"></span>
+      {steps.map((s, i) => (
+        <li class="relative grid grid-cols-[3.5rem_1fr] gap-x-5 lg:block" data-reveal style={`--reveal-delay:${i * 90}ms`}>
+          <span class="relative z-10 flex size-14 items-center justify-center rounded-full border-[1.5px] border-forest bg-white text-forest">
+            <s.icon size={24} stroke-width={1.75} aria-hidden="true" />
+          </span>
+          <div class="lg:mt-7">
+            <p class="text-eyebrow uppercase text-brand">Étape {i + 1}</p>
+            <h3 class="mt-2 text-h4 text-forest">{s.title}</h3>
+            <p class="mt-2 text-small text-muted">{s.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <div class="mt-14" data-reveal>
+      <ArrowLink href="/cabinet/approche">Découvrir notre démarche</ArrowLink>
+    </div>
+  </div>
+</section>

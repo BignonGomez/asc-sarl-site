@@ -1,0 +1,9 @@
+---
+import { Leaf, Thermometer, Droplets, Map as MapIcon, Sprout, Store, Trees, Users } from '@lucide/astro';
+import type { Expertise } from '../../data/expertises';
+interface Props { name: Expertise['icon']; size?: number; class?: string }
+const { name, size = 24, class: extra } = Astro.props;
+const icons = { leaf: Leaf, thermometer: Thermometer, droplets: Droplets, map: MapIcon, sprout: Sprout, store: Store, trees: Trees, users: Users };
+const Cmp = icons[name];
+---
+<Cmp size={size} stroke-width={1.75} class={extra} aria-hidden="true" />

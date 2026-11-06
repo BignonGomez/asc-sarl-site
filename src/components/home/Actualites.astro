@@ -1,0 +1,25 @@
+---
+import { CalendarDays, ArrowRight } from '@lucide/astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import PhotoPlaceholder from '../ui/PhotoPlaceholder.astro';
+import { url } from '../../lib/url';
+---
+<section aria-labelledby="actualites-title" class="section-y bg-mineral">
+  <div class="container-site">
+    <SectionHeading id="actualites-title" title="Actualités" />
+
+    <article class="group relative mt-14 grid overflow-hidden rounded-card border border-line bg-white shadow-card transition-[box-shadow,border-color] duration-300 hover:border-forest/40 hover:shadow-lift md:grid-cols-2 lg:mt-16 lg:max-w-4xl" data-reveal>
+      <PhotoPlaceholder context="Visuel de l'article" class="aspect-[16/10] md:aspect-auto md:min-h-64" />
+      <div class="flex flex-col p-7 sm:p-9">
+        <p class="inline-flex items-center gap-2 text-small text-muted">
+          <CalendarDays size={16} aria-hidden="true" /> [date de mise en ligne]
+        </p>
+        <h3 class="mt-4 text-h3 text-forest">
+          <a href={url('/actualites/asc-sarl-lance-son-site-internet')} class="after:absolute after:inset-0 focus-visible:outline-none">ASC SARL lance son site internet</a>
+        </h3>
+        <p class="mt-4 flex-1 text-body text-muted">Le site présente le cabinet, ses domaines d'expertise, son approche méthodologique et son équipe.</p>
+        <span aria-hidden="true" class="mt-7 inline-flex items-center gap-2 font-semibold text-forest">Lire l'article <ArrowRight size={18} class="transition-transform duration-200 group-hover:translate-x-1" /></span>
+      </div>
+    </article>
+  </div>
+</section>

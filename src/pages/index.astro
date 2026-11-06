@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import CabinetIntro from '../components/home/CabinetIntro.astro';
+import ExpertisesGrid from '../components/home/ExpertisesGrid.astro';
+import Realisations from '../components/home/Realisations.astro';
+import Approche from '../components/home/Approche.astro';
+import Actualites from '../components/home/Actualites.astro';
+import Partenaires from '../components/home/Partenaires.astro';
+import CtaBand from '../components/home/CtaBand.astro';
+import { features } from '../config/site';
+---
+<BaseLayout>
+  <Hero />
+  <CabinetIntro />
+  <ExpertisesGrid />
+  <Realisations />
+  <Approche />
+  {features.homeNews && <Actualites />}
+  {features.homePartners && <Partenaires />}
+  <CtaBand />
+</BaseLayout>

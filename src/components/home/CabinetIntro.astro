@@ -1,0 +1,24 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import ArrowLink from '../ui/ArrowLink.astro';
+import PhotoPlaceholder from '../ui/PhotoPlaceholder.astro';
+---
+<section aria-labelledby="cabinet-title" class="section-y bg-mineral">
+  <div class="container-site grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+    <div class="lg:col-span-6">
+      <SectionHeading id="cabinet-title" title="Le cabinet" />
+      <p class="mt-8 text-lead text-ink/90" data-reveal>
+        ALKEBULAN SERVICES ET CONSEILS (ASC SARL) est une société à responsabilité limitée de droit béninois, immatriculée à Cotonou en 2025. Le cabinet intervient dans les domaines de l'environnement, des changements climatiques, de l'eau, de l'aménagement du territoire, de l'agriculture durable et du développement local.
+      </p>
+      <p class="mt-5 text-body text-muted" data-reveal>
+        Il met des compétences pluridisciplinaires au service des administrations publiques, des collectivités territoriales, des organisations de développement, des entreprises et des porteurs de projets, avec une préoccupation constante : apporter des réponses adaptées aux réalités des territoires.
+      </p>
+      <div class="mt-9" data-reveal>
+        <ArrowLink href="/cabinet">En savoir plus sur le cabinet</ArrowLink>
+      </div>
+    </div>
+    <div class="lg:col-span-6" data-reveal style="--reveal-delay:120ms">
+      <PhotoPlaceholder context="Équipe ou siège du cabinet" class="aspect-[4/3] rounded-card border border-line" />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,58 @@
+---
+import { MapPin, Phone, Mail } from '@lucide/astro';
+import { site, footerLinks, legalLinks } from '../../config/site';
+import { url } from '../../lib/url';
+---
+<footer class="bg-forest text-white">
+  <div class="container-site pb-10 pt-16 lg:pt-24">
+    <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+      <div class="lg:col-span-4">
+        <a href={url('/')} class="inline-flex flex-col leading-none">
+          <span class="font-display text-2xl font-bold tracking-tight">ASC SARL</span>
+          <span class="mt-1.5 text-[0.6875rem] font-semibold tracking-[0.08em] text-white/75">ALKEBULAN SERVICES ET CONSEILS</span>
+        </a>
+        <p class="mt-6 max-w-sm text-small leading-relaxed text-white/75">{site.fullName} est un cabinet béninois d'études et de conseil en environnement, changements climatiques, gestion des ressources en eau, aménagement du territoire et développement local.</p>
+      </div>
+
+      <nav aria-labelledby="footer-nav" class="lg:col-span-2 lg:col-start-5">
+        <h2 id="footer-nav" class="font-sans text-eyebrow uppercase text-forest-mist">Navigation</h2>
+        <ul class="mt-5 space-y-3">
+          {footerLinks.map((l) => (
+            <li><a href={url(l.href)} class="text-small text-white/85 transition-colors hover:text-white hover:underline hover:underline-offset-4">{l.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="lg:col-span-3">
+        <h2 class="font-sans text-eyebrow uppercase text-forest-mist">Siège social</h2>
+        <ul class="mt-5 space-y-4 text-small text-white/85">
+          <li class="flex gap-3">
+            <MapPin size={18} aria-hidden="true" class="mt-0.5 shrink-0 text-forest-mist" />
+            <address class="not-italic leading-relaxed">{site.address.oneLine}</address>
+          </li>
+          <li class="flex gap-3">
+            <Phone size={18} aria-hidden="true" class="mt-0.5 shrink-0 text-forest-mist" />
+            <span><span class="sr-only">Téléphone : </span>{site.phone.display}</span>
+          </li>
+          <li class="flex gap-3">
+            <Mail size={18} aria-hidden="true" class="mt-0.5 shrink-0 text-forest-mist" />
+            <a href={`mailto:${site.email}`} class="hover:text-white hover:underline hover:underline-offset-4">{site.email}</a>
+          </li>
+        </ul>
+      </div>
+
+      <nav aria-labelledby="footer-legal" class="lg:col-span-3 lg:pl-6">
+        <h2 id="footer-legal" class="font-sans text-eyebrow uppercase text-forest-mist">Informations</h2>
+        <ul class="mt-5 space-y-3">
+          {legalLinks.map((l) => (
+            <li><a href={url(l.href)} class="text-small text-white/85 transition-colors hover:text-white hover:underline hover:underline-offset-4">{l.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+
+    <div class="mt-16 border-t border-white/15 pt-8 text-xs text-white/65">
+      <p>© {site.copyrightYear} {site.fullName}. Tous droits réservés.</p>
+    </div>
+  </div>
+</footer>

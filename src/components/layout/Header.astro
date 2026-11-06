@@ -1,0 +1,194 @@
+---
+import { ChevronDown, Menu, X, ArrowRight } from '@lucide/astro';
+import { site, nav } from '../../config/site';
+import { expertises } from '../../data/expertises';
+import { url, isActive } from '../../lib/url';
+import Button from '../ui/Button.astro';
+
+const current = Astro.url.pathname;
+const items = nav.map((item) =>
+  item.href === '/expertises'
+    ? {
+        ...item,
+        children: [
+          { label: 'Tous nos domaines', href: '/expertises' },
+          ...expertises.map((e) => ({ label: e.title, href: `/expertises/${e.slug}` })),
+        ],
+      }
+    : item,
+);
+---
+<header
+  id="site-header"
+  class="sticky top-0 z-50 border-b border-transparent bg-white/95 backdrop-blur-md transition-[box-shadow,border-color] duration-300 data-[scrolled]:border-line data-[scrolled]:shadow-header"
+>
+  <div class="container-site flex h-[4.5rem] items-center justify-between gap-4 lg:h-20">
+    <!-- Logo typographique (logo vectoriel à fournir) -->
+    <a href={url('/')} class="group flex shrink-0 flex-col leading-none" aria-label={`${site.shortName}, retour à l'accueil`}>
+      <span class="font-display text-[1.375rem] font-bold tracking-tight text-brand">ASC SARL</span>
+      <span class="mt-1 text-[0.6875rem] font-semibold tracking-[0.08em] text-ink/80">ALKEBULAN SERVICES ET CONSEILS</span>
+    </a>
+
+    <!-- Navigation bureau -->
+    <nav aria-label="Navigation principale" class="hidden xl:block">
+      <ul class="flex items-center gap-0.5">
+        {items.map((item) => {
+          const active = isActive(current, item.href);
+          const hasChildren = item.children && item.children.length > 0;
+          return (
+            <li class="group/nav relative" data-dropdown={hasChildren ? '' : undefined}>
+              <div class="flex items-center">
+                <a
+                  href={url(item.href)}
+                  aria-current={active ? 'page' : undefined}
+                  class:list={[
+                    'relative whitespace-nowrap rounded-ui px-2.5 py-2 text-[0.9375rem] font-medium transition-colors',
+                    active ? 'text-brand' : 'text-ink hover:text-brand',
+                    'after:absolute after:inset-x-2.5 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:bg-brand after:transition-transform',
+                    active ? 'after:scale-x-100' : 'after:scale-x-0',
+                    hasChildren && 'pr-0.5',
+                  ]}
+                >
+                  {item.label}
+                </a>
+                {hasChildren && (
+                  <button
+                    type="button"
+                    class="rounded-ui p-0.5 text-ink/50 transition-colors hover:text-brand"
+                    aria-expanded="false"
+                    aria-controls={`sub-${item.href.replace(/\W/g, '')}`}
+                    data-dropdown-toggle
+                  >
+                    <span class="sr-only">Ouvrir le sous-menu {item.label}</span>
+                    <ChevronDown size={15} aria-hidden="true" class="transition-transform duration-200 group-hover/nav:rotate-180" />
+                  </button>
+                )}
+              </div>
+              {hasChildren && (
+                <div
+                  id={`sub-${item.href.replace(/\W/g, '')}`}
+                  class="invisible absolute left-1/2 top-full z-10 -translate-x-1/2 translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover/nav:visible group-hover/nav:translate-y-0 group-hover/nav:opacity-100 group-data-[open]/nav:visible group-data-[open]/nav:translate-y-0 group-data-[open]/nav:opacity-100"
+                >
+                  <ul
+                    class:list={[
+                      'rounded-card border border-line bg-white p-2 shadow-lift',
+                      item.children!.length > 5 ? 'grid w-[34rem] grid-cols-2 gap-x-2' : 'w-72',
+                    ]}
+                  >
+                    {item.children!.map((child, i) => (
+                      <li class:list={[item.children!.length > 5 && i === 0 && 'col-span-2 mb-1 border-b border-line pb-1']}>
+                        <a
+                          href={url(child.href)}
+                          class="flex items-center justify-between gap-3 rounded-ui px-3 py-2.5 text-small font-medium text-ink transition-colors hover:bg-mineral hover:text-forest"
+                        >
+                          {child.label}
+                          {item.children!.length > 5 && i === 0 && <ArrowRight size={16} aria-hidden="true" />}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <div class="hidden sm:block"><Button href={site.cta.href}>{site.cta.label}</Button></div>
+      <button
+        type="button"
+        id="menu-toggle"
+        class="inline-flex min-h-11 items-center gap-2 rounded-ui border border-line px-3.5 text-small font-semibold text-ink transition-colors hover:border-forest xl:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <Menu size={20} aria-hidden="true" class="menu-open" />
+        <X size={20} aria-hidden="true" class="menu-close hidden" />
+        <span>Menu</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Navigation mobile et tablette -->
+  <div id="mobile-menu" hidden class="max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-line bg-white xl:hidden">
+    <nav aria-label="Navigation principale (mobile)" class="container-site py-4">
+      <ul class="divide-y divide-line">
+        {items.map((item) => {
+          const active = isActive(current, item.href);
+          return item.children && item.children.length > 0 ? (
+            <li>
+              <details class="group/acc" open={active}>
+                <summary class:list={['flex cursor-pointer list-none items-center justify-between py-4 font-display text-lg font-semibold [&::-webkit-details-marker]:hidden', active ? 'text-brand' : 'text-ink']}>
+                  {item.label}
+                  <ChevronDown size={20} aria-hidden="true" class="text-muted transition-transform group-open/acc:rotate-180" />
+                </summary>
+                <ul class="mb-4 space-y-1 border-l-2 border-forest-mist pl-4">
+                  {item.children.map((child) => (
+                    <li>
+                      <a href={url(child.href)} class="block rounded-ui py-2 text-body text-ink/85 hover:text-forest">{child.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </li>
+          ) : (
+            <li>
+              <a href={url(item.href)} aria-current={active ? 'page' : undefined} class:list={['block py-4 font-display text-lg font-semibold', active ? 'text-brand' : 'text-ink']}>
+                {item.label}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+      <div class="mt-6 sm:hidden"><Button href={site.cta.href} size="lg" class="w-full" arrow>{site.cta.label}</Button></div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.getElementById('site-header')!;
+  const onScroll = () => header.toggleAttribute('data-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Menu mobile
+  const toggle = document.getElementById('menu-toggle')!;
+  const panel = document.getElementById('mobile-menu')!;
+  const setOpen = (open: boolean) => {
+    toggle.setAttribute('aria-expanded', String(open));
+    panel.hidden = !open;
+    toggle.querySelector('.menu-open')?.classList.toggle('hidden', open);
+    toggle.querySelector('.menu-close')?.classList.toggle('hidden', !open);
+    document.documentElement.classList.toggle('overflow-hidden', open);
+  };
+  toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      setOpen(false);
+      document.querySelectorAll('[data-dropdown][data-open]').forEach((d) => {
+        d.removeAttribute('data-open');
+        d.querySelector('[data-dropdown-toggle]')?.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+  window.matchMedia('(min-width: 80rem)').addEventListener('change', (m) => m.matches && setOpen(false));
+
+  // Sous-menus bureau : ouverture au clavier / au clic sur le chevron
+  document.querySelectorAll<HTMLElement>('[data-dropdown]').forEach((dd) => {
+    const btn = dd.querySelector('[data-dropdown-toggle]')!;
+    btn.addEventListener('click', () => {
+      const open = !dd.hasAttribute('data-open');
+      document.querySelectorAll('[data-dropdown][data-open]').forEach((o) => o !== dd && o.removeAttribute('data-open'));
+      dd.toggleAttribute('data-open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    });
+    dd.addEventListener('focusout', (e) => {
+      if (!dd.contains(e.relatedTarget as Node)) {
+        dd.removeAttribute('data-open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+</script>

@@ -1,0 +1,25 @@
+---
+/**
+ * Emplacement réservé à une photographie réelle (aucune image générée — cf. protocole).
+ * Quand la photo sera fournie : remplacer ce composant par <Image /> d'astro:assets (optimisation automatique).
+ */
+import { ImageIcon } from '@lucide/astro';
+interface Props { label?: string; context?: string; class?: string; tone?: 'light' | 'dark'; compact?: boolean }
+const { label = 'Photo à fournir', context, class: extra = '', tone = 'light', compact = false } = Astro.props;
+---
+<div
+  role="img"
+  aria-label={context ? `${label} : ${context}` : label}
+  class:list={[
+    'relative flex flex-col items-center justify-center overflow-hidden text-center',
+    tone === 'light' ? 'bg-placeholder text-muted' : 'bg-white/5 text-white/70 ring-1 ring-white/15 ring-inset',
+    extra,
+  ]}
+>
+  <span aria-hidden="true" class="absolute inset-0 opacity-[0.06] [background-image:repeating-linear-gradient(135deg,currentColor_0_1px,transparent_1px_12px)]"></span>
+  <span class="relative flex flex-col items-center gap-2 px-4">
+    <slot name="icon"><ImageIcon size={compact ? 22 : 28} stroke-width={1.5} aria-hidden="true" /></slot>
+    <span class:list={['font-semibold', compact ? 'text-xs' : 'text-small']}>{label}</span>
+    {context && <span class:list={['italic', compact ? 'text-xs' : 'text-small']}>{context}</span>}
+  </span>
+</div>
