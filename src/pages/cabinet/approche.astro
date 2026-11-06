@@ -1,0 +1,64 @@
+---
+/** 3.4 Notre approche méthodologique — protocole complet, section 3.4. Données : src/data/approche.ts */
+import { Info } from '@lucide/astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/page/PageHeader.astro';
+import CabinetLinks from '../../components/page/CabinetLinks.astro';
+import SectionHeading from '../../components/ui/SectionHeading.astro';
+import StepIcon from '../../components/ui/StepIcon.astro';
+import CtaBand from '../../components/home/CtaBand.astro';
+import { steps } from '../../data/approche';
+---
+<BaseLayout
+  title="Notre approche méthodologique"
+  description="Comment Alkebulan Services et Conseils conduit ses missions : une démarche en cinq étapes, structurée, participative et adaptée aux réalités du terrain."
+>
+  <PageHeader
+    eyebrow="Le Cabinet"
+    title="Notre approche méthodologique"
+    intro="Chaque mission confiée à Alkebulan Services et Conseils suit une démarche structurée, participative et adaptée aux réalités du terrain. Elle repose sur l'analyse des besoins, la collecte et l'exploitation de données fiables, la participation des acteurs concernés et la recherche de solutions techniquement pertinentes et adaptées au contexte local."
+    crumbs={[{ label: 'Le Cabinet', href: '/cabinet' }, { label: 'Notre approche méthodologique' }]}
+  />
+
+  <section aria-labelledby="etapes-title" class="section-y bg-mineral">
+    <div class="container-site">
+      <SectionHeading id="etapes-title" title="Une démarche en cinq étapes" />
+
+      <!-- Frise : verticale sur mobile et tablette, horizontale sur ordinateur -->
+      <ol class="relative mt-14 grid gap-6 lg:mt-16 lg:grid-cols-5 lg:gap-5">
+        <span aria-hidden="true" class="absolute left-[1.75rem] top-7 bottom-7 w-0.5 bg-linear-to-b from-brand via-forest/40 to-forest/10 lg:hidden"></span>
+        <span aria-hidden="true" class="absolute left-[10%] right-[10%] top-7 hidden h-0.5 bg-linear-to-r from-brand via-forest/50 to-forest/20 lg:block"></span>
+        {steps.map((s, i) => (
+          <li class="relative grid grid-cols-[3.5rem_1fr] gap-x-5 lg:flex lg:flex-col" data-reveal style={`--reveal-delay:${i * 90}ms`}>
+            <span class:list={['relative z-10 flex size-14 items-center justify-center rounded-full font-display text-xl font-bold text-white shadow-[0_0_0_6px_var(--color-mineral)] lg:mx-auto', i % 2 === 0 ? 'bg-brand' : 'bg-forest']}>
+              {i + 1}
+            </span>
+            <article class="flex-1 rounded-card border border-line bg-white p-6 shadow-card transition-[box-shadow,transform] duration-300 hover:-translate-y-1 hover:shadow-lift lg:mt-8">
+              <span class="flex size-11 items-center justify-center rounded-ui bg-forest-soft text-forest">
+                <StepIcon name={s.icon} size={20} />
+              </span>
+              <p class="mt-5 text-eyebrow uppercase text-brand">Étape {i + 1}</p>
+              <h3 class="mt-2 text-h4 text-forest">{s.title}</h3>
+              <p class="mt-3 text-small text-muted">{s.text}</p>
+            </article>
+          </li>
+        ))}
+      </ol>
+
+      <aside aria-label="Cadre de la démarche" class="mt-12 flex gap-5 rounded-card border border-forest/20 bg-white p-6 sm:p-8" data-reveal>
+        <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-forest-soft text-forest">
+          <Info size={20} aria-hidden="true" />
+        </span>
+        <div>
+          <p class="text-eyebrow uppercase text-forest">Un cadre adaptable</p>
+          <p class="mt-2 text-body text-ink/85">
+            Cette démarche constitue un cadre de référence et non une procédure rigide. Elle est adaptée à chaque mission, à son domaine technique, à ses objectifs, aux exigences du client et aux contraintes du terrain.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <CabinetLinks current="/cabinet/approche" links={['/cabinet/vision-mission-valeurs', '/cabinet/equipe', '/expertises']} class="bg-white" />
+  <CtaBand />
+</BaseLayout>

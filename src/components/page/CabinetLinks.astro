@@ -1,0 +1,46 @@
+---
+/** « Poursuivre la découverte » : cartes vers les autres pages de la rubrique (la page courante est exclue). */
+import { Building, Target, Users, Route, LayoutGrid, ArrowRight } from '@lucide/astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import { url } from '../../lib/url';
+
+interface Props { current: string; links?: string[]; title?: string; class?: string }
+const { current, links, title = 'Poursuivre la découverte du cabinet', class: extra = 'bg-mineral' } = Astro.props;
+
+const all = [
+  { href: '/cabinet', icon: Building, title: 'Présentation du cabinet', text: 'Identité, statut juridique, positionnement et ancrage territorial.' },
+  { href: '/cabinet/vision-mission-valeurs', icon: Target, title: 'Vision, mission et valeurs', text: 'Le cap que nous suivons, les actions que nous menons et les principes qui guident notre travail.' },
+  { href: '/cabinet/equipe', icon: Users, title: 'Notre équipe', text: 'Les responsables et experts associés mobilisés sur nos missions.' },
+  { href: '/cabinet/approche', icon: Route, title: 'Notre approche méthodologique', text: "Comment nous conduisons une mission, de l'analyse des besoins au suivi des actions." },
+  { href: '/expertises', icon: LayoutGrid, title: 'Nos expertises', text: "Nos huit domaines d'intervention complémentaires." },
+];
+const items = all.filter((l) => l.href !== current && (!links || links.includes(l.href)));
+---
+<section aria-labelledby="suite-title" class:list={['section-y', extra]}>
+  <div class="container-site">
+    <SectionHeading id="suite-title" title={title} />
+    <ul class:list={['mt-12 grid gap-5 sm:grid-cols-2', items.length >= 3 && 'lg:grid-cols-3', items.length === 4 && 'xl:grid-cols-4']}>
+      {items.map((l, i) => (
+        <li class="card group relative flex flex-col rounded-card border border-line bg-white p-7 shadow-card transition-[box-shadow,transform,border-color] duration-300 hover:-translate-y-1 hover:border-forest/30 hover:shadow-lift" data-reveal style={`--reveal-delay:${i * 80}ms`}>
+          <span class="flex size-12 items-center justify-center rounded-ui bg-forest-soft text-forest transition-colors group-hover:bg-forest group-hover:text-white">
+            <l.icon size={22} stroke-width={1.75} aria-hidden="true" />
+          </span>
+          <h3 class="mt-6 text-h4 text-forest">
+            <a href={url(l.href)} class="after:absolute after:inset-0 after:rounded-card focus-visible:outline-none">{l.title}</a>
+          </h3>
+          <p class="mt-2 flex-1 text-small text-muted">{l.text}</p>
+          <span aria-hidden="true" class="mt-6 inline-flex items-center gap-2 text-small font-semibold text-brand">
+            Découvrir <ArrowRight size={16} class="transition-transform duration-200 group-hover:translate-x-1" />
+          </span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .card:has(a:focus-visible) {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+  }
+</style>

@@ -1,0 +1,95 @@
+---
+/** 3.3 Notre équipe — protocole complet, section 3.3. Données : src/data/equipe.ts */
+import { Image } from 'astro:assets';
+import { GraduationCap, Clock, Users } from '@lucide/astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/page/PageHeader.astro';
+import CabinetLinks from '../../components/page/CabinetLinks.astro';
+import SectionHeading from '../../components/ui/SectionHeading.astro';
+import CtaBand from '../../components/home/CtaBand.astro';
+import { team } from '../../data/equipe';
+
+const initials = (m: (typeof team)[number]) =>
+  (m.firstName.split(/[\s-]/)[0][0] + m.lastName[0]).toUpperCase();
+---
+<BaseLayout
+  title="Notre équipe"
+  description="Les responsables et experts associés d'Alkebulan Services et Conseils : environnement et changements climatiques, agronomie, développement rural, communication et sociologie du développement."
+>
+  <PageHeader
+    eyebrow="Le Cabinet"
+    title="Notre équipe"
+    intro="Les missions d'Alkebulan Services et Conseils sont conduites par des professionnels aux compétences complémentaires : environnement et changements climatiques, agronomie et développement rural, communication et sociologie du développement, accompagnement des collectivités. Selon la nature de chaque mission, le cabinet constitue des équipes pluridisciplinaires associant ses responsables et des experts associés."
+    crumbs={[{ label: 'Le Cabinet', href: '/cabinet' }, { label: 'Notre équipe' }]}
+  />
+
+  <section aria-labelledby="membres-title" class="section-y bg-mineral">
+    <div class="container-site">
+      <h2 id="membres-title" class="sr-only">Membres de l'équipe</h2>
+      <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {team.map((m, i) => (
+          <li data-reveal style={`--reveal-delay:${(i % 3) * 80}ms`}>
+            <article class="flex h-full flex-col overflow-hidden rounded-card border border-line bg-white shadow-card transition-[box-shadow,transform] duration-300 hover:-translate-y-1 hover:shadow-lift" aria-labelledby={`m-${i}`}>
+              {m.photo ? (
+                <Image src={m.photo} alt={`Portrait de ${m.firstName} ${m.lastName}`} widths={[400, 800]} sizes="(min-width: 64rem) 24rem, (min-width: 40rem) 50vw, 100vw" class="aspect-[4/3] w-full object-cover" />
+              ) : (
+                <div role="img" aria-label={`Photo à fournir : portrait de ${m.firstName} ${m.lastName}`} class="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[linear-gradient(135deg,var(--color-forest-soft),#dfe8d8)]">
+                  <span aria-hidden="true" class="absolute inset-0 opacity-[0.07] [background-image:repeating-linear-gradient(135deg,var(--color-forest)_0_1px,transparent_1px_12px)]"></span>
+                  <span aria-hidden="true" class="relative flex size-24 items-center justify-center rounded-full bg-white font-display text-3xl font-bold text-forest shadow-[0_8px_24px_-12px_rgb(16_29_8/0.4)] ring-4 ring-white/60">{initials(m)}</span>
+                  <span class="absolute bottom-3 right-3 rounded-full bg-white/85 px-2.5 py-1 text-xs font-semibold text-muted">Photo à fournir</span>
+                </div>
+              )}
+              <div class="flex flex-1 flex-col p-6 sm:p-7">
+                <div class="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
+                  <h3 id={`m-${i}`} class="text-h4 text-forest">{m.firstName} <span class="whitespace-nowrap">{m.lastName}</span></h3>
+                  {m.badge && (
+                    <span class:list={['rounded-full px-2.5 py-1 text-xs font-bold', m.badge === 'Direction' ? 'bg-brand-soft text-brand' : 'bg-forest-soft text-forest']}>{m.badge}</span>
+                  )}
+                </div>
+                <p class="mt-1 text-small font-semibold text-brand">{m.role}</p>
+                <p class="mt-4 text-small font-medium text-ink">{m.specialty}</p>
+                {(m.degree || m.experience) && (
+                  <ul class="mt-4 flex flex-wrap gap-2">
+                    {m.degree && (
+                      <li class="inline-flex items-center gap-1.5 rounded-ui bg-mineral px-2.5 py-1.5 text-xs font-semibold text-ink/80">
+                        <GraduationCap size={14} aria-hidden="true" class="text-forest" />{m.degree}
+                      </li>
+                    )}
+                    {m.experience && (
+                      <li class="inline-flex items-center gap-1.5 rounded-ui bg-mineral px-2.5 py-1.5 text-xs font-semibold text-ink/80">
+                        <Clock size={14} aria-hidden="true" class="text-forest" />{m.experience} ans d'expérience
+                      </li>
+                    )}
+                  </ul>
+                )}
+                <p class="mt-5 border-t border-line pt-5 text-small text-muted">{m.bio}</p>
+              </div>
+            </article>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="constitution-title" class="section-y bg-white">
+    <div class="container-site grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-16">
+      <div class="lg:col-span-7">
+        <SectionHeading id="constitution-title" title="Des équipes adaptées à chaque mission" />
+        <p class="mt-8 text-lead text-ink/90" data-reveal>
+          En fonction de la nature et des exigences de chaque mission, Alkebulan Services et Conseils constitue des équipes adaptées, associant ses responsables et des experts associés aux spécialités complémentaires. La composition de l'équipe proposée est précisée dans chacune de nos offres techniques.
+        </p>
+      </div>
+      <div class="lg:col-span-5" data-reveal style="--reveal-delay:120ms">
+        <div class="flex items-center gap-5 rounded-card bg-forest p-7 text-white sm:p-9">
+          <span class="flex size-14 shrink-0 items-center justify-center rounded-full bg-white/10 text-forest-mist ring-1 ring-white/20">
+            <Users size={26} stroke-width={1.75} aria-hidden="true" />
+          </span>
+          <p class="font-display text-h4 leading-snug">Des équipes pluridisciplinaires, constituées selon les besoins de chaque mission.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CabinetLinks current="/cabinet/equipe" links={['/cabinet/vision-mission-valeurs', '/cabinet/approche']} />
+  <CtaBand />
+</BaseLayout>

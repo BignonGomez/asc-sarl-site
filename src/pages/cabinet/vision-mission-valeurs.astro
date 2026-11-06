@@ -1,0 +1,125 @@
+---
+/** 3.2 Vision, mission et valeurs — protocole complet, section 3.2 (textes À VALIDER par la direction). */
+import { Eye, Flag, BadgeCheck, ShieldCheck, Flame, Lightbulb, Leaf, Handshake, ArrowRight, ArrowDown } from '@lucide/astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/page/PageHeader.astro';
+import CabinetLinks from '../../components/page/CabinetLinks.astro';
+import SectionHeading from '../../components/ui/SectionHeading.astro';
+import CtaBand from '../../components/home/CtaBand.astro';
+
+const pillars = [
+  {
+    id: 'vision',
+    icon: Eye,
+    label: 'Notre vision',
+    statement: 'Des territoires durables et résilients, mieux préparés aux défis environnementaux, climatiques, économiques et sociaux.',
+    text: "Alkebulan Services et Conseils souhaite contribuer à l'émergence de territoires où les ressources naturelles sont gérées de manière responsable, où les écosystèmes sont préservés, où les populations sont mieux préparées aux effets des changements climatiques, et où les modèles de développement tiennent compte des réalités locales.",
+  },
+  {
+    id: 'mission',
+    icon: Flag,
+    label: 'Notre mission',
+    statement: 'Accompagner les acteurs publics et privés par des études, des conseils et des solutions techniques adaptées aux réalités des territoires.',
+    text: "Pour y parvenir, le cabinet réalise des études, fournit des prestations de conseil, élabore des solutions techniques et accompagne les initiatives de développement. Il mobilise des compétences pluridisciplinaires pour répondre aux problématiques liées à l'environnement, au climat, à la gestion des ressources en eau, à l'aménagement du territoire, à l'agriculture durable et au développement local, en associant toutes les parties prenantes, y compris les femmes.",
+  },
+];
+
+const values = [
+  { icon: BadgeCheck, title: 'Rigueur professionnelle', text: 'Nous accordons la plus grande attention à la qualité de nos analyses et de nos prestations.' },
+  { icon: ShieldCheck, title: 'Intégrité', text: 'Nous agissons avec honnêteté et transparence, et nous respectons nos engagements.' },
+  { icon: Flame, title: 'Engagement', text: 'Nous nous investissons pleinement pour atteindre les objectifs des missions qui nous sont confiées.' },
+  { icon: Lightbulb, title: 'Innovation', text: 'Nous recherchons des solutions adaptées à chaque contexte et améliorons continuellement nos pratiques.' },
+  { icon: Leaf, title: 'Responsabilité environnementale', text: 'Nous intégrons les enjeux écologiques et la gestion durable des ressources naturelles dans chacune de nos interventions.' },
+  { icon: Handshake, title: 'Collaboration', text: 'Nous privilégions le dialogue, la participation et la coopération avec tous les acteurs concernés.' },
+];
+
+const levels = [
+  { n: 1, name: 'Vision', role: 'Le cap' },
+  { n: 2, name: 'Mission', role: 'Les actions' },
+  { n: 3, name: 'Valeurs', role: "La manière d'agir" },
+];
+---
+<BaseLayout
+  title="Vision, mission et valeurs"
+  description="La vision, la mission et les valeurs d'Alkebulan Services et Conseils : des territoires durables et résilients, des solutions adaptées aux réalités locales."
+>
+  <PageHeader
+    eyebrow="Le Cabinet"
+    title="Vision, mission et valeurs"
+    intro="Notre vision, notre mission et nos valeurs expriment ce que nous voulons contribuer à construire, la manière dont nous entendons agir et les principes qui guident notre travail avec nos clients, nos partenaires et les bénéficiaires de nos missions."
+    crumbs={[{ label: 'Le Cabinet', href: '/cabinet' }, { label: 'Vision, mission et valeurs' }]}
+  />
+
+  <!-- Parties 1 et 2 : vision et mission -->
+  <section aria-label="Vision et mission" class="section-y bg-mineral">
+    <div class="container-site grid gap-6 lg:grid-cols-2 lg:gap-8">
+      {pillars.map((p, i) => (
+        <article aria-labelledby={`${p.id}-title`} class="relative flex flex-col overflow-hidden rounded-card border border-line bg-white p-7 shadow-card sm:p-10" data-reveal style={`--reveal-delay:${i * 100}ms`}>
+          <span aria-hidden="true" class:list={['absolute inset-y-0 left-0 w-1', i === 0 ? 'bg-brand' : 'bg-forest']}></span>
+          <div class="flex items-center gap-4">
+            <span class:list={['flex size-12 items-center justify-center rounded-ui', i === 0 ? 'bg-brand-soft text-brand' : 'bg-forest-soft text-forest']}>
+              <p.icon size={22} stroke-width={1.75} aria-hidden="true" />
+            </span>
+            <h2 id={`${p.id}-title`} class="text-h3 text-forest">{p.label}</h2>
+          </div>
+          <blockquote class="mt-8 border-l-0">
+            <p class="font-display text-[1.375rem] font-semibold leading-snug tracking-[-0.01em] text-ink sm:text-[1.5rem]">
+              « {p.statement} »
+            </p>
+          </blockquote>
+          <p class="mt-6 text-body text-muted">{p.text}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Partie 3 : valeurs -->
+  <section aria-labelledby="valeurs-title" class="section-y bg-white">
+    <div class="container-site">
+      <SectionHeading id="valeurs-title" title="Nos valeurs" intro="Six principes guident chacune de nos interventions." />
+      <ul class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {values.map((v, i) => (
+          <li class="group rounded-card border border-line bg-white p-7 shadow-card transition-[box-shadow,border-color,transform] duration-300 hover:-translate-y-1 hover:border-forest/30 hover:shadow-lift" data-reveal style={`--reveal-delay:${(i % 3) * 80}ms`}>
+            <span class="flex size-12 items-center justify-center rounded-ui bg-forest-soft text-forest transition-colors group-hover:bg-forest group-hover:text-white">
+              <v.icon size={22} stroke-width={1.75} aria-hidden="true" />
+            </span>
+            <h3 class="mt-6 text-h4 text-forest">{v.title}</h3>
+            <p class="mt-2 text-small text-muted">{v.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Partie 4 : articulation -->
+  <section aria-labelledby="articulation-title" class="section-y bg-mineral">
+    <div class="container-site">
+      <SectionHeading id="articulation-title" title="Comment elles s'articulent" />
+      <ol class="mt-12 flex flex-col items-stretch gap-3 lg:flex-row lg:items-center lg:gap-4" data-reveal>
+        {levels.map((l, i) => (
+          <>
+            <li class="flex flex-1 items-center gap-5 rounded-card border border-line bg-white p-6 shadow-card lg:flex-col lg:p-8 lg:text-center">
+              <span class:list={['flex size-12 shrink-0 items-center justify-center rounded-full font-display text-lg font-bold text-white', i === 1 ? 'bg-forest' : 'bg-brand']}>{l.n}</span>
+              <div>
+                <p class="text-eyebrow uppercase text-muted">{l.name}</p>
+                <p class="mt-1 font-display text-h3 text-forest">{l.role}</p>
+              </div>
+            </li>
+            {i < levels.length - 1 && (
+              <li aria-hidden="true" class="flex justify-center text-forest/50">
+                <ArrowDown size={22} class="lg:hidden" />
+                <ArrowRight size={24} class="hidden lg:block" />
+              </li>
+            )}
+          </>
+        ))}
+      </ol>
+      <p class="mx-auto mt-10 max-w-3xl text-center text-lead text-ink/85" data-reveal>
+        Notre vision fixe le cap, notre mission décrit les actions que nous menons pour y contribuer, et nos valeurs encadrent la manière dont nous les menons.
+      </p>
+    </div>
+  </section>
+
+  <CabinetLinks current="/cabinet/vision-mission-valeurs" links={['/cabinet/equipe', '/cabinet/approche']} class="bg-white" />
+  <CtaBand />
+</BaseLayout>

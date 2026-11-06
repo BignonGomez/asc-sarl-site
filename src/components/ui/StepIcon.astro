@@ -1,0 +1,9 @@
+---
+import { FileText, Search, DraftingCompass, Handshake, BadgeCheck } from '@lucide/astro';
+import type { Step } from '../../data/approche';
+interface Props { name: Step['icon']; size?: number; class?: string }
+const { name, size = 24, class: extra } = Astro.props;
+const icons = { 'file-text': FileText, search: Search, 'drafting-compass': DraftingCompass, handshake: Handshake, 'badge-check': BadgeCheck };
+const Cmp = icons[name];
+---
+<Cmp size={size} stroke-width={1.75} class={extra} aria-hidden="true" />
