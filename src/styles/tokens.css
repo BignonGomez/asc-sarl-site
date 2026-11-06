@@ -17,6 +17,12 @@
   --color-forest-soft: #eef3ea;
   --color-forest-mist: #c3d6b5;
 
+  /* Verts vifs du pied de page (dégradé émeraude → vert profond) */
+  --color-emerald: #12804b;        /* Émeraude vif (contraste texte blanc : 4,9:1) */
+  --color-emerald-deep: #073d22;   /* Vert profond */
+  --color-emerald-mist: #b9ecd0;   /* Titres et pictogrammes sur fond vert */
+  --color-flame: #f3a9b8;          /* Rose lumineux : accents sur fond sombre */
+
   /* ---------- Neutres ---------- */
   --color-ink: #1f1f1f;            /* Texte principal */
   --color-muted: #555555;          /* Texte secondaire, métadonnées */
@@ -88,7 +94,11 @@
   /* ---------- Ombres (très discrètes, cf. maquette) ---------- */
   --shadow-card: 0 1px 2px rgb(16 29 8 / 0.04);
   --shadow-lift: 0 18px 40px -24px rgb(16 29 8 / 0.28);
-  --shadow-header: 0 1px 0 rgb(16 29 8 / 0.06), 0 8px 24px -16px rgb(16 29 8 / 0.18);
+  --shadow-header: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 1px 0 rgb(16 29 8 / 0.06), 0 6px 14px -6px rgb(16 29 8 / 0.12), 0 18px 36px -18px rgb(16 29 8 / 0.28);
+  --shadow-header-scrolled: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 1px 0 rgb(16 29 8 / 0.08), 0 10px 22px -8px rgb(16 29 8 / 0.18), 0 26px 48px -20px rgb(16 29 8 / 0.38);
+  /* Relief des boutons principaux : reflet en haut, arête en bas, ombre portée teintée */
+  --shadow-button: inset 0 1px 0 rgb(255 255 255 / 0.22), inset 0 -2px 0 rgb(0 0 0 / 0.18), 0 2px 4px rgb(141 2 47 / 0.25), 0 10px 22px -10px rgb(174 36 69 / 0.7);
+  --shadow-button-hover: inset 0 1px 0 rgb(255 255 255 / 0.25), inset 0 -2px 0 rgb(0 0 0 / 0.2), 0 4px 8px rgb(141 2 47 / 0.25), 0 18px 32px -12px rgb(174 36 69 / 0.75);
 
   /* ---------- Animations ---------- */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);

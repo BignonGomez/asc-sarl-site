@@ -1,58 +1,140 @@
 ---
-import { MapPin, Phone, Mail } from '@lucide/astro';
+import { MapPin, Phone, Mail, ArrowUpRight } from '@lucide/astro';
+import SocialIcon from '../ui/SocialIcon.astro';
 import { site, footerLinks, legalLinks } from '../../config/site';
 import { url } from '../../lib/url';
+
+const titleClass = 'font-display text-base font-semibold uppercase tracking-[0.1em] text-white';
+const linkClass = 'group/fl inline-flex items-center gap-1.5 text-[0.9375rem] text-white/90 transition-colors hover:text-white';
 ---
-<footer class="bg-forest text-white">
-  <div class="container-site pb-10 pt-16 lg:pt-24">
-    <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
-      <div class="lg:col-span-4">
+<footer class="relative isolate overflow-hidden bg-emerald-deep text-white">
+  <!-- Fond : dégradé émeraude → vert profond, lueur d'accent rose/rouge -->
+  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-linear-to-br from-emerald via-[#0c5f37] to-emerald-deep"></div>
+  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_45%_60%_at_100%_0%,rgb(224_88_122/0.30),transparent_70%),radial-gradient(ellipse_50%_50%_at_0%_100%,rgb(5_25_14/0.55),transparent_70%)]"></div>
+  <!-- Trait d'accent lumineux en haut -->
+  <div aria-hidden="true" class="h-1 bg-linear-to-r from-brand-deep via-[#e0587a] to-brand shadow-[0_0_18px_2px_rgb(224_88_122/0.55)]"></div>
+
+  <div class="container-site pb-10 pt-16 lg:pt-20">
+    <div class="grid gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-12">
+      <!-- Marque -->
+      <div class="lg:col-span-4 lg:pr-6">
         <a href={url('/')} class="inline-flex flex-col leading-none">
-          <span class="font-display text-2xl font-bold tracking-tight">ASC SARL</span>
-          <span class="mt-1.5 text-[0.6875rem] font-semibold tracking-[0.08em] text-white/75">ALKEBULAN SERVICES ET CONSEILS</span>
+          <span class="font-display text-[1.625rem] font-bold uppercase tracking-[0.02em]">Alkebulan</span>
+          <span class="mt-1.5 text-[0.8125rem] font-bold uppercase tracking-[0.14em] text-emerald-mist">Services et Conseils</span>
         </a>
-        <p class="mt-6 max-w-sm text-small leading-relaxed text-white/75">{site.fullName} est un cabinet béninois d'études et de conseil en environnement, changements climatiques, gestion des ressources en eau, aménagement du territoire et développement local.</p>
+        <p class="mt-6 max-w-sm text-[0.9375rem] leading-relaxed text-white/90">Cabinet béninois d'études et de conseil en environnement, changements climatiques, gestion des ressources en eau, aménagement du territoire et développement local.</p>
+        <ul class="mt-7 flex flex-wrap gap-3" aria-label="Réseaux sociaux">
+          {site.social.map((s) => (
+            <li>
+              {s.href ? (
+                <a href={s.href} target="_blank" rel="noopener noreferrer" class="social" aria-label={`${s.name} (nouvel onglet)`}>
+                  <SocialIcon name={s.icon} />
+                </a>
+              ) : (
+                <span class="social" role="img" aria-label={`${s.name} (lien à venir)`} title={`${s.name} — lien à venir`}>
+                  <SocialIcon name={s.icon} />
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
       </div>
 
-      <nav aria-labelledby="footer-nav" class="lg:col-span-2 lg:col-start-5">
-        <h2 id="footer-nav" class="font-sans text-eyebrow uppercase text-forest-mist">Navigation</h2>
-        <ul class="mt-5 space-y-3">
+      <!-- Navigation -->
+      <nav aria-labelledby="footer-nav" class="lg:col-span-2">
+        <h2 id="footer-nav" class={titleClass}>Navigation<span aria-hidden="true" class="title-bar"></span></h2>
+        <ul class="mt-6 space-y-3">
           {footerLinks.map((l) => (
-            <li><a href={url(l.href)} class="text-small text-white/85 transition-colors hover:text-white hover:underline hover:underline-offset-4">{l.label}</a></li>
+            <li><a href={url(l.href)} class={linkClass}><span class="hover-line">{l.label}</span></a></li>
           ))}
         </ul>
       </nav>
 
+      <!-- Coordonnées -->
       <div class="lg:col-span-3">
-        <h2 class="font-sans text-eyebrow uppercase text-forest-mist">Siège social</h2>
-        <ul class="mt-5 space-y-4 text-small text-white/85">
-          <li class="flex gap-3">
-            <MapPin size={18} aria-hidden="true" class="mt-0.5 shrink-0 text-forest-mist" />
+        <h2 class={titleClass}>Siège social<span aria-hidden="true" class="title-bar"></span></h2>
+        <ul class="mt-6 space-y-4 text-[0.9375rem] text-white/90">
+          <li class="flex gap-3.5">
+            <span class="icon-box"><MapPin size={18} aria-hidden="true" /></span>
             <address class="not-italic leading-relaxed">{site.address.oneLine}</address>
           </li>
-          <li class="flex gap-3">
-            <Phone size={18} aria-hidden="true" class="mt-0.5 shrink-0 text-forest-mist" />
+          <li class="flex items-center gap-3.5">
+            <span class="icon-box"><Phone size={18} aria-hidden="true" /></span>
             <span><span class="sr-only">Téléphone : </span>{site.phone.display}</span>
           </li>
-          <li class="flex gap-3">
-            <Mail size={18} aria-hidden="true" class="mt-0.5 shrink-0 text-forest-mist" />
-            <a href={`mailto:${site.email}`} class="hover:text-white hover:underline hover:underline-offset-4">{site.email}</a>
+          <li class="flex items-center gap-3.5">
+            <span class="icon-box"><Mail size={18} aria-hidden="true" /></span>
+            <a href={`mailto:${site.email}`} class="hover-line font-medium text-white">{site.email}</a>
           </li>
         </ul>
       </div>
 
-      <nav aria-labelledby="footer-legal" class="lg:col-span-3 lg:pl-6">
-        <h2 id="footer-legal" class="font-sans text-eyebrow uppercase text-forest-mist">Informations</h2>
-        <ul class="mt-5 space-y-3">
-          {legalLinks.map((l) => (
-            <li><a href={url(l.href)} class="text-small text-white/85 transition-colors hover:text-white hover:underline hover:underline-offset-4">{l.label}</a></li>
-          ))}
-        </ul>
-      </nav>
+      <!-- Informations légales -->
+      <div class="lg:col-span-3 lg:pl-4">
+        <nav aria-labelledby="footer-legal">
+          <h2 id="footer-legal" class={titleClass}>Informations<span aria-hidden="true" class="title-bar"></span></h2>
+          <ul class="mt-6 space-y-3">
+            {legalLinks.map((l) => (
+              <li><a href={url(l.href)} class={linkClass}><span class="hover-line">{l.label}</span></a></li>
+            ))}
+          </ul>
+        </nav>
+        <a href={url(site.cta.href)} class="mt-8 inline-flex items-center gap-2 rounded-ui border border-white/30 bg-white/10 px-4 py-2.5 text-[0.9375rem] font-semibold text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.15)] transition-colors hover:bg-white hover:text-emerald-deep">
+          {site.cta.label} <ArrowUpRight size={17} aria-hidden="true" />
+        </a>
+      </div>
     </div>
 
-    <div class="mt-16 border-t border-white/15 pt-8 text-xs text-white/65">
-      <p>© {site.copyrightYear} {site.fullName}. Tous droits réservés.</p>
+    <div class="mt-14 flex flex-col gap-2 border-t border-white/20 pt-7 text-[0.8125rem] text-white/80 sm:flex-row sm:items-center sm:justify-between">
+      <p>© {site.copyrightYear} {site.name}. Tous droits réservés.</p>
+      <p>{site.domain}</p>
     </div>
   </div>
 </footer>
+
+<style>
+  .title-bar {
+    display: block;
+    margin-top: 0.75rem;
+    width: 2.25rem;
+    height: 3px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #e0587a, var(--color-brand));
+    box-shadow: 0 0 10px rgb(224 88 122 / 0.6);
+  }
+  .icon-box {
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-ui);
+    background: rgb(255 255 255 / 0.12);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.18);
+    color: var(--color-emerald-mist);
+  }
+  .social {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.12);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.22);
+    color: #fff;
+    transition: background-color 0.2s, color 0.2s, transform 0.2s;
+  }
+  a.social:hover {
+    background: #fff;
+    color: var(--color-emerald-deep);
+    transform: translateY(-2px);
+  }
+  .hover-line {
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+    transition: background-size 0.25s var(--ease-out-soft);
+  }
+  a:hover .hover-line,
+  a.hover-line:hover {
+    background-size: 100% 1px;
+  }
+</style>

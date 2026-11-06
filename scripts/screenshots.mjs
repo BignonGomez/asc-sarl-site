@@ -20,7 +20,7 @@ for (const vp of viewports) {
     deviceScaleFactor: vp.deviceScaleFactor ?? 1,
     isMobile: vp.isMobile ?? false,
     hasTouch: vp.isMobile ?? false,
-    reducedMotion: 'reduce',
+    reducedMotion: process.env.SHOT_REDUCED === '1' ? 'reduce' : 'no-preference',
   });
   const page = await ctx.newPage();
   const errors = [];
@@ -30,7 +30,7 @@ for (const vp of viewports) {
     await page.goto(BASE + p, { waitUntil: 'load', timeout: 60000 });
     await page.evaluate(() => document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible')));
     await page.evaluate(() => document.fonts.ready);
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(1600);
     const slug = p === '/' ? 'accueil' : p.replace(/^\/|\/$/g, '').replace(/\//g, '_');
     await page.screenshot({ path: `${out}/${slug}-${vp.name}.png`, fullPage: true });
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);

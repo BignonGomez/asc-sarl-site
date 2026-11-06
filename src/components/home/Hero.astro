@@ -1,61 +1,49 @@
 ---
+/**
+ * Héro de l'accueil : photo plein format en arrière-plan + voile vert en dégradé, contenu centré.
+ *
+ * PHOTO PROVISOIRE (libre de droits, licence Unsplash) :
+ *   « Town surrounded by green trees with distant hills », Korhogo (Côte d'Ivoire),
+ *   par Shane Ryan Herilalaina — https://unsplash.com/photos/W2tPZON_d4s
+ * POUR LA REMPLACER : déposer la photo du cabinet dans src/assets/hero/ (≥ 2000 px de large)
+ * et modifier la ligne d'import ci-dessous. Formats AVIF/WebP et tailles générés automatiquement.
+ */
+import { Picture } from 'astro:assets';
+import heroPhoto from '../../assets/hero/hero-terrain.jpg';
 import Button from '../ui/Button.astro';
-import PhotoPlaceholder from '../ui/PhotoPlaceholder.astro';
 import { site } from '../../config/site';
 ---
-<section aria-labelledby="hero-title" class="relative isolate overflow-hidden bg-forest-night text-white">
-  <!-- Décor : courbes de niveau (évoquent les territoires), purement décoratif -->
-  <svg aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10 h-full w-full text-forest-mist opacity-[0.09]" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1.2">
-    <path d="M-50 620 C 180 540, 320 700, 560 610 S 900 470, 1260 560" />
-    <path d="M-50 560 C 200 470, 330 640, 580 540 S 920 400, 1260 490" />
-    <path d="M-50 500 C 220 400, 340 580, 600 470 S 940 330, 1260 420" />
-    <path d="M-50 440 C 240 330, 350 520, 620 400 S 960 260, 1260 350" />
-    <path d="M-50 380 C 260 260, 360 460, 640 330 S 980 190, 1260 280" />
-    <path d="M-50 320 C 280 190, 370 400, 660 260 S 1000 120, 1260 210" />
-    <path d="M-50 260 C 300 120, 380 340, 680 190 S 1020 50, 1260 140" />
-    <path d="M-50 200 C 320 50, 390 280, 700 120 S 1040 -20, 1260 70" />
-  </svg>
-  <div aria-hidden="true" class="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_80%_70%_at_85%_20%,rgb(35_67_18/0.85),transparent_70%),radial-gradient(ellipse_60%_60%_at_0%_100%,rgb(174_36_69/0.22),transparent_70%)]"></div>
+<section aria-labelledby="hero-title" class="relative isolate flex min-h-[min(46rem,calc(100svh-4.5rem))] items-center overflow-hidden bg-forest-night text-white lg:min-h-[min(50rem,calc(100svh-5rem))]">
+  <Picture
+    src={heroPhoto}
+    alt=""
+    formats={['avif', 'webp']}
+    widths={[640, 960, 1280, 1600, 1920]}
+    quality={60}
+    sizes="100vw"
+    loading="eager"
+    fetchpriority="high"
+    class="absolute inset-0 -z-20 h-full w-full object-cover object-center"
+  />
+  <!-- Voile vert en dégradé : garantit la lisibilité du texte sur la photo -->
+  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(16_29_8/0.78)_0%,rgb(16_29_8/0.62)_40%,rgb(16_29_8/0.80)_75%,rgb(16_29_8/0.94)_100%)]"></div>
+  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_60%_at_50%_45%,rgb(16_29_8/0.45),transparent_75%),radial-gradient(ellipse_55%_50%_at_100%_100%,rgb(174_36_69/0.28),transparent_70%)]"></div>
 
-  <div class="container-site grid items-center gap-12 pb-16 pt-14 sm:pt-20 lg:grid-cols-12 lg:gap-10 lg:pb-24 lg:pt-28">
-    <div class="lg:col-span-7">
-      <p class="hero-in inline-flex items-center gap-3 text-eyebrow uppercase text-forest-mist" style="--d:0ms">
-        <span aria-hidden="true" class="h-px w-8 bg-brand"></span>
-        Cabinet d'études et de conseil · Cotonou, Bénin
-      </p>
-      <h1 id="hero-title" class="hero-in mt-6 text-display text-white" style="--d:80ms">
-        Des études et des conseils pour des territoires <span class="text-[#f3a9b8]">durables et résilients</span>
-      </h1>
-      <p class="hero-in mt-7 max-w-2xl text-lead text-white/80" style="--d:160ms">
-        Cabinet béninois d'études et de conseil, ASC SARL accompagne les acteurs publics et privés face aux enjeux environnementaux, climatiques et de développement territorial : analyse des besoins, études, solutions techniques adaptées et accompagnement des projets.
-      </p>
-      <div class="hero-in mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4" style="--d:240ms">
-        <Button href={site.cta.href} size="lg" arrow>{site.cta.label}</Button>
-        <Button href="/expertises" variant="light" size="lg">Découvrir nos expertises</Button>
-      </div>
+  <div class="container-site flex flex-col items-center py-20 text-center sm:py-24 lg:py-28">
+    <p class="hero-in inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-eyebrow uppercase text-white backdrop-blur-sm" style="--d:0ms">
+      <span aria-hidden="true" class="h-1.5 w-1.5 rounded-full bg-[#f3a9b8]"></span>
+      Cabinet d'études et de conseil · Cotonou, Bénin
+    </p>
+    <h1 id="hero-title" class="hero-in mt-7 max-w-4xl text-display text-white [text-shadow:0_2px_24px_rgb(16_29_8/0.45)]" style="--d:80ms">
+      Bâtir ensemble des territoires <span class="text-[#f3a9b8]">durables et résilients</span>
+    </h1>
+    <p class="hero-in mt-7 max-w-3xl text-lead text-white/90" style="--d:160ms">
+      <strong class="font-semibold text-white">{site.name}</strong> accompagne les institutions publiques, les collectivités, les organisations et les entreprises face aux enjeux environnementaux, climatiques et territoriaux : du diagnostic des besoins aux solutions techniques adaptées, jusqu'à l'accompagnement de vos projets.
+    </p>
+    <div class="hero-in mt-10 flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:justify-center sm:gap-4" style="--d:240ms">
+      <Button href={site.cta.href} size="lg" arrow>{site.cta.label}</Button>
+      <Button href="/expertises" variant="light" size="lg">Découvrir nos expertises</Button>
     </div>
-
-    <div class="hero-in lg:col-span-5" style="--d:320ms">
-      <PhotoPlaceholder tone="dark" context="Photographie de terrain (ex. site d'Allahé, avec l'accord de la commune)" class="aspect-[4/3] rounded-card lg:aspect-[4/5]" />
-    </div>
-  </div>
-
-  <!-- Repères factuels (sources : RCCM, protocole) -->
-  <div class="border-t border-white/10">
-    <dl class="container-site grid gap-6 py-8 text-small sm:grid-cols-3 sm:gap-8">
-      <div class="hero-in" style="--d:380ms">
-        <dt class="font-display text-h4 text-white">Société de droit béninois</dt>
-        <dd class="mt-1 text-white/65">SARL immatriculée à Cotonou en 2025</dd>
-      </div>
-      <div class="hero-in sm:border-l sm:border-white/10 sm:pl-8" style="--d:440ms">
-        <dt class="font-display text-h4 text-white">Huit domaines d'expertise</dt>
-        <dd class="mt-1 text-white/65">De l'environnement au développement local</dd>
-      </div>
-      <div class="hero-in sm:border-l sm:border-white/10 sm:pl-8" style="--d:500ms">
-        <dt class="font-display text-h4 text-white">Acteurs publics et privés</dt>
-        <dd class="mt-1 text-white/65">Administrations, collectivités, organisations, entreprises</dd>
-      </div>
-    </dl>
   </div>
 </section>
 

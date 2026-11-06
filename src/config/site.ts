@@ -3,10 +3,14 @@
  * Sources : protocole complet validé (annexe A) — les valeurs marquées « À VALIDER » restent provisoires.
  */
 export const site = {
-  name: 'ALKEBULAN SERVICES ET CONSEILS',
-  shortName: 'ASC SARL',
-  fullName: 'ALKEBULAN SERVICES ET CONSEILS (ASC SARL)',
+  // Nom d'usage affiché partout sur le site (« ASC SARL » réservé à l'e-mail et au domaine)
+  name: 'Alkebulan Services et Conseils',
+  shortName: 'Alkebulan Services et Conseils',
+  fullName: 'Alkebulan Services et Conseils',
+  // Dénomination juridique complète (mentions légales uniquement)
+  legalName: 'ALKEBULAN SERVICES ET CONSEILS SARL',
   domain: 'asc-sarl.com',
+  url: 'https://asc-sarl.com', // domaine officiel : URL canoniques et balises SEO
   description:
     "Cabinet béninois d'études et de conseil en environnement, changements climatiques, gestion des ressources en eau, aménagement du territoire et développement local.",
   address: {
@@ -20,6 +24,13 @@ export const site = {
   rccm: 'RB/COT/25 B 40462',
   copyrightYear: 2026,
   cta: { label: 'Parlons de votre projet', href: '/contact' },
+  // À RENSEIGNER : adresses des pages officielles (href: null = icône affichée, lien inactif)
+  social: [
+    { name: 'LinkedIn', icon: 'linkedin', href: null as string | null },
+    { name: 'Facebook', icon: 'facebook', href: null as string | null },
+    { name: 'WhatsApp', icon: 'whatsapp', href: null as string | null },
+    { name: 'YouTube', icon: 'youtube', href: null as string | null },
+  ],
 } as const;
 
 /**
