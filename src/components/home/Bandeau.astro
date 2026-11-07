@@ -1,67 +1,136 @@
 ---
 /**
- * Bandeau défilant (type « titres d'actualité ») placé sous le héro.
- * Défilement continu de droite à gauche, en boucle ; pause au survol et au focus ;
- * affichage fixe (sans mouvement) si l'utilisateur a demandé de réduire les animations.
+ * Bandeau défilant « Le cabinet en bref » (sous le héro).
+ * Technique : une piste contenant deux copies identiques de la liste, translateX 0 → -50 % en boucle linéaire.
+ * La 2e copie est masquée aux lecteurs d'écran. Fondu des bords par mask-image.
+ * Pause : survol, focus clavier, bouton pause/lecture, et hors écran (économie de ressources).
+ * « Réduire les animations » : pas de mouvement, pastilles affichées sur plusieurs lignes.
  */
+import { Landmark, FileCheck, LayoutGrid, Leaf, Handshake, Building, Pause, Play } from '@lucide/astro';
+
 const items = [
-  'Société de droit béninois',
-  'SARL immatriculée à Cotonou en 2025',
-  "Huit domaines d'expertise",
-  "De l'environnement au développement local",
-  'Acteurs publics et privés',
-  'Administrations, collectivités, organisations, entreprises',
+  { icon: Landmark, label: 'Société de droit béninois' },
+  { icon: FileCheck, label: 'SARL immatriculée à Cotonou en 2025' },
+  { icon: LayoutGrid, label: "Huit domaines d'expertise" },
+  { icon: Leaf, label: "De l'environnement au développement local" },
+  { icon: Handshake, label: 'Acteurs publics et privés' },
+  { icon: Building, label: 'Administrations, collectivités, organisations, entreprises' },
 ];
 ---
-<section aria-label="Le cabinet en bref" class="bandeau relative overflow-hidden border-b border-line bg-white" tabindex="0">
-  <!-- Fondu sur les bords -->
-  <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-white to-transparent sm:w-24"></div>
-  <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-white to-transparent sm:w-24"></div>
+<section aria-labelledby="bandeau-title" class="bandeau relative border-b border-line bg-mineral py-6 sm:py-7">
+  <div class="container-site mb-5 flex items-center justify-center gap-3">
+    <h2 id="bandeau-title" class="font-sans text-eyebrow uppercase text-muted">Le cabinet en bref</h2>
+    <button
+      type="button"
+      class="bandeau-toggle grid size-9 place-items-center rounded-full bg-white text-brand shadow-[inset_0_0_0_1px_var(--color-line)] transition-colors hover:bg-brand hover:text-white"
+      aria-pressed="false"
+      aria-controls="bandeau-defilant"
+      data-bandeau-toggle
+    >
+      <span class="sr-only" data-label>Mettre en pause le défilement</span>
+      <Pause size={14} stroke-width={2.4} aria-hidden="true" class="i-pause" />
+      <Play size={14} stroke-width={2.4} aria-hidden="true" class="i-play hidden" />
+    </button>
+  </div>
 
-  <div class="bandeau-track flex w-max">
-    {[0, 1].map((copy) => (
-      <ul class="bandeau-list flex shrink-0 items-center" aria-hidden={copy === 1 ? 'true' : undefined}>
-        {items.map((item) => (
-          <li class="flex items-center whitespace-nowrap py-4 font-display text-[0.9375rem] font-semibold tracking-[0.01em] text-brand sm:py-5 sm:text-base">
-            <span class="px-6 sm:px-8">{item}</span>
-            <span aria-hidden="true" class="h-2 w-2 rotate-45 rounded-[1px] bg-forest/70"></span>
-          </li>
-        ))}
-      </ul>
-    ))}
+  <div id="bandeau-defilant" class="bandeau-marquee" data-bandeau>
+    <div class="bandeau-track">
+      {[0, 1].map((copy) => (
+        <ul class="bandeau-copy" aria-hidden={copy === 1 ? 'true' : undefined}>
+          {items.map((it) => (
+            <li class="pastille">
+              <span class="pastille__icon"><it.icon size={15} stroke-width={2} aria-hidden="true" /></span>
+              {it.label}
+            </li>
+          ))}
+        </ul>
+      ))}
+    </div>
   </div>
 </section>
 
 <style>
-  .bandeau-track {
-    animation: bandeau 45s linear infinite;
+  .bandeau-marquee {
+    --gap: 0.75rem;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8% 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8% 92%, transparent);
   }
-  .bandeau:hover .bandeau-track,
-  .bandeau:focus-within .bandeau-track,
-  .bandeau:focus .bandeau-track {
+  .bandeau-track {
+    display: flex;
+    width: max-content;
+    animation: bandeau-defile 55s linear infinite;
+  }
+  .bandeau-copy {
+    display: flex;
+    gap: var(--gap);
+    padding-right: var(--gap);
+  }
+  .pastille {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    white-space: nowrap;
+    padding: 0.5rem 1.125rem 0.5rem 0.5rem;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid var(--color-line);
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 6px 16px -12px rgb(16 29 8 / 0.35);
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-brand);
+  }
+  .pastille__icon {
+    display: grid;
+    place-items: center;
+    width: 1.875rem;
+    height: 1.875rem;
+    border-radius: 999px;
+    background: var(--color-brand-soft);
+    color: var(--color-brand);
+    flex-shrink: 0;
+  }
+
+  /* Pauses : survol, focus, bouton, hors écran */
+  .bandeau-marquee:hover .bandeau-track,
+  .bandeau-marquee:focus-within .bandeau-track,
+  .bandeau-marquee[data-paused] .bandeau-track,
+  .bandeau-marquee[data-offscreen] .bandeau-track {
     animation-play-state: paused;
   }
-  @keyframes bandeau {
+  .bandeau-toggle[aria-pressed='true'] .i-pause { display: none; }
+  .bandeau-toggle[aria-pressed='true'] .i-play { display: block; }
+
+  @keyframes bandeau-defile {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
   }
 
-  /* Réduire les animations : liste fixe, centrée, sur plusieurs lignes */
+  /* Réduire les animations : aucune animation, pastilles fixes sur plusieurs lignes */
   @media (prefers-reduced-motion: reduce) {
-    .bandeau-track {
-      animation: none !important;
-      width: 100%;
-      justify-content: center;
-    }
-    .bandeau-list { flex-shrink: 1; width: 100%; flex-wrap: wrap; justify-content: center; padding: 0.5rem var(--spacing-gutter); }
-    .bandeau-list[aria-hidden='true'] { display: none; }
-    .bandeau-list li { padding-block: 0.375rem; white-space: normal; }
-    .bandeau-list li:last-child > span:last-child { display: none; }
-    .bandeau > div[aria-hidden='true'] { display: none; }
-  }
-  @media (prefers-reduced-motion: reduce) and (width < 40rem) {
-    .bandeau-list li > span:last-child { display: none; }
-    .bandeau-list li > span:first-child { padding-inline: 0; text-align: center; }
-    .bandeau-list { flex-direction: column; gap: 0.125rem; }
+    .bandeau-toggle { display: none; }
+    .bandeau-marquee { -webkit-mask-image: none; mask-image: none; }
+    .bandeau-track { animation: none !important; width: auto; justify-content: center; }
+    .bandeau-copy { flex-wrap: wrap; justify-content: center; padding-inline: var(--spacing-gutter); }
+    .bandeau-copy[aria-hidden='true'] { display: none; }
+    .pastille { white-space: normal; }
   }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-bandeau]').forEach((marquee) => {
+    const btn = document.querySelector<HTMLButtonElement>(`[data-bandeau-toggle][aria-controls="${marquee.id}"]`);
+    btn?.addEventListener('click', () => {
+      const paused = btn.getAttribute('aria-pressed') !== 'true';
+      btn.setAttribute('aria-pressed', String(paused));
+      marquee.toggleAttribute('data-paused', paused);
+      const label = btn.querySelector('[data-label]');
+      if (label) label.textContent = paused ? 'Reprendre le défilement' : 'Mettre en pause le défilement';
+    });
+    // Pas d'animation quand le bandeau n'est pas visible
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => marquee.toggleAttribute('data-offscreen', !e.isIntersecting)).observe(marquee);
+    }
+  });
+</script>
