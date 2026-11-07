@@ -28,7 +28,7 @@
   --color-muted: #555555;          /* Texte secondaire, métadonnées */
   --color-line: #e5e7eb;           /* Bordures et séparateurs */
   --color-mineral: #f5f6f2;        /* Fond des sections alternées */
-  --color-placeholder: #eceee9;    /* Emplacements « Photo à fournir » */
+  --color-placeholder: #eceee9;    /* Fond neutre (zones d’image en cours de chargement) */
   --color-paper: #ffffff;
 
   /* ---------- Statuts ---------- */

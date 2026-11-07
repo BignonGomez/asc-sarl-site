@@ -1,7 +1,7 @@
 ---
 import { CalendarDays, ArrowRight } from '@lucide/astro';
 import SectionHeading from '../ui/SectionHeading.astro';
-import PhotoPlaceholder from '../ui/PhotoPlaceholder.astro';
+import SiteImage from '../ui/SiteImage.astro';
 import { url } from '../../lib/url';
 ---
 <section aria-labelledby="actualites-title" class="section-y bg-mineral">
@@ -9,7 +9,9 @@ import { url } from '../../lib/url';
     <SectionHeading id="actualites-title" title="Actualités" />
 
     <article class="group relative mt-14 grid overflow-hidden rounded-card border border-line bg-white shadow-card transition-[box-shadow,border-color] duration-300 hover:border-forest/40 hover:shadow-lift md:grid-cols-2 lg:mt-16 lg:max-w-4xl" data-reveal>
-      <PhotoPlaceholder context="Visuel de l'article" class="aspect-[16/10] md:aspect-auto md:min-h-64" />
+      <div class="relative aspect-[16/10] overflow-hidden border-b border-line bg-white md:aspect-auto md:min-h-64 md:border-b-0 md:border-r">
+        <div class="absolute inset-4"><SiteImage id="accueil.actualite-lancement" sizes="(min-width: 48rem) 28rem, 100vw" /></div>
+      </div>
       <div class="flex flex-col p-7 sm:p-9">
         <p class="inline-flex items-center gap-2 text-small text-muted">
           <CalendarDays size={16} aria-hidden="true" /> [date de mise en ligne]

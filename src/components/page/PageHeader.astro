@@ -3,17 +3,16 @@
  * En-tête (héro) des pages intérieures : photo plein format + voile vert, contenu centré (fil d'Ariane, étiquette, H1, introduction).
  * Le fil d'Ariane est aussi publié en données structurées (schema.org BreadcrumbList) pour le référencement.
  */
-import { Picture } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
 import { ChevronRight } from '@lucide/astro';
-import defaultPhoto from '../../assets/hero/hero-terrain.jpg';
+import SiteImage from '../ui/SiteImage.astro';
+import type { ImageId } from '../../config/images';
 import { url } from '../../lib/url';
 import { site } from '../../config/site';
 
 interface Crumb { label: string; href?: string }
-/** image : photo d'arrière-plan (par défaut celle de l'accueil) ; position : cadrage CSS (ex. 'center 30%'). */
-interface Props { title: string; eyebrow?: string; intro?: string; crumbs: Crumb[]; image?: ImageMetadata; position?: string }
-const { title, eyebrow, intro, crumbs, image = defaultPhoto, position = 'center' } = Astro.props;
+/** image : identifiant de l'image de fond dans src/config/images.ts (ex. 'cabinet.hero'). */
+interface Props { title: string; eyebrow?: string; intro?: string; crumbs: Crumb[]; image: ImageId }
+const { title, eyebrow, intro, crumbs, image } = Astro.props;
 const trail: Crumb[] = [{ label: 'Accueil', href: '/' }, ...crumbs];
 
 const jsonLd = {
@@ -28,18 +27,7 @@ const jsonLd = {
 };
 ---
 <section class="relative isolate flex min-h-[26rem] items-center overflow-hidden bg-forest-night text-white sm:min-h-[30rem] lg:min-h-[34rem]">
-  <Picture
-    src={image}
-    alt=""
-    formats={['avif', 'webp']}
-    widths={[640, 960, 1280, 1600, 1920]}
-    quality={60}
-    sizes="100vw"
-    loading="eager"
-    fetchpriority="high"
-    class="absolute inset-0 -z-20 h-full w-full object-cover"
-    style={`object-position:${position}`}
-  />
+  <div class="absolute inset-0 -z-20"><SiteImage id={image} sizes="100vw" priority alt="" /></div>
   <!-- Voile vert en dégradé (même traitement que le héro de l'accueil) -->
   <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(16_29_8/0.82)_0%,rgb(16_29_8/0.66)_45%,rgb(16_29_8/0.86)_80%,rgb(16_29_8/0.95)_100%)]"></div>
   <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,rgb(16_29_8/0.4),transparent_75%),radial-gradient(ellipse_55%_60%_at_100%_100%,rgb(174_36_69/0.28),transparent_70%)]"></div>

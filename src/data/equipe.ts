@@ -2,7 +2,7 @@
  * Équipe — protocole, section 3.3 (sources : [MCV], [CONTRAT]).
  * Règles : pas de titre « Dr » tant que le doctorat n'est pas confirmé ; pas de mention « expert certifié »
  * sans vérification du certificat ; publication soumise à l'accord écrit de chaque personne.
- * photo : null = emplacement « Photo à fournir ». Pour ajouter une photo : déposer le fichier dans
+ * photo : null = monogramme (initiales) affiché à la place du portrait. Pour ajouter une photo : déposer le fichier dans
  * src/assets/equipe/ puis l'importer ici (ex. import dahodo from '../assets/equipe/dahodo.jpg').
  */
 import type { ImageMetadata } from 'astro';

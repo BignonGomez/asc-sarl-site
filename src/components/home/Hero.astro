@@ -1,30 +1,14 @@
 ---
 /**
  * Héro de l'accueil : photo plein format en arrière-plan + voile vert en dégradé, contenu centré.
- *
- * PHOTO PROVISOIRE (libre de droits, licence Unsplash) :
- *   « Town surrounded by green trees with distant hills », Korhogo (Côte d'Ivoire),
- *   par Shane Ryan Herilalaina — https://unsplash.com/photos/W2tPZON_d4s
- * POUR LA REMPLACER : déposer la photo du cabinet dans src/assets/hero/ (≥ 2000 px de large)
- * et modifier la ligne d'import ci-dessous. Formats AVIF/WebP et tailles générés automatiquement.
+ * Image : emplacement 'accueil.hero' de src/config/images.ts
  */
-import { Picture } from 'astro:assets';
-import heroPhoto from '../../assets/hero/hero-terrain.jpg';
+import SiteImage from '../ui/SiteImage.astro';
 import Button from '../ui/Button.astro';
 import { site } from '../../config/site';
 ---
 <section aria-labelledby="hero-title" class="relative isolate flex min-h-[min(46rem,calc(100svh-4.5rem))] items-center overflow-hidden bg-forest-night text-white lg:min-h-[min(50rem,calc(100svh-5rem))]">
-  <Picture
-    src={heroPhoto}
-    alt=""
-    formats={['avif', 'webp']}
-    widths={[640, 960, 1280, 1600, 1920]}
-    quality={60}
-    sizes="100vw"
-    loading="eager"
-    fetchpriority="high"
-    class="absolute inset-0 -z-20 h-full w-full object-cover object-center"
-  />
+  <div class="absolute inset-0 -z-20"><SiteImage id="accueil.hero" sizes="100vw" priority /></div>
   <!-- Voile vert en dégradé : garantit la lisibilité du texte sur la photo -->
   <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(16_29_8/0.78)_0%,rgb(16_29_8/0.62)_40%,rgb(16_29_8/0.80)_75%,rgb(16_29_8/0.94)_100%)]"></div>
   <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_60%_at_50%_45%,rgb(16_29_8/0.45),transparent_75%),radial-gradient(ellipse_55%_50%_at_100%_100%,rgb(174_36_69/0.28),transparent_70%)]"></div>

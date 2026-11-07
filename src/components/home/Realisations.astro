@@ -2,7 +2,7 @@
 import { MapPin, CalendarDays } from '@lucide/astro';
 import SectionHeading from '../ui/SectionHeading.astro';
 import ArrowLink from '../ui/ArrowLink.astro';
-import PhotoPlaceholder from '../ui/PhotoPlaceholder.astro';
+import SiteImage from '../ui/SiteImage.astro';
 import { url } from '../../lib/url';
 ---
 <section aria-labelledby="realisations-title" class="section-y bg-mineral">
@@ -19,7 +19,9 @@ import { url } from '../../lib/url';
     </div>
 
     <article class="group relative mt-14 grid overflow-hidden rounded-card border border-line bg-white shadow-card transition-[box-shadow,border-color] duration-300 hover:border-forest/40 hover:shadow-lift lg:mt-16 lg:grid-cols-12" data-reveal>
-      <PhotoPlaceholder context="Site d'Allahé" class="aspect-[16/10] lg:col-span-5 lg:aspect-auto lg:min-h-[22rem]" />
+      <div class="relative aspect-[16/10] overflow-hidden lg:col-span-5 lg:aspect-auto lg:min-h-[22rem]">
+        <div class="absolute inset-0"><SiteImage id="accueil.realisation-zakpota" sizes="(min-width: 64rem) 30rem, 100vw" class="transition-transform duration-700 group-hover:scale-[1.03]" /></div>
+      </div>
       <div class="flex flex-col justify-center p-7 sm:p-10 lg:col-span-7 lg:p-14">
         <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-small">
           <span class="inline-flex items-center gap-2 rounded-ui bg-status-ongoing-bg px-3 py-1 font-semibold text-status-ongoing">

@@ -1,6 +1,7 @@
 ---
 import { MapPin, Phone, Mail, ArrowUpRight } from '@lucide/astro';
 import SocialIcon from '../ui/SocialIcon.astro';
+import logoWhite from '../../assets/logo/logo-full-white.svg';
 import { site, footerLinks, legalLinks } from '../../config/site';
 import { url } from '../../lib/url';
 
@@ -18,9 +19,8 @@ const linkClass = 'group/fl inline-flex items-center gap-1.5 text-[0.9375rem] te
     <div class="grid gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-12">
       <!-- Marque -->
       <div class="lg:col-span-4 lg:pr-6">
-        <a href={url('/')} class="inline-flex flex-col leading-none">
-          <span class="font-display text-[1.625rem] font-bold uppercase tracking-[0.02em]">Alkebulan</span>
-          <span class="mt-1.5 text-[0.8125rem] font-bold uppercase tracking-[0.14em] text-emerald-mist">Services et Conseils</span>
+        <a href={url('/')} class="inline-flex rounded-ui">
+          <img src={logoWhite.src} alt={`${site.name} – accueil`} width="174" height="80" class="h-20 w-auto" />
         </a>
         <p class="mt-6 max-w-sm text-[0.9375rem] leading-relaxed text-white/90">Cabinet béninois d'études et de conseil en environnement, changements climatiques, gestion des ressources en eau, aménagement du territoire et développement local.</p>
         <ul class="mt-7 flex flex-wrap gap-3" aria-label="Réseaux sociaux">

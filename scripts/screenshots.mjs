@@ -30,6 +30,12 @@ for (const vp of viewports) {
     await page.goto(BASE + p, { waitUntil: 'load', timeout: 60000 });
     await page.evaluate(() => document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible')));
     await page.evaluate(() => document.fonts.ready);
+    // Défilement progressif pour déclencher le chargement différé des images
+    await page.evaluate(async () => {
+      for (let y = 0; y < document.body.scrollHeight; y += 500) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 120)); }
+      window.scrollTo(0, 0);
+    });
+    await page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {});
     await page.waitForTimeout(1600);
     const slug = p === '/' ? 'accueil' : p.replace(/^\/|\/$/g, '').replace(/\//g, '_');
     await page.screenshot({ path: `${out}/${slug}-${vp.name}.png`, fullPage: true });

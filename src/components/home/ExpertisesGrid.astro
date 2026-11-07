@@ -2,7 +2,7 @@
 import { ArrowRight } from '@lucide/astro';
 import SectionHeading from '../ui/SectionHeading.astro';
 import ExpertiseIcon from '../ui/ExpertiseIcon.astro';
-import PhotoPlaceholder from '../ui/PhotoPlaceholder.astro';
+import SiteImage from '../ui/SiteImage.astro';
 import { expertises } from '../../data/expertises';
 import { url } from '../../lib/url';
 ---
@@ -13,7 +13,9 @@ import { url } from '../../lib/url';
       {expertises.map((e, i) => (
         <li data-reveal style={`--reveal-delay:${(i % 4) * 70}ms`}>
           <article class="card group relative flex h-full flex-col overflow-hidden rounded-card border border-line bg-white shadow-card transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1 hover:border-forest/40 hover:shadow-lift">
-            <PhotoPlaceholder compact class="aspect-[16/9]" />
+            <div class="aspect-[16/10] overflow-hidden bg-mineral">
+              <SiteImage id={`expertise.${e.slug}` as any} sizes="(min-width: 64rem) 18rem, (min-width: 40rem) 50vw, 100vw" class="transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-[1.04]" />
+            </div>
             <div class="flex flex-1 flex-col px-6 pb-6">
               <span class="relative -mt-6 mb-5 inline-flex size-12 items-center justify-center rounded-ui border border-line bg-white text-forest shadow-card transition-colors duration-300 group-hover:border-forest group-hover:bg-forest group-hover:text-white">
                 <ExpertiseIcon name={e.icon} size={22} />

@@ -17,6 +17,7 @@ const initials = (m: (typeof team)[number]) =>
   description="Les responsables et experts associés d'Alkebulan Services et Conseils : environnement et changements climatiques, agronomie, développement rural, communication et sociologie du développement."
 >
   <PageHeader
+    image="equipe.hero"
     eyebrow="Le Cabinet"
     title="Notre équipe"
     intro="Les missions d'Alkebulan Services et Conseils sont conduites par des professionnels aux compétences complémentaires : environnement et changements climatiques, agronomie et développement rural, communication et sociologie du développement, accompagnement des collectivités. Selon la nature de chaque mission, le cabinet constitue des équipes pluridisciplinaires associant ses responsables et des experts associés."
@@ -33,10 +34,9 @@ const initials = (m: (typeof team)[number]) =>
               {m.photo ? (
                 <Image src={m.photo} alt={`Portrait de ${m.firstName} ${m.lastName}`} widths={[400, 800]} sizes="(min-width: 64rem) 24rem, (min-width: 40rem) 50vw, 100vw" class="aspect-[4/3] w-full object-cover" />
               ) : (
-                <div role="img" aria-label={`Photo à fournir : portrait de ${m.firstName} ${m.lastName}`} class="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[linear-gradient(135deg,var(--color-forest-soft),#dfe8d8)]">
+                <div aria-hidden="true" class="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[linear-gradient(135deg,var(--color-forest-soft),#dfe8d8)]">
                   <span aria-hidden="true" class="absolute inset-0 opacity-[0.07] [background-image:repeating-linear-gradient(135deg,var(--color-forest)_0_1px,transparent_1px_12px)]"></span>
                   <span aria-hidden="true" class="relative flex size-24 items-center justify-center rounded-full bg-white font-display text-3xl font-bold text-forest shadow-[0_8px_24px_-12px_rgb(16_29_8/0.4)] ring-4 ring-white/60">{initials(m)}</span>
-                  <span class="absolute bottom-3 right-3 rounded-full bg-white/85 px-2.5 py-1 text-xs font-semibold text-muted">Photo à fournir</span>
                 </div>
               )}
               <div class="flex flex-1 flex-col p-6 sm:p-7">

@@ -1,0 +1,34 @@
+---
+/**
+ * Affiche une image du site à partir de son identifiant (src/config/images.ts).
+ * AVIF + WebP générés au build, tailles adaptées à l'écran, chargement différé sauf `priority`.
+ */
+import { Picture } from 'astro:assets';
+import { images, type ImageId } from '../../config/images';
+
+interface Props {
+  id: ImageId;
+  sizes: string;
+  class?: string;
+  priority?: boolean;
+  alt?: string; // remplace le texte alternatif de la configuration (ex. '' si décoratif)
+}
+const { id, sizes, class: extra = '', priority = false, alt } = Astro.props;
+const img = images[id];
+const max = img.src.width;
+const widths = [400, 640, 960, 1280, 1600, 1920].filter((w) => w < max).concat(max > 1920 ? [] : [max]);
+---
+<Picture
+  src={img.src}
+  alt={alt ?? img.alt}
+  formats={['avif', 'webp']}
+  fallbackFormat="jpg"
+  widths={widths}
+  sizes={sizes}
+  quality={62}
+  loading={priority ? 'eager' : 'lazy'}
+  decoding={priority ? 'sync' : 'async'}
+  fetchpriority={priority ? 'high' : 'auto'}
+  class:list={['h-full w-full', img.fit === 'contain' ? 'object-contain' : 'object-cover', extra]}
+  style={img.position ? `object-position:${img.position}` : undefined}
+/>

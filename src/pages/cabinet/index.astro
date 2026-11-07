@@ -5,7 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/page/PageHeader.astro';
 import CabinetLinks from '../../components/page/CabinetLinks.astro';
 import SectionHeading from '../../components/ui/SectionHeading.astro';
-import PhotoPlaceholder from '../../components/ui/PhotoPlaceholder.astro';
+import SiteImage from '../../components/ui/SiteImage.astro';
 import ExpertiseIcon from '../../components/ui/ExpertiseIcon.astro';
 import ArrowLink from '../../components/ui/ArrowLink.astro';
 import CtaBand from '../../components/home/CtaBand.astro';
@@ -38,6 +38,7 @@ const publics = [
   description="Alkebulan Services et Conseils, cabinet béninois d'études et de conseil : identité juridique, positionnement, champs d'intervention et ancrage territorial."
 >
   <PageHeader
+    image="cabinet.hero"
     eyebrow="Le Cabinet"
     title={site.name}
     intro="Alkebulan Services et Conseils est un cabinet béninois de services et de conseils. Il intervient sur des problématiques liées à l'environnement, aux changements climatiques, à la gestion des ressources naturelles et au développement territorial."
@@ -54,7 +55,9 @@ const publics = [
         </p>
       </div>
       <div class="lg:col-span-6" data-reveal style="--reveal-delay:120ms">
-        <PhotoPlaceholder context="Photographie institutionnelle ou illustration des activités" class="aspect-[4/3] rounded-card border border-line" />
+        <div class="relative aspect-[4/3] overflow-hidden rounded-card shadow-lift ring-1 ring-black/5">
+          <SiteImage id="cabinet.vocation" sizes="(min-width: 64rem) 36rem, 100vw" />
+        </div>
       </div>
     </div>
   </section>

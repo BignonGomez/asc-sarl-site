@@ -1,7 +1,7 @@
 ---
 import SectionHeading from '../ui/SectionHeading.astro';
 import ArrowLink from '../ui/ArrowLink.astro';
-import PhotoPlaceholder from '../ui/PhotoPlaceholder.astro';
+import SiteImage from '../ui/SiteImage.astro';
 ---
 <section aria-labelledby="cabinet-title" class="section-y bg-mineral">
   <div class="container-site grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
@@ -18,7 +18,9 @@ import PhotoPlaceholder from '../ui/PhotoPlaceholder.astro';
       </div>
     </div>
     <div class="lg:col-span-6" data-reveal style="--reveal-delay:120ms">
-      <PhotoPlaceholder context="Équipe ou siège du cabinet" class="aspect-[4/3] rounded-card border border-line" />
+      <div class="relative aspect-[4/3] overflow-hidden rounded-card shadow-lift ring-1 ring-black/5">
+        <SiteImage id="accueil.cabinet" sizes="(min-width: 64rem) 36rem, 100vw" />
+      </div>
     </div>
   </div>
 </section>
