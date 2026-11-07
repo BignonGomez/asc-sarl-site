@@ -1,140 +1,351 @@
 ---
+/**
+ * Pied de page : carte d'appel à l'action en verre (remplace l'ancien bandeau rouge),
+ * 5 colonnes (présentation, navigation, expertises, siège social, informations légales),
+ * grand mot en contour « ALKEBULAN » animé au défilement, barre du bas.
+ * Fond : dégradé émeraude → vert forêt, deux halos (vert clair, rose) et léger grain.
+ */
 import { MapPin, Phone, Mail, ArrowUpRight } from '@lucide/astro';
 import SocialIcon from '../ui/SocialIcon.astro';
+import Button from '../ui/Button.astro';
 import logoWhite from '../../assets/logo/logo-full-white.svg';
 import { site, footerLinks, legalLinks } from '../../config/site';
+import { expertises } from '../../data/expertises';
 import { url } from '../../lib/url';
 
-const titleClass = 'font-display text-base font-semibold uppercase tracking-[0.1em] text-white';
-const linkClass = 'group/fl inline-flex items-center gap-1.5 text-[0.9375rem] text-white/90 transition-colors hover:text-white';
+// Réseaux sociaux : seules les icônes dont le lien est renseigné sont affichées ; l'e-mail est toujours présent
+const socials = [
+  ...site.social.filter((s) => s.href).map((s) => ({ name: s.name, icon: s.icon, href: s.href as string, external: true })),
+  { name: 'E-mail', icon: 'mail', href: `mailto:${site.email}`, external: false },
+];
 ---
-<footer class="relative isolate overflow-hidden bg-emerald-deep text-white">
-  <!-- Fond : dégradé émeraude → vert profond, lueur d'accent rose/rouge -->
-  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-linear-to-br from-emerald via-[#0c5f37] to-emerald-deep"></div>
-  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_45%_60%_at_100%_0%,rgb(224_88_122/0.30),transparent_70%),radial-gradient(ellipse_50%_50%_at_0%_100%,rgb(5_25_14/0.55),transparent_70%)]"></div>
-  <!-- Trait d'accent lumineux en haut -->
+<footer class="site-footer relative isolate overflow-clip text-white">
+  <!-- Fond -->
+  <div aria-hidden="true" class="sf-bg absolute inset-0 -z-10">
+    <span class="sf-halo sf-halo--green"></span>
+    <span class="sf-halo sf-halo--rose"></span>
+    <span class="sf-grain"></span>
+  </div>
+  <!-- Trait d'accent -->
   <div aria-hidden="true" class="h-1 bg-linear-to-r from-brand-deep via-[#e0587a] to-brand shadow-[0_0_18px_2px_rgb(224_88_122/0.55)]"></div>
 
-  <div class="container-site pb-10 pt-16 lg:pt-20">
-    <div class="grid gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-12">
-      <!-- Marque -->
-      <div class="lg:col-span-4 lg:pr-6">
+  <!-- Carte d'appel à l'action -->
+  <section aria-labelledby="footer-cta-title" class="container-site pt-16 sm:pt-20 lg:pt-24">
+    <div class="sf-cta" data-reveal data-spot>
+      <span aria-hidden="true" class="sf-cta__glow"></span>
+      <p class="inline-flex items-center gap-3 text-eyebrow uppercase text-emerald-mist">
+        <span aria-hidden="true" class="h-px w-6 bg-flame"></span>Parlons de votre projet<span aria-hidden="true" class="h-px w-6 bg-flame"></span>
+      </p>
+      <h2 id="footer-cta-title" class="mx-auto mt-5 max-w-[22ch] text-h2 text-white">Un projet, une étude, des termes de référence à partager ?</h2>
+      <p class="mx-auto mt-5 max-w-2xl text-lead text-white">
+        {site.name} étudie avec vous vos besoins et vos problématiques, que vous soyez une institution publique, une collectivité territoriale, une organisation ou une entreprise. Transmettez-nous votre demande ou vos termes de référence.
+      </p>
+      <div class="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
+        <Button href={site.cta.href} size="lg" arrow class="!rounded-full">{site.cta.label}</Button>
+        <a href={`mailto:${site.email}`} class="sf-glass-btn">
+          <Mail size={18} aria-hidden="true" /> {site.email}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Colonnes -->
+  <div class="container-site">
+    <div class="sf-main">
+      <div class="sf-brand">
         <a href={url('/')} class="inline-flex rounded-ui">
           <img src={logoWhite.src} alt={`${site.name} – accueil`} width="174" height="80" class="h-20 w-auto" />
         </a>
-        <p class="mt-6 max-w-sm text-[0.9375rem] leading-relaxed text-white/90">Cabinet béninois d'études et de conseil en environnement, changements climatiques, gestion des ressources en eau, aménagement du territoire et développement local.</p>
-        <ul class="mt-7 flex flex-wrap gap-3" aria-label="Réseaux sociaux">
-          {site.social.map((s) => (
+        <p class="mt-5 max-w-sm text-[0.9375rem] leading-relaxed text-white/85">Cabinet béninois d'études et de conseil en environnement, changements climatiques, gestion des ressources en eau, aménagement du territoire et développement local.</p>
+        <ul class="mt-6 flex flex-wrap gap-2.5" aria-label="Nous suivre et nous écrire">
+          {socials.map((s) => (
             <li>
-              {s.href ? (
-                <a href={s.href} target="_blank" rel="noopener noreferrer" class="social" aria-label={`${s.name} (nouvel onglet)`}>
-                  <SocialIcon name={s.icon} />
-                </a>
-              ) : (
-                <span class="social" role="img" aria-label={`${s.name} (lien à venir)`} title={`${s.name} — lien à venir`}>
-                  <SocialIcon name={s.icon} />
-                </span>
-              )}
+              <a
+                href={s.href}
+                class="sf-social"
+                aria-label={s.external ? `${s.name} (nouvel onglet)` : `Nous écrire : ${site.email}`}
+                target={s.external ? '_blank' : undefined}
+                rel={s.external ? 'noopener noreferrer' : undefined}
+              >
+                {s.icon === 'mail' ? <Mail size={18} aria-hidden="true" /> : <SocialIcon name={s.icon as any} />}
+              </a>
             </li>
           ))}
         </ul>
       </div>
 
-      <!-- Navigation -->
-      <nav aria-labelledby="footer-nav" class="lg:col-span-2">
-        <h2 id="footer-nav" class={titleClass}>Navigation<span aria-hidden="true" class="title-bar"></span></h2>
-        <ul class="mt-6 space-y-3">
-          {footerLinks.map((l) => (
-            <li><a href={url(l.href)} class={linkClass}><span class="hover-line">{l.label}</span></a></li>
-          ))}
+      <nav aria-labelledby="sf-nav" class="sf-col">
+        <h2 id="sf-nav" class="sf-title">Navigation</h2>
+        <ul>
+          {footerLinks.map((l) => <li><a href={url(l.href)} class="sf-link">{l.label}</a></li>)}
         </ul>
       </nav>
 
-      <!-- Coordonnées -->
-      <div class="lg:col-span-3">
-        <h2 class={titleClass}>Siège social<span aria-hidden="true" class="title-bar"></span></h2>
-        <ul class="mt-6 space-y-4 text-[0.9375rem] text-white/90">
-          <li class="flex gap-3.5">
-            <span class="icon-box"><MapPin size={18} aria-hidden="true" /></span>
-            <address class="not-italic leading-relaxed">{site.address.oneLine}</address>
+      <nav aria-labelledby="sf-exp" class="sf-col sf-col--wide">
+        <h2 id="sf-exp" class="sf-title">Nos expertises</h2>
+        <ul>
+          {expertises.map((e) => <li><a href={url(`/expertises/${e.slug}`)} class="sf-link">{e.title}</a></li>)}
+        </ul>
+      </nav>
+
+      <div class="sf-col sf-col--wide">
+        <h2 class="sf-title">Siège social</h2>
+        <ul class="sf-contact">
+          <li>
+            <span class="sf-icon"><MapPin size={17} aria-hidden="true" /></span>
+            <address class="not-italic">{site.address.oneLine}</address>
           </li>
-          <li class="flex items-center gap-3.5">
-            <span class="icon-box"><Phone size={18} aria-hidden="true" /></span>
+          <li>
+            <span class="sf-icon"><Phone size={17} aria-hidden="true" /></span>
             <span><span class="sr-only">Téléphone : </span>{site.phone.display}</span>
           </li>
-          <li class="flex items-center gap-3.5">
-            <span class="icon-box"><Mail size={18} aria-hidden="true" /></span>
-            <a href={`mailto:${site.email}`} class="hover-line font-medium text-white">{site.email}</a>
+          <li>
+            <span class="sf-icon"><Mail size={17} aria-hidden="true" /></span>
+            <a href={`mailto:${site.email}`} class="sf-link !text-white">{site.email}</a>
           </li>
         </ul>
       </div>
 
-      <!-- Informations légales -->
-      <div class="lg:col-span-3 lg:pl-4">
-        <nav aria-labelledby="footer-legal">
-          <h2 id="footer-legal" class={titleClass}>Informations<span aria-hidden="true" class="title-bar"></span></h2>
-          <ul class="mt-6 space-y-3">
-            {legalLinks.map((l) => (
-              <li><a href={url(l.href)} class={linkClass}><span class="hover-line">{l.label}</span></a></li>
-            ))}
-          </ul>
-        </nav>
-        <a href={url(site.cta.href)} class="mt-8 inline-flex items-center gap-2 rounded-ui border border-white/30 bg-white/10 px-4 py-2.5 text-[0.9375rem] font-semibold text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.15)] transition-colors hover:bg-white hover:text-emerald-deep">
-          {site.cta.label} <ArrowUpRight size={17} aria-hidden="true" />
-        </a>
-      </div>
+      <nav aria-labelledby="sf-legal" class="sf-col">
+        <h2 id="sf-legal" class="sf-title">Informations légales</h2>
+        <ul>
+          {legalLinks.map((l) => <li><a href={url(l.href)} class="sf-link">{l.label}</a></li>)}
+          <li class="pt-2 text-[0.8125rem] text-white/75">RCCM {site.rccm}</li>
+        </ul>
+      </nav>
     </div>
+  </div>
 
-    <div class="mt-14 flex flex-col gap-2 border-t border-white/20 pt-7 text-[0.8125rem] text-white/80 sm:flex-row sm:items-center sm:justify-between">
+  <!-- Grand mot en contour -->
+  <p class="sf-word" aria-hidden="true" data-footer-word>ALKEBULAN</p>
+
+  <!-- Barre du bas -->
+  <div class="container-site">
+    <div class="sf-bottom">
       <p>© {site.copyrightYear} {site.name}. Tous droits réservés.</p>
-      <p>{site.domain}</p>
+      <ul class="flex flex-wrap items-center gap-x-5 gap-y-2">
+        {legalLinks.map((l) => <li><a href={url(l.href)} class="sf-link">{l.label}</a></li>)}
+        <li><a href={url('/')} class="sf-link inline-flex items-center gap-1">{site.domain}<ArrowUpRight size={14} aria-hidden="true" /></a></li>
+      </ul>
     </div>
   </div>
 </footer>
 
 <style>
-  .title-bar {
-    display: block;
-    margin-top: 0.75rem;
-    width: 2.25rem;
-    height: 3px;
-    border-radius: 9999px;
-    background: linear-gradient(90deg, #e0587a, var(--color-brand));
-    box-shadow: 0 0 10px rgb(224 88 122 / 0.6);
+  /* ---------- Fond ---------- */
+  .sf-bg {
+    background: linear-gradient(170deg, #0e6c3f 0%, #0b5a33 26%, #0a4529 52%, var(--color-emerald-deep) 78%, #052614 100%);
+    overflow: hidden;
   }
-  .icon-box {
-    display: inline-grid;
-    place-items: center;
-    flex-shrink: 0;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: var(--radius-ui);
-    background: rgb(255 255 255 / 0.12);
-    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.18);
+  .sf-halo { position: absolute; border-radius: 50%; filter: blur(20px); }
+  .sf-halo--green {
+    width: 60vmax; height: 60vmax; top: -28vmax; left: -18vmax;
+    background: radial-gradient(closest-side, rgb(110 231 160 / 0.2), transparent);
+  }
+  .sf-halo--rose {
+    width: 52vmax; height: 52vmax; top: 18%; right: -20vmax;
+    background: radial-gradient(closest-side, rgb(224 88 122 / 0.30), rgb(174 36 69 / 0.12) 55%, transparent);
+  }
+  .sf-grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- Carte d'appel à l'action ---------- */
+  .sf-cta {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(2.5rem, 6vw, 5.5rem) clamp(1.25rem, 5vw, 5rem);
+    border-radius: 2.125rem;
+    text-align: center;
+    background: linear-gradient(150deg, rgb(255 255 255 / 0.13), rgb(255 255 255 / 0.04) 55%, rgb(255 255 255 / 0.08));
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    backdrop-filter: blur(16px) saturate(150%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.22), 0 30px 70px -30px rgb(0 0 0 / 0.6);
+  }
+  .sf-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(155deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.08) 35%, rgb(255 255 255 / 0.04) 65%, rgb(243 169 184 / 0.6));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  /* Halo lumineux sous la carte */
+  .sf-cta__glow {
+    position: absolute;
+    inset: auto 0 -55% 0;
+    z-index: -1;
+    height: 110%;
+    filter: blur(10px);
+    background: radial-gradient(closest-side, rgb(224 88 122 / 0.45), rgb(110 231 160 / 0.12) 60%, transparent);
+  }
+  /* Halo qui suit la souris */
+  .sf-cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(480px circle at var(--mx, 50%) var(--my, -20%), rgb(255 255 255 / 0.12), transparent 45%);
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-out-soft);
+    pointer-events: none;
+  }
+  .sf-cta:hover::after { opacity: 1; }
+
+  .sf-glass-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    min-height: 3.5rem;
+    padding: 0 1.75rem;
+    border-radius: 999px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(150deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.05));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.25), inset 0 0 0 1px rgb(255 255 255 / 0.2), 0 10px 30px -14px rgb(0 0 0 / 0.6);
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s var(--ease-out-soft);
+  }
+  .sf-glass-btn:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), inset 0 0 0 1px rgb(243 169 184 / 0.6), 0 14px 36px -14px rgb(224 88 122 / 0.5); }
+
+  /* ---------- Colonnes ---------- */
+  .sf-main {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem 1.5rem;
+    margin-top: clamp(3.5rem, 7vw, 6rem);
+    padding-block: 2.75rem;
+    border-top: 1px solid rgb(255 255 255 / 0.14);
+  }
+  .sf-brand, .sf-col--wide { grid-column: 1 / -1; }
+  @media (width >= 48rem) {
+    .sf-main { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .sf-brand { grid-column: 1 / -1; }
+    .sf-col--wide { grid-column: auto; }
+  }
+  @media (width >= 64rem) {
+    .sf-main { grid-template-columns: 1.35fr 0.8fr 1.25fr 1.15fr 0.95fr; gap: 2rem; }
+    .sf-brand { grid-column: auto; }
+  }
+  .sf-title {
+    margin-bottom: 1.125rem;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
     color: var(--color-emerald-mist);
   }
-  .social {
-    display: inline-grid;
+  .sf-col li + li { margin-top: 0.625rem; }
+  .sf-link {
+    font-size: 0.9375rem;
+    color: rgb(255 255 255 / 0.85);
+    transition: color 0.2s;
+  }
+  .sf-link:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--color-flame); }
+  .sf-contact li { display: flex; gap: 0.75rem; font-size: 0.9375rem; line-height: 1.55; color: rgb(255 255 255 / 0.88); }
+  .sf-contact li + li { margin-top: 0.875rem; }
+  .sf-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.625rem;
+    color: var(--color-emerald-mist);
+    background: rgb(255 255 255 / 0.1);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16);
+  }
+  .sf-social {
+    display: grid;
     place-items: center;
     width: 2.75rem;
     height: 2.75rem;
-    border-radius: 9999px;
-    background: rgb(255 255 255 / 0.12);
-    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.22);
+    border-radius: 0.75rem;
     color: #fff;
-    transition: background-color 0.2s, color 0.2s, transform 0.2s;
+    background: rgb(255 255 255 / 0.1);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.2);
+    transition: color 0.2s, background-color 0.2s, box-shadow 0.2s, transform 0.3s var(--ease-out-soft);
   }
-  a.social:hover {
-    background: #fff;
+  .sf-social:hover {
     color: var(--color-emerald-deep);
-    transform: translateY(-2px);
+    background: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px -10px rgb(0 0 0 / 0.6);
   }
-  .hover-line {
-    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
-    transition: background-size 0.25s var(--ease-out-soft);
+
+  /* ---------- Grand mot en contour ---------- */
+  .sf-word {
+    margin: 0.5rem 0 -0.06em;
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 16.5vw, 15rem);
+    font-weight: 700;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    text-align: center;
+    white-space: nowrap;
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(255 255 255 / 0.22);
+    background: linear-gradient(180deg, rgb(243 169 184 / 0.28), rgb(243 169 184 / 0.04) 70%, transparent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    user-select: none;
+    pointer-events: none;
+    transform: translateX(var(--shift, 0px));
+    will-change: transform;
   }
-  a:hover .hover-line,
-  a.hover-line:hover {
-    background-size: 100% 1px;
+
+  /* ---------- Barre du bas ---------- */
+  .sf-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    padding-block: 1.5rem 2rem;
+    border-top: 1px solid rgb(255 255 255 / 0.14);
+    font-size: 0.84rem;
+    color: rgb(255 255 255 / 0.78);
+  }
+  .sf-bottom .sf-link { font-size: 0.84rem; color: rgb(255 255 255 / 0.8); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sf-word { transform: none; }
+    .sf-social:hover, .sf-glass-btn:hover { transform: none; }
   }
 </style>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  // Halo qui suit la souris sur la carte d'appel
+  document.querySelectorAll<HTMLElement>('[data-spot]').forEach((el) => {
+    el.addEventListener('pointermove', (e) => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      el.style.setProperty('--my', `${e.clientY - r.top}px`);
+    });
+  });
+  // Léger glissement horizontal du grand mot pendant le défilement
+  const word = document.querySelector<HTMLElement>('[data-footer-word]');
+  if (word && !reduce.matches) {
+    let visible = false, ticking = false;
+    const update = () => {
+      ticking = false;
+      const r = word.getBoundingClientRect();
+      const progress = 1 - Math.min(Math.max((r.top + r.height) / (window.innerHeight + r.height), 0), 1); // 0 → 1 pendant la traversée
+      word.style.setProperty('--shift', `${((0.5 - progress) * 8).toFixed(2)}vw`);
+    };
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) update(); }).observe(word);
+    window.addEventListener('scroll', () => { if (visible && !ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  }
+</script>

@@ -6,7 +6,6 @@ import PageHeader from '../../components/page/PageHeader.astro';
 import CabinetLinks from '../../components/page/CabinetLinks.astro';
 import SectionHeading from '../../components/ui/SectionHeading.astro';
 import StepIcon from '../../components/ui/StepIcon.astro';
-import CtaBand from '../../components/home/CtaBand.astro';
 import { steps } from '../../data/approche';
 ---
 <BaseLayout
@@ -61,5 +60,4 @@ import { steps } from '../../data/approche';
   </section>
 
   <CabinetLinks current="/cabinet/approche" links={['/cabinet/vision-mission-valeurs', '/cabinet/equipe', '/expertises']} class="bg-white" />
-  <CtaBand />
 </BaseLayout>

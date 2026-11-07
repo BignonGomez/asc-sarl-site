@@ -6,7 +6,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/page/PageHeader.astro';
 import CabinetLinks from '../../components/page/CabinetLinks.astro';
 import SectionHeading from '../../components/ui/SectionHeading.astro';
-import CtaBand from '../../components/home/CtaBand.astro';
 import { team } from '../../data/equipe';
 
 const initials = (m: (typeof team)[number]) =>
@@ -91,5 +90,4 @@ const initials = (m: (typeof team)[number]) =>
   </section>
 
   <CabinetLinks current="/cabinet/equipe" links={['/cabinet/vision-mission-valeurs', '/cabinet/approche']} />
-  <CtaBand />
 </BaseLayout>
