@@ -4,9 +4,12 @@
  * Blocs : en-tête, sommaire, enjeux et contexte, prestations, démarche (méthodes), publics,
  * experts mobilisables (si identifiés), mission liée (si elle existe), domaines complémentaires.
  * L'appel à l'action final est la carte du pied de page.
- * La mise en page varie selon `layout` (src/data/expertises-pages.ts).
+ * La mise en page varie d'une page à l'autre selon `layout` (src/data/expertises-pages.ts) :
+ *   présentation : split-right | split-left | quote
+ *   prestations  : cards | list | bento (+ groupes par public si prestationGroups)
+ *   démarche     : timeline | vertical | cards
  */
-import { ArrowUpRight, ArrowRight, Info } from '@lucide/astro';
+import { ArrowUpRight, ArrowRight, Info, MapPin, CalendarDays, Quote } from '@lucide/astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/page/PageHeader.astro';
 import SectionHeading from '../../components/ui/SectionHeading.astro';
@@ -29,6 +32,7 @@ const experts = page.experts.map((n) => team.find((m) => m.lastName === n)).filt
 const complementary = page.complementary.map((s) => expertises.find((e) => e.slug === s)!).filter(Boolean);
 const others = expertises.filter((e) => e.slug !== page.slug && !page.complementary.includes(e.slug));
 const initials = (m: (typeof team)[number]) => (m.firstName[0] + m.lastName[0]).toUpperCase();
+const nbPrestations = page.prestationGroups ? page.prestationGroups.reduce((n, g) => n + g.items.length, 0) : page.prestations.length;
 
 const toc = [
   { id: 'enjeux', label: 'Enjeux' },
@@ -40,6 +44,7 @@ const toc = [
   { id: 'complementaires', label: 'Domaines complémentaires' },
 ];
 const L = page.layout;
+const split = L.presentation !== 'quote';
 ---
 <BaseLayout title={page.seoTitle} description={page.seoDescription}>
   <PageHeader
@@ -62,38 +67,117 @@ const L = page.layout;
 
   <!-- 2. Enjeux et contexte -->
   <section id="enjeux" aria-labelledby="enjeux-title" class="section-y scroll-mt-24 bg-white">
-    <div class:list={['container-site grid items-center gap-12 lg:grid-cols-12 lg:gap-16']}>
-      <div class:list={['lg:col-span-6', L.presentation === 'split-left' && 'lg:order-2']}>
+    {split ? (
+      <div class="container-site grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+        <div class:list={['lg:col-span-6', L.presentation === 'split-left' && 'lg:order-2']}>
+          <SectionHeading id="enjeux-title" title="Enjeux et contexte" />
+          {page.enjeux.map((p, i) => (
+            <p class:list={[i === 0 ? 'mt-8 text-lead text-ink/90' : 'mt-5 text-body text-muted']} data-reveal style={`--reveal-delay:${i * 80}ms`}>{p}</p>
+          ))}
+        </div>
+        <div class:list={['relative lg:col-span-6', L.presentation === 'split-left' && 'lg:order-1']} data-reveal style="--reveal-delay:120ms">
+          <div class="relative aspect-[4/3] overflow-hidden rounded-[1.5rem] shadow-lift ring-1 ring-black/5">
+            <SiteImage id={page.sideImage} sizes="(min-width: 64rem) 36rem, 100vw" />
+          </div>
+          <div class:list={['badge-domaine', L.presentation === 'split-left' ? 'badge-domaine--right' : 'badge-domaine--left']}>
+            <span class="badge-domaine__icon"><ExpertiseIcon name={domain.icon} size={20} /></span>
+            <span class="font-display text-small font-semibold leading-tight text-forest">{domain.title}</span>
+          </div>
+        </div>
+      </div>
+    ) : (
+      <div class="container-site">
         <SectionHeading id="enjeux-title" title="Enjeux et contexte" />
-        {page.enjeux.map((p, i) => (
-          <p class:list={[i === 0 ? 'mt-8 text-lead text-ink/90' : 'mt-5 text-body text-muted']} data-reveal style={`--reveal-delay:${i * 80}ms`}>{p}</p>
-        ))}
-      </div>
-      <div class:list={['relative lg:col-span-6', L.presentation === 'split-left' && 'lg:order-1']} data-reveal style="--reveal-delay:120ms">
-        <div class="relative aspect-[4/3] overflow-hidden rounded-[1.5rem] shadow-lift ring-1 ring-black/5">
-          <SiteImage id={page.sideImage} sizes="(min-width: 64rem) 36rem, 100vw" />
+        <div class="mt-10 grid gap-10 lg:grid-cols-12 lg:gap-16">
+          <blockquote class="relative lg:col-span-7" data-reveal>
+            <Quote size={44} aria-hidden="true" class="text-brand/25" />
+            <p class="mt-3 font-display text-[clamp(1.375rem,1.1rem+1vw,2rem)] font-semibold leading-snug tracking-[-0.015em] text-forest">{page.enjeux[0]}</p>
+          </blockquote>
+          <div class="lg:col-span-5 lg:pt-14">
+            {page.enjeux.slice(1).map((p, i) => <p class="text-lead text-muted" data-reveal style={`--reveal-delay:${100 + i * 80}ms`}>{p}</p>)}
+          </div>
         </div>
-        <div class="badge-domaine">
-          <span class="badge-domaine__icon"><ExpertiseIcon name={domain.icon} size={20} /></span>
-          <span class="font-display text-small font-semibold leading-tight text-forest">{domain.title}</span>
+        <div class="relative mt-12 aspect-[16/9] overflow-hidden rounded-[1.75rem] shadow-lift ring-1 ring-black/5 sm:aspect-[21/9]" data-reveal>
+          <SiteImage id={page.sideImage} sizes="(min-width: 80rem) 75rem, 100vw" />
+          <div class="badge-domaine badge-domaine--inside">
+            <span class="badge-domaine__icon"><ExpertiseIcon name={domain.icon} size={20} /></span>
+            <span class="font-display text-small font-semibold leading-tight text-forest">{domain.title}</span>
+          </div>
         </div>
       </div>
-    </div>
+    )}
   </section>
 
   <!-- 3. Prestations -->
   <section id="prestations" aria-labelledby="prestations-title" class="section-y scroll-mt-24 bg-mineral">
     <div class="container-site">
-      <SectionHeading id="prestations-title" title="Ce que nous faisons" intro="Nos prestations dans ce domaine." />
-      <ul class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {page.prestations.map((p, i) => (
-          <li class:list={['presta', i === 0 && page.prestations.length % 3 === 2 && 'lg:col-span-2']} data-reveal style={`--reveal-delay:${(i % 3) * 80}ms`}>
-            <span class="presta__icon"><Icon name={p.icon} size={22} /></span>
-            <span aria-hidden="true" class="presta__num">{String(i + 1).padStart(2, '0')}</span>
-            <h3 class="mt-6 text-h4 text-forest">{p.title}</h3>
-          </li>
-        ))}
-      </ul>
+      {page.prestationGroups ? (
+        <>
+          <SectionHeading id="prestations-title" title="Ce que nous faisons" intro="Nos prestations dans ce domaine." />
+          <div class="mt-12 grid gap-6 lg:grid-cols-2">
+            {page.prestationGroups.map((g, gi) => (
+              <div class:list={['groupe', gi === 1 && 'groupe--dark']} data-reveal style={`--reveal-delay:${gi * 100}ms`}>
+                <h3 class="groupe__title">{g.title}</h3>
+                <ul class="mt-6 grid gap-3">
+                  {g.items.map((p) => (
+                    <li class="groupe__item">
+                      <span class="groupe__icon"><Icon name={p.icon} size={20} /></span>
+                      <span class="font-display text-h4 leading-snug">{p.title}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : L.prestations === 'list' ? (
+        <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+          <div class="lg:col-span-5">
+            <div class="lg:sticky lg:top-28">
+              <SectionHeading id="prestations-title" title="Ce que nous faisons" intro="Nos prestations dans ce domaine." />
+              <div class="list-panel mt-10" data-reveal>
+                <span class="list-panel__icon"><ExpertiseIcon name={domain.icon} size={30} /></span>
+                <p class="mt-6 font-display text-[3.5rem] font-bold leading-none text-white">{String(nbPrestations).padStart(2, '0')}</p>
+                <p class="mt-2 text-small font-semibold uppercase tracking-[0.12em] text-forest-mist">prestations</p>
+              </div>
+            </div>
+          </div>
+          <ol class="lg:col-span-7">
+            {page.prestations.map((p, i) => (
+              <li class="list-row" data-reveal style={`--reveal-delay:${i * 70}ms`}>
+                <span aria-hidden="true" class="list-row__num">{String(i + 1).padStart(2, '0')}</span>
+                <span class="list-row__icon"><Icon name={p.icon} size={20} /></span>
+                <h3 class="font-display text-h4 leading-snug text-forest">{p.title}</h3>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ) : L.prestations === 'bento' ? (
+        <>
+          <SectionHeading id="prestations-title" title="Ce que nous faisons" intro="Nos prestations dans ce domaine." />
+          <ul class="bento mt-12">
+            {page.prestations.map((p, i) => (
+              <li class:list={['bento__item', i === 0 && 'bento__item--lead']} data-reveal style={`--reveal-delay:${(i % 3) * 80}ms`}>
+                <span class="bento__icon"><Icon name={p.icon} size={i === 0 ? 26 : 22} /></span>
+                <h3 class:list={['mt-auto pt-8 font-display leading-snug', i === 0 ? 'text-h3 text-white' : 'text-h4 text-forest']}>{p.title}</h3>
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <>
+          <SectionHeading id="prestations-title" title="Ce que nous faisons" intro="Nos prestations dans ce domaine." />
+          <ul class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {page.prestations.map((p, i) => (
+              <li class:list={['presta', i === 0 && page.prestations.length % 3 === 2 && 'lg:col-span-2']} data-reveal style={`--reveal-delay:${(i % 3) * 80}ms`}>
+                <span class="presta__icon"><Icon name={p.icon} size={22} /></span>
+                <span aria-hidden="true" class="presta__num">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="mt-6 text-h4 text-forest">{p.title}</h3>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </div>
   </section>
 
@@ -104,14 +188,41 @@ const L = page.layout;
         <SectionHeading id="demarche-title" title="Notre démarche" intro="Les grandes étapes d'une mission dans ce domaine." />
         <div class="shrink-0" data-reveal><ArrowLink href="/cabinet/approche">Notre approche méthodologique</ArrowLink></div>
       </div>
-      <ol class="frise mt-14" style={`--n:${page.steps.length}`}>
-        {page.steps.map((s, i) => (
-          <li class="frise__step" data-reveal style={`--reveal-delay:${i * 80}ms`}>
-            <span class="frise__dot">{i + 1}</span>
-            <p class="frise__label">{s}</p>
-          </li>
-        ))}
-      </ol>
+
+      {L.demarche === 'timeline' && (
+        <ol class="frise mt-14" style={`--n:${page.steps.length}`}>
+          {page.steps.map((s, i) => (
+            <li class="frise__step" data-reveal style={`--reveal-delay:${i * 80}ms`}>
+              <span class="frise__dot">{i + 1}</span>
+              <p class="frise__label">{s}</p>
+            </li>
+          ))}
+        </ol>
+      )}
+      {L.demarche === 'vertical' && (
+        <ol class="vsteps mt-14">
+          {page.steps.map((s, i) => (
+            <li class="vsteps__item" data-reveal style={`--reveal-delay:${i * 80}ms`}>
+              <span class="vsteps__dot">{i + 1}</span>
+              <div class="vsteps__card">
+                <p class="text-eyebrow uppercase text-brand">Étape {i + 1}</p>
+                <p class="mt-1.5 font-display text-h4 text-forest">{s}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      )}
+      {L.demarche === 'cards' && (
+        <ol class="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {page.steps.map((s, i) => (
+            <li class="scard" data-reveal style={`--reveal-delay:${i * 80}ms`}>
+              <span aria-hidden="true" class="scard__num">{String(i + 1).padStart(2, '0')}</span>
+              <p class="relative font-display text-h4 leading-snug text-forest"><span class="sr-only">Étape {i + 1} : </span>{s}</p>
+            </li>
+          ))}
+        </ol>
+      )}
+
       {page.stepsNote && (
         <p class="mt-10 flex items-start gap-3 rounded-[1.25rem] bg-forest-soft p-5 text-body text-forest sm:p-6" data-reveal>
           <Info size={20} aria-hidden="true" class="mt-0.5 shrink-0" />{page.stepsNote}
@@ -132,6 +243,12 @@ const L = page.layout;
           </li>
         ))}
       </ul>
+      {page.publicsSpecific && (
+        <div class="mt-10 flex flex-wrap items-center gap-2" data-reveal>
+          <span class="mr-2 text-eyebrow uppercase text-forest-mist">Dans ce domaine, en particulier</span>
+          {page.publicsSpecific.map((p) => <span class="rounded-full bg-white/10 px-3.5 py-1.5 text-small font-semibold text-white ring-1 ring-white/20">{p}</span>)}
+        </div>
+      )}
     </div>
   </section>
 
@@ -143,8 +260,8 @@ const L = page.layout;
           <SectionHeading id="experts-title" title="Experts mobilisables" intro="Selon la nature de chaque mission, l'équipe est complétée par des experts associés." />
         </div>
         <ul class="grid gap-4 lg:col-span-7">
-          {experts.map((m) => (
-            <li data-reveal>
+          {experts.map((m, i) => (
+            <li data-reveal style={`--reveal-delay:${i * 80}ms`}>
               <a href={url(`/cabinet/equipe#membre-${m.lastName.toLowerCase()}`)} class="expert group">
                 <span aria-hidden="true" class="expert__avatar">{initials(m)}</span>
                 <span class="flex-1">
@@ -161,8 +278,37 @@ const L = page.layout;
     </section>
   )}
 
+  <!-- 6. Mission en cours liée (décision du cabinet : affichée comme mission en cours) -->
+  {page.mission && (
+    <section id="mission" aria-labelledby="mission-title" class="section-y scroll-mt-24 bg-mineral">
+      <div class="container-site">
+        <SectionHeading id="mission-title" title="Mission en cours dans ce domaine" />
+        <article class="mission group mt-12" data-reveal>
+          <div class="relative aspect-[16/10] overflow-hidden lg:aspect-auto lg:min-h-[22rem]">
+            <div class="absolute inset-0"><SiteImage id="accueil.realisation-zakpota" sizes="(min-width: 64rem) 30rem, 100vw" class="transition-transform duration-700 group-hover:scale-[1.04]" /></div>
+          </div>
+          <div class="flex flex-col justify-center p-7 sm:p-10 lg:p-12">
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-small">
+              <span class="inline-flex items-center gap-2 rounded-ui bg-status-ongoing-bg px-3 py-1 font-semibold text-status-ongoing">
+                <span aria-hidden="true" class="size-2 rounded-full bg-[#e0a100]"></span> En cours
+              </span>
+              <span class="inline-flex items-center gap-2 text-muted"><CalendarDays size={16} aria-hidden="true" /> Contrat notifié en juillet 2026</span>
+            </div>
+            <h3 class="mt-6 text-h3 text-forest">
+              <a href={url('/realisations/missions-en-cours')} class="after:absolute after:inset-0 focus-visible:outline-none">
+                Formation de jeunes à la production piscicole et maraîchère intégrée et renforcement des capacités des responsables de filières agricoles
+              </a>
+            </h3>
+            <p class="mt-5 inline-flex items-center gap-2 text-body text-muted"><MapPin size={18} aria-hidden="true" class="shrink-0 text-forest" /> Commune de Za-Kpota, département du Zou</p>
+            <span aria-hidden="true" class="mt-7 inline-flex items-center gap-2 font-semibold text-brand">Voir la mission <ArrowRight size={18} class="transition-transform group-hover:translate-x-1" /></span>
+          </div>
+        </article>
+      </div>
+    </section>
+  )}
+
   <!-- 8. Domaines complémentaires et autres expertises -->
-  <section id="complementaires" aria-labelledby="compl-title" class="section-y scroll-mt-24 bg-mineral">
+  <section id="complementaires" aria-labelledby="compl-title" class:list={['section-y scroll-mt-24', page.mission ? 'bg-white' : 'bg-mineral']}>
     <div class="container-site">
       <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <SectionHeading id="compl-title" title="Domaines complémentaires" />
@@ -214,9 +360,9 @@ const L = page.layout;
   }
   .toc-chip:hover { color: #fff; background: var(--color-forest) !important; box-shadow: none; }
 
+  /* Badge du domaine posé sur l'image */
   .badge-domaine {
     position: absolute;
-    left: 1rem;
     bottom: -1.25rem;
     display: flex;
     align-items: center;
@@ -229,7 +375,14 @@ const L = page.layout;
     backdrop-filter: blur(12px);
     box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lift);
   }
-  @media (width >= 40rem) { .badge-domaine { left: -1.25rem; } }
+  .badge-domaine--left { left: 1rem; }
+  .badge-domaine--right { right: 1rem; }
+  .badge-domaine--inside { left: 1rem; bottom: 1rem; }
+  @media (width >= 40rem) {
+    .badge-domaine--left { left: -1.25rem; }
+    .badge-domaine--right { right: -1.25rem; }
+    .badge-domaine--inside { left: 1.5rem; bottom: 1.5rem; }
+  }
   .badge-domaine__icon {
     display: grid;
     place-items: center;
@@ -241,7 +394,7 @@ const L = page.layout;
     background: linear-gradient(135deg, var(--color-brand), var(--color-brand-deep));
   }
 
-  /* Prestations : cartes */
+  /* ---------- Prestations : cartes ---------- */
   .presta {
     position: relative;
     overflow: hidden;
@@ -275,7 +428,96 @@ const L = page.layout;
     -webkit-text-stroke: 1.5px rgb(35 67 18 / 0.14);
   }
 
-  /* Démarche : frise (verticale sur mobile, horizontale sur ordinateur) */
+  /* ---------- Prestations : liste illustrée ---------- */
+  .list-panel {
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    background: radial-gradient(ellipse 70% 80% at 100% 0%, rgb(18 128 75 / 0.55), transparent 70%), radial-gradient(ellipse 60% 70% at 0% 100%, rgb(174 36 69 / 0.35), transparent 70%), var(--color-forest-night);
+  }
+  .list-panel__icon {
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1.1rem;
+    color: #fff;
+    background: rgb(255 255 255 / 0.1);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.18);
+  }
+  .list-row {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.5rem 0.5rem;
+    border-bottom: 1px solid var(--color-line);
+    transition: transform 0.35s var(--ease-out-soft), background-color 0.3s;
+  }
+  .list-row:first-child { border-top: 1px solid var(--color-line); }
+  .list-row:hover { transform: translateX(6px); }
+  .list-row__num { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--color-brand); }
+  .list-row__icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.875rem;
+    color: var(--color-forest);
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-line);
+  }
+
+  /* ---------- Prestations : bento ---------- */
+  .bento { display: grid; gap: 1rem; }
+  @media (width >= 40rem) { .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (width >= 64rem) {
+    .bento { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: minmax(11rem, auto); }
+    .bento__item--lead { grid-row: span 2; }
+  }
+  .bento__item {
+    display: flex;
+    flex-direction: column;
+    min-height: 11rem;
+    padding: 1.75rem;
+    border-radius: 1.5rem;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-card);
+    transition: transform 0.45s var(--ease-out-soft), box-shadow 0.45s;
+  }
+  .bento__item:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+  .bento__item--lead {
+    background: radial-gradient(ellipse 80% 70% at 100% 0%, rgb(18 128 75 / 0.6), transparent 70%), radial-gradient(ellipse 70% 60% at 0% 100%, rgb(174 36 69 / 0.4), transparent 70%), var(--color-forest-night);
+    box-shadow: var(--shadow-lift);
+  }
+  .bento__icon {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.9rem;
+    color: var(--color-forest);
+    background: var(--color-forest-soft);
+  }
+  .bento__item--lead .bento__icon { width: 3.5rem; height: 3.5rem; color: #fff; background: rgb(255 255 255 / 0.12); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.2); }
+
+  /* ---------- Prestations : groupes par public ---------- */
+  .groupe {
+    padding: 2rem;
+    border-radius: 1.5rem;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-card);
+  }
+  .groupe--dark { background: var(--color-forest-night); box-shadow: var(--shadow-lift); }
+  .groupe__title { font-family: var(--font-sans); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-brand); }
+  .groupe--dark .groupe__title { color: var(--color-flame); }
+  .groupe__item { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 1rem; background: var(--color-mineral); color: var(--color-forest); }
+  .groupe--dark .groupe__item { background: rgb(255 255 255 / 0.07); color: #fff; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1); }
+  .groupe__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.75rem; height: 2.75rem; border-radius: 0.875rem; color: #fff; background: var(--color-forest); }
+  .groupe--dark .groupe__icon { background: var(--color-brand); }
+
+  /* ---------- Démarche : frise (verticale sur mobile, horizontale sur ordinateur) ---------- */
   .frise { position: relative; display: grid; gap: 1.25rem; }
   .frise::before {
     content: '';
@@ -310,7 +552,68 @@ const L = page.layout;
     .frise__step { flex-direction: column; text-align: center; gap: 1rem; }
   }
 
-  /* Publics : bande verte */
+  /* ---------- Démarche : étapes verticales alternées ---------- */
+  .vsteps { position: relative; display: grid; gap: 1rem; }
+  .vsteps::before {
+    content: '';
+    position: absolute;
+    top: 1rem;
+    bottom: 1rem;
+    left: 1.375rem;
+    width: 2px;
+    background: linear-gradient(var(--color-brand), var(--color-forest-mist));
+  }
+  .vsteps__item { position: relative; display: grid; grid-template-columns: 2.75rem 1fr; align-items: center; gap: 1.25rem; }
+  .vsteps__dot {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: #fff;
+    background: var(--color-forest);
+    box-shadow: 0 0 0 6px #fff;
+  }
+  .vsteps__item:nth-child(odd) .vsteps__dot { background: var(--color-brand); }
+  .vsteps__card { padding: 1.1rem 1.4rem; border-radius: 1.1rem; background: var(--color-mineral); box-shadow: inset 0 0 0 1px var(--color-line); }
+  @media (width >= 64rem) {
+    .vsteps::before { left: 50%; transform: translateX(-1px); }
+    .vsteps__item { grid-template-columns: 1fr 2.75rem 1fr; gap: 2rem; }
+    .vsteps__dot { grid-column: 2; grid-row: 1; }
+    .vsteps__card { grid-row: 1; }
+    .vsteps__item:nth-child(odd) .vsteps__card { grid-column: 1; text-align: right; }
+    .vsteps__item:nth-child(even) .vsteps__card { grid-column: 3; }
+  }
+
+  /* ---------- Démarche : cartes numérotées ---------- */
+  .scard {
+    position: relative;
+    overflow: hidden;
+    min-height: 9rem;
+    padding: 1.5rem;
+    border-radius: 1.25rem;
+    display: flex;
+    align-items: flex-end;
+    background: linear-gradient(160deg, #fff, var(--color-mineral));
+    box-shadow: inset 0 0 0 1px var(--color-line);
+  }
+  .scard__num {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.9rem;
+    font-family: var(--font-display);
+    font-size: 4.25rem;
+    font-weight: 700;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgb(174 36 69 / 0.28);
+  }
+
+  /* ---------- Publics : bande verte ---------- */
   .publics { background: radial-gradient(ellipse 60% 80% at 100% 0%, rgb(18 128 75 / 0.45), transparent 70%), radial-gradient(ellipse 50% 70% at 0% 100%, rgb(174 36 69 / 0.25), transparent 70%), var(--color-forest-night); }
   .public {
     display: flex;
@@ -332,7 +635,7 @@ const L = page.layout;
     background: rgb(255 255 255 / 0.08);
   }
 
-  /* Experts */
+  /* ---------- Experts ---------- */
   .expert {
     display: flex;
     align-items: center;
@@ -371,7 +674,21 @@ const L = page.layout;
   }
   .expert:hover .expert__arrow, .compl:hover .domaine-arrow { color: #fff; background: var(--color-brand); transform: rotate(-45deg); }
 
-  /* Domaines complémentaires */
+  /* ---------- Mission ---------- */
+  .mission {
+    position: relative;
+    display: grid;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-card);
+    transition: box-shadow 0.4s;
+  }
+  @media (width >= 64rem) { .mission { grid-template-columns: 5fr 7fr; } }
+  .mission:hover { box-shadow: inset 0 0 0 1px rgb(35 67 18 / 0.3), var(--shadow-lift); }
+  .mission:has(a:focus-visible) { outline: 2px solid var(--color-brand); outline-offset: 3px; }
+
+  /* ---------- Domaines complémentaires ---------- */
   .compl {
     position: relative;
     display: flex;
@@ -387,6 +704,6 @@ const L = page.layout;
   .compl:has(a:focus-visible) { outline: 2px solid var(--color-brand); outline-offset: 3px; }
 
   @media (prefers-reduced-motion: reduce) {
-    .presta:hover, .expert:hover, .compl:hover { transform: none; }
+    .presta:hover, .expert:hover, .compl:hover, .bento__item:hover, .list-row:hover { transform: none; }
   }
 </style>

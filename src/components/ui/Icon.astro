@@ -3,7 +3,7 @@
 import {
   FileSearch, ClipboardCheck, Microscope, ListChecks, MessagesSquare, Landmark, MapPinned, Handshake,
   Briefcase, Lightbulb, HandCoins, Users, Leaf, Route, Check, Sprout, Droplets, Map as MapIcon,
-  Thermometer, Store, Trees, ScanSearch, ClipboardList, FileText, Megaphone, Presentation, BookOpen,
+  Thermometer, Store, Trees, ScanSearch, ClipboardList, FileText, Megaphone, Presentation, BookOpen, TriangleExclamationPoint,
 } from '@lucide/astro';
 interface Props { name: string; size?: number; class?: string; strokeWidth?: number }
 const { name, size = 22, class: extra, strokeWidth = 1.75 } = Astro.props;
@@ -13,7 +13,7 @@ const icons: Record<string, any> = {
   briefcase: Briefcase, lightbulb: Lightbulb, 'hand-coins': HandCoins, users: Users, leaf: Leaf, route: Route,
   check: Check, sprout: Sprout, droplets: Droplets, map: MapIcon, thermometer: Thermometer, store: Store,
   trees: Trees, 'scan-search': ScanSearch, 'clipboard-list': ClipboardList, 'file-text': FileText,
-  megaphone: Megaphone, presentation: Presentation, 'book-open': BookOpen,
+  megaphone: Megaphone, presentation: Presentation, 'book-open': BookOpen, 'triangle-alert': TriangleExclamationPoint,
 };
 const Cmp = icons[name] ?? Check;
 ---

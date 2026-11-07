@@ -31,6 +31,10 @@ import tourisme from '../assets/images/tourisme.jpg';
 import mangroves from '../assets/images/mangroves.png';
 import canal from '../assets/images/canal-irrigation.png';
 import terrainVisite from '../assets/images/terrain-visite-site.png'; // Picture2.png
+import terrainPiquetage2 from '../assets/images/terrain-piquetage-2.png'; // Picture8.png
+import terrainRepiquage2 from '../assets/images/terrain-repiquage-2.png'; // Picture14.png
+import economieRurale from '../assets/images/economie-rurale.png';
+import ecotourisme from '../assets/images/ecotourisme.png';
 import ogImage from '../assets/logo/og-image-1200x630.png';
 
 export type ImageSlot = {
@@ -161,6 +165,47 @@ export const images = {
     alt: 'Visite de terrain : un groupe de personnes parcourt une parcelle en bordure de végétation',
     status: 'provisoire',
     note: "Photo de terrain (Picture2.png) ; prévoir une photo d'étude environnementale (enquête, mesures, consultation).",
+  },
+  'climat.presentation': {
+    src: mangroves,
+    alt: 'Habitants replantant des palétuviers dans une zone humide',
+    status: 'provisoire',
+    note: 'Image générée par intelligence artificielle (métadonnées C2PA).',
+  },
+  'gire.presentation': {
+    src: canal,
+    alt: "Canal d'irrigation traversant des cultures, au pied de collines",
+    status: 'provisoire',
+    note: 'Paysage non béninois ; prévoir une photo de ressource en eau au Bénin.',
+  },
+  'amenagement.presentation': {
+    src: terrainPiquetage2,
+    alt: 'Piquetage et traçage au cordeau de parcelles sur le terrain',
+    status: 'provisoire',
+    note: "Photo de terrain (Picture8.png) ; prévoir une photo d'aménagement du territoire.",
+  },
+  'agriculture.presentation': {
+    src: terrainRepiquage2,
+    alt: 'Participants repiquant des plants sur des planches de culture',
+    status: 'définitif',
+    note: 'Photo de terrain (Picture14.png).',
+  },
+  'economie.presentation': {
+    src: economieRurale,
+    alt: "Commerçantes échangeant des produits vivriers sur l'étal d'un marché",
+    status: 'définitif',
+  },
+  'tourisme.presentation': {
+    src: ecotourisme,
+    alt: 'Groupe de visiteurs et un guide observant des éléphants et une girafe dans une savane',
+    status: 'provisoire',
+    note: 'Faune de savane non représentative du Bénin (girafe) ; prévoir une photo de site naturel ou culturel béninois.',
+  },
+  'formation.presentation': {
+    src: formationSalle2,
+    alt: 'Un intervenant anime une séance de travail devant des participants',
+    status: 'définitif',
+    note: 'Photo de terrain (Picture4.png).',
   },
 } satisfies Record<string, ImageSlot>;
 
