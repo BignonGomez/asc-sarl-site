@@ -1,0 +1,194 @@
+---
+/**
+ * 7.2 Foire aux questions — accordéons par thème (protocole complet, section 7.2).
+ * Contenu : src/data/faq.ts. Données structurées FAQPage pour les moteurs de recherche.
+ */
+import { Building, ClipboardList, Handshake, Users, ShieldCheck, Plus, ArrowRight, Mail, MessageCircleQuestionMark } from '@lucide/astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/page/PageHeader.astro';
+import { faq } from '../../data/faq';
+import { site } from '../../config/site';
+import { url } from '../../lib/url';
+
+const icons: Record<string, any> = { building: Building, clipboard: ClipboardList, handshake: Handshake, users: Users, shield: ShieldCheck };
+const total = faq.reduce((n, t) => n + t.items.length, 0);
+let n = 0;
+const themes = faq.map((t) => ({ ...t, items: t.items.map((it) => ({ ...it, n: ++n })) }));
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.flatMap((t) => t.items.map((it) => ({ '@type': 'Question', name: it.q, acceptedAnswer: { '@type': 'Answer', text: it.a } }))),
+};
+---
+<BaseLayout
+  title="Foire aux questions (FAQ)"
+  description="Questions fréquentes sur Alkebulan Services et Conseils : domaines d'intervention, déroulement des missions, livrables, transmission des termes de référence, équipe et protection des données."
+>
+  <PageHeader
+    image="faq.hero"
+    eyebrow="Ressources"
+    title="Foire aux questions"
+    intro="Les réponses aux questions les plus fréquentes sur le cabinet, ses prestations et la manière de travailler avec lui."
+    crumbs={[{ label: 'Ressources' }, { label: 'Foire aux questions' }]}
+  />
+
+  <section aria-label="Questions et réponses" class="section-y bg-mineral">
+    <div class="container-site grid gap-12 lg:grid-cols-12 lg:gap-16">
+      <!-- Colonne fixe : titre et thèmes -->
+      <div class="lg:col-span-4">
+        <div class="lg:sticky lg:top-28" data-reveal>
+          <span aria-hidden="true" class="mb-6 block h-1 w-12 rounded-full bg-brand"></span>
+          <h2 class="text-h2 text-forest">Vos questions, nos réponses</h2>
+          <p class="mt-4 text-muted">{total} questions réparties en {faq.length} thèmes.</p>
+          <nav aria-label="Thèmes de la FAQ" class="mt-8">
+            <ul class="grid gap-2">
+              {themes.map((t) => {
+                const I = icons[t.icon];
+                return (
+                  <li>
+                    <a href={`#theme-${t.id}`} class="theme-link group">
+                      <span class="theme-link__icon"><I size={18} stroke-width={1.8} aria-hidden="true" /></span>
+                      <span class="flex-1">{t.title}</span>
+                      <span class="theme-link__count">{t.items.length}</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+          <div class="faq-help mt-8 hidden lg:block">
+            <MessageCircleQuestionMark size={22} aria-hidden="true" class="text-flame" />
+            <p class="mt-3 font-display text-h4 text-white">Vous ne trouvez pas votre réponse ?</p>
+            <a href={`mailto:${site.email}`} class="mt-4 inline-flex items-center gap-2 text-small font-semibold text-white underline underline-offset-4 hover:text-flame">
+              <Mail size={16} aria-hidden="true" /> {site.email}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accordéons par thème -->
+      <div class="grid gap-12 lg:col-span-8">
+        {themes.map((t) => {
+          const I = icons[t.icon];
+          return (
+            <section id={`theme-${t.id}`} aria-labelledby={`titre-${t.id}`} class="scroll-mt-28">
+              <h2 id={`titre-${t.id}`} class="flex items-center gap-3 text-h3 text-forest" data-reveal>
+                <span class="theme-title-icon"><I size={20} stroke-width={1.8} aria-hidden="true" /></span>
+                {t.title}
+              </h2>
+              <div class="mt-6 grid gap-3">
+                {t.items.map((it, i) => (
+                  <details class="faq-item" data-reveal style={`--reveal-delay:${i * 60}ms`}>
+                    <summary>
+                      <span class="faq-item__n" aria-hidden="true">{String(it.n).padStart(2, '0')}</span>
+                      <span class="flex-1">{it.q}</span>
+                      <span class="faq-item__icon" aria-hidden="true"><Plus size={18} stroke-width={2.2} /></span>
+                    </summary>
+                    <div class="faq-item__a">
+                      <p>{it.a}</p>
+                      {it.link && (
+                        <a href={url(it.link.href)} class="mt-4 inline-flex items-center gap-2 text-small font-semibold text-brand hover:underline hover:underline-offset-4">
+                          {it.link.label} <ArrowRight size={16} aria-hidden="true" />
+                        </a>
+                      )}
+                    </div>
+                  </details>
+                ))}
+              </div>
+            </section>
+          );
+        })}
+
+        <div class="faq-help lg:hidden" data-reveal>
+          <MessageCircleQuestionMark size={22} aria-hidden="true" class="text-flame" />
+          <p class="mt-3 font-display text-h4 text-white">Vous ne trouvez pas votre réponse ?</p>
+          <a href={`mailto:${site.email}`} class="mt-4 inline-flex items-center gap-2 text-small font-semibold text-white underline underline-offset-4">
+            <Mail size={16} aria-hidden="true" /> {site.email}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+</BaseLayout>
+
+<style>
+  .theme-link {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 1rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-line);
+    transition: box-shadow 0.2s, transform 0.3s var(--ease-out-soft);
+  }
+  .theme-link:hover { transform: translateX(4px); box-shadow: inset 0 0 0 1px rgb(35 67 18 / 0.35); }
+  .theme-link__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 0.75rem; color: var(--color-forest); background: var(--color-forest-soft); transition: color 0.2s, background-color 0.2s; }
+  .theme-link:hover .theme-link__icon { color: #fff; background: var(--color-forest); }
+  .theme-link__count { display: grid; place-items: center; min-width: 1.75rem; height: 1.75rem; padding: 0 0.4rem; border-radius: 999px; font-size: 0.8125rem; font-weight: 700; color: var(--color-brand); background: var(--color-brand-soft); }
+  .theme-title-icon { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 0.8rem; color: #fff; background: linear-gradient(135deg, var(--color-brand), var(--color-brand-deep)); }
+
+  .faq-help {
+    padding: 1.5rem;
+    border-radius: 1.25rem;
+    background: radial-gradient(ellipse 80% 80% at 100% 0%, rgb(18 128 75 / 0.5), transparent 70%), var(--color-forest-night);
+  }
+
+  /* Accordéon animé */
+  .faq-item {
+    border-radius: 1.1rem;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-line);
+    transition: box-shadow 0.3s;
+    interpolate-size: allow-keywords;
+  }
+  .faq-item[open] { box-shadow: inset 0 0 0 1px rgb(35 67 18 / 0.25), var(--shadow-lift); }
+  .faq-item summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.1rem 1.25rem;
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--color-forest);
+    border-radius: inherit;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary:hover { color: var(--color-brand); }
+  .faq-item__n { flex-shrink: 0; font-size: 0.8125rem; font-weight: 700; color: var(--color-brand); }
+  .faq-item__icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    color: var(--color-forest);
+    background: var(--color-mineral);
+    transition: transform 0.35s var(--ease-out-soft), background-color 0.25s, color 0.25s;
+  }
+  .faq-item[open] .faq-item__icon { transform: rotate(45deg); color: #fff; background: var(--color-brand); }
+  .faq-item__a { padding: 0 1.25rem 1.35rem 3.4rem; color: var(--color-muted); line-height: 1.7; }
+  @media (width < 40rem) { .faq-item__a { padding-left: 1.25rem; } }
+  /* Ouverture fluide (navigateurs compatibles) */
+  .faq-item::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition: block-size 0.45s var(--ease-out-soft), content-visibility 0.45s allow-discrete;
+  }
+  .faq-item[open]::details-content { block-size: auto; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-item::details-content { transition: none; }
+    .theme-link:hover { transform: none; }
+  }
+</style>

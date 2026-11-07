@@ -229,6 +229,13 @@ export const images = {
     note: "Photo de séance de travail (Picture1.png, déjà utilisée) ; prévoir une photo de l'équipe ou des locaux du cabinet.",
   },
 
+  'faq.hero': {
+    src: formationSalle2,
+    alt: '',
+    status: 'provisoire',
+    note: 'Photo de séance de travail (Picture4.png, déjà utilisée) ; prévoir une image propre à la FAQ ou à la relation client.',
+  },
+
   // ---------------- Rubrique Réalisations ----------------
   'realisations.hero': {
     src: terrainSemis,
