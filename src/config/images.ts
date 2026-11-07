@@ -221,6 +221,14 @@ export const images = {
     note: "Photo de terrain (Picture6.png, déjà utilisée sur l'accueil) ; prévoir une photo de la vie du cabinet.",
   },
 
+  // ---------------- Rubrique Ressources ----------------
+  'recrutement.hero': {
+    src: formationSalle1,
+    alt: '',
+    status: 'provisoire',
+    note: "Photo de séance de travail (Picture1.png, déjà utilisée) ; prévoir une photo de l'équipe ou des locaux du cabinet.",
+  },
+
   // ---------------- Rubrique Réalisations ----------------
   'realisations.hero': {
     src: terrainSemis,

@@ -48,7 +48,8 @@ export const features = {
 };
 
 export type NavChild = { label: string; href: string; desc?: string; icon?: string };
-export type NavItem = { label: string; href: string; children?: NavChild[] };
+/** hideAll : masque le lien « Découvrir … » du sous-menu quand la rubrique n'a pas de page d'accueil propre */
+export type NavItem = { label: string; href: string; children?: NavChild[]; hideAll?: boolean };
 
 /**
  * Menu principal à 7 rubriques — seules les pages publiées au lancement sont listées (annexe E).
@@ -84,7 +85,11 @@ export const nav: NavItem[] = [
   {
     label: 'Ressources',
     href: '/ressources/faq',
-    children: [{ label: 'Foire aux questions (FAQ)', href: '/ressources/faq' }],
+    hideAll: true,
+    children: [
+      { label: 'Foire aux questions (FAQ)', href: '/ressources/faq', desc: 'Réponses aux questions fréquentes', icon: 'help' },
+      { label: 'Recrutement', href: '/ressources/recrutement', desc: 'Offres et candidature spontanée', icon: 'briefcase' },
+    ],
   },
   { label: 'Contact', href: '/contact' },
 ];
@@ -95,6 +100,7 @@ export const footerLinks = [
   { label: 'Réalisations', href: '/realisations/missions-en-cours' },
   { label: 'Actualités', href: '/actualites' },
   { label: 'Ressources', href: '/ressources/faq' },
+  { label: 'Recrutement', href: '/ressources/recrutement' },
   { label: 'Contact', href: '/contact' },
 ];
 

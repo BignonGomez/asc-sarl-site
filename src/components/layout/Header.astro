@@ -4,7 +4,7 @@
  * tiroir mobile plein écran. La couche de verre est un élément séparé : un parent avec backdrop-filter
  * empêcherait le flou des sous-menus.
  */
-import { ChevronDown, ArrowRight, Building, Target, Users, Route, Mail, Phone } from '@lucide/astro';
+import { ChevronDown, ArrowRight, Building, Target, Users, Route, Mail, Phone, CircleQuestionMark, BriefcaseBusiness } from '@lucide/astro';
 import { site, nav } from '../../config/site';
 import { expertises } from '../../data/expertises';
 import { url, isActive } from '../../lib/url';
@@ -13,7 +13,7 @@ import ExpertiseIcon from '../ui/ExpertiseIcon.astro';
 import logo from '../../assets/logo/logo-full.svg';
 
 const current = Astro.url.pathname;
-const navIcons: Record<string, any> = { building: Building, target: Target, users: Users, route: Route };
+const navIcons: Record<string, any> = { building: Building, target: Target, users: Users, route: Route, help: CircleQuestionMark, briefcase: BriefcaseBusiness };
 
 type Child = { label: string; href: string; desc?: string; icon?: string; expertise?: (typeof expertises)[number]['icon'] };
 const items = nav.map((item) => {
@@ -75,10 +75,12 @@ const panelId = (href: string) => `menu-${href.replace(/\W/g, '') || 'accueil'}`
                           );
                         })}
                       </ul>
-                      <a href={url(item.href)} class="mega__all">
-                        {item.href === '/expertises' ? 'Voir tous nos domaines' : `Découvrir ${item.label.toLowerCase()}`}
-                        <ArrowRight size={16} aria-hidden="true" />
-                      </a>
+                      {!item.hideAll && (
+                        <a href={url(item.href)} class="mega__all">
+                          {item.href === '/expertises' ? 'Voir tous nos domaines' : `Découvrir ${item.label.toLowerCase()}`}
+                          <ArrowRight size={16} aria-hidden="true" />
+                        </a>
+                      )}
                     </div>
                   </div>
                 </>
@@ -116,7 +118,7 @@ const panelId = (href: string) => `menu-${href.replace(/\W/g, '') || 'accueil'}`
                   </summary>
                   <ul class="drawer__links">
                     {item.children.map((c) => <li><a href={url(c.href)}>{c.label}</a></li>)}
-                    <li class="col-span-full"><a href={url(item.href)} class="!font-semibold !text-brand">{item.href === '/expertises' ? 'Voir tous nos domaines' : `Découvrir ${item.label.toLowerCase()}`} →</a></li>
+                    {!item.hideAll && <li class="col-span-full"><a href={url(item.href)} class="!font-semibold !text-brand">{item.href === '/expertises' ? 'Voir tous nos domaines' : `Découvrir ${item.label.toLowerCase()}`} →</a></li>}
                   </ul>
                 </details>
               </li>
