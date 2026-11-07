@@ -13,6 +13,11 @@ import { site, footerLinks, legalLinks } from '../../config/site';
 import { expertises } from '../../data/expertises';
 import { url } from '../../lib/url';
 
+interface Props { cta?: { title?: string; text?: string } }
+const { cta = {} } = Astro.props;
+const ctaTitle = cta.title ?? 'Un projet, une étude, des termes de référence à partager ?';
+const ctaText = cta.text ?? `${site.name} étudie avec vous vos besoins et vos problématiques, que vous soyez une institution publique, une collectivité territoriale, une organisation ou une entreprise. Transmettez-nous votre demande ou vos termes de référence.`;
+
 // Réseaux sociaux : seules les icônes dont le lien est renseigné sont affichées ; l'e-mail est toujours présent
 const socials = [
   ...site.social.filter((s) => s.href).map((s) => ({ name: s.name, icon: s.icon, href: s.href as string, external: true })),
@@ -36,9 +41,9 @@ const socials = [
       <p class="inline-flex items-center gap-3 text-eyebrow uppercase text-emerald-mist">
         <span aria-hidden="true" class="h-px w-6 bg-flame"></span>Parlons de votre projet<span aria-hidden="true" class="h-px w-6 bg-flame"></span>
       </p>
-      <h2 id="footer-cta-title" class="mx-auto mt-5 max-w-[22ch] text-h2 text-white">Un projet, une étude, des termes de référence à partager ?</h2>
+      <h2 id="footer-cta-title" class="mx-auto mt-5 max-w-[22ch] text-h2 text-white">{ctaTitle}</h2>
       <p class="mx-auto mt-5 max-w-2xl text-lead text-white">
-        {site.name} étudie avec vous vos besoins et vos problématiques, que vous soyez une institution publique, une collectivité territoriale, une organisation ou une entreprise. Transmettez-nous votre demande ou vos termes de référence.
+        {ctaText}
       </p>
       <div class="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
         <Button href={site.cta.href} size="lg" arrow class="!rounded-full">{site.cta.label}</Button>

@@ -28,7 +28,7 @@ const initials = (m: (typeof team)[number]) =>
       <h2 id="membres-title" class="sr-only">Membres de l'équipe</h2>
       <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {team.map((m, i) => (
-          <li data-reveal style={`--reveal-delay:${(i % 3) * 80}ms`}>
+          <li id={`membre-${m.lastName.toLowerCase()}`} class="scroll-mt-28" data-reveal style={`--reveal-delay:${(i % 3) * 80}ms`}>
             <article class="flex h-full flex-col overflow-hidden rounded-card border border-line bg-white shadow-card transition-[box-shadow,transform] duration-300 hover:-translate-y-1 hover:shadow-lift" aria-labelledby={`m-${i}`}>
               {m.photo ? (
                 <Image src={m.photo} alt={`Portrait de ${m.firstName} ${m.lastName}`} widths={[400, 800]} sizes="(min-width: 64rem) 24rem, (min-width: 40rem) 50vw, 100vw" class="aspect-[4/3] w-full object-cover" />

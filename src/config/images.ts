@@ -29,6 +29,8 @@ import agriculture from '../assets/images/agriculture-durable.jpg';
 import economieLocale from '../assets/images/economie-locale.png';
 import tourisme from '../assets/images/tourisme.jpg';
 import mangroves from '../assets/images/mangroves.png';
+import canal from '../assets/images/canal-irrigation.png';
+import terrainVisite from '../assets/images/terrain-visite-site.png'; // Picture2.png
 import ogImage from '../assets/logo/og-image-1200x630.png';
 
 export type ImageSlot = {
@@ -144,6 +146,21 @@ export const images = {
     alt: '',
     status: 'définitif',
     position: 'center 60%',
+  },
+
+  // ---------------- Rubrique Nos expertises ----------------
+  'expertises.hero': {
+    src: canal,
+    alt: '',
+    status: 'provisoire',
+    position: 'center 60%',
+    note: "Paysage non béninois ; prévoir une photo de terrain représentative de l'ensemble des domaines.",
+  },
+  'eies.presentation': {
+    src: terrainVisite,
+    alt: 'Visite de terrain : un groupe de personnes parcourt une parcelle en bordure de végétation',
+    status: 'provisoire',
+    note: "Photo de terrain (Picture2.png) ; prévoir une photo d'étude environnementale (enquête, mesures, consultation).",
   },
 } satisfies Record<string, ImageSlot>;
 

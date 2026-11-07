@@ -1,0 +1,20 @@
+---
+/** Pictogramme Lucide désigné par son nom (utilisé par les données de contenu). */
+import {
+  FileSearch, ClipboardCheck, Microscope, ListChecks, MessagesSquare, Landmark, MapPinned, Handshake,
+  Briefcase, Lightbulb, HandCoins, Users, Leaf, Route, Check, Sprout, Droplets, Map as MapIcon,
+  Thermometer, Store, Trees, ScanSearch, ClipboardList, FileText, Megaphone, Presentation, BookOpen,
+} from '@lucide/astro';
+interface Props { name: string; size?: number; class?: string; strokeWidth?: number }
+const { name, size = 22, class: extra, strokeWidth = 1.75 } = Astro.props;
+const icons: Record<string, any> = {
+  'file-search': FileSearch, 'clipboard-check': ClipboardCheck, microscope: Microscope, 'list-checks': ListChecks,
+  'messages-square': MessagesSquare, landmark: Landmark, 'map-pinned': MapPinned, handshake: Handshake,
+  briefcase: Briefcase, lightbulb: Lightbulb, 'hand-coins': HandCoins, users: Users, leaf: Leaf, route: Route,
+  check: Check, sprout: Sprout, droplets: Droplets, map: MapIcon, thermometer: Thermometer, store: Store,
+  trees: Trees, 'scan-search': ScanSearch, 'clipboard-list': ClipboardList, 'file-text': FileText,
+  megaphone: Megaphone, presentation: Presentation, 'book-open': BookOpen,
+};
+const Cmp = icons[name] ?? Check;
+---
+<Cmp size={size} stroke-width={strokeWidth} class={extra} aria-hidden="true" />
