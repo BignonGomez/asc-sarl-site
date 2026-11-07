@@ -1,0 +1,23 @@
+---
+/** 6.2 Actualités du cabinet — page 1 de la liste. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/page/PageHeader.astro';
+import ListeActualites from '../../components/actualites/ListeActualites.astro';
+import { getActualites, PAR_PAGE } from '../../lib/actualites';
+
+const all = await getActualites();
+const lastPage = Math.max(1, Math.ceil(all.length / PAR_PAGE));
+---
+<BaseLayout
+  title="Actualités"
+  description="Les actualités d'Alkebulan Services et Conseils, cabinet béninois d'études et de conseil : vie du cabinet, partenariats, rencontres et nouvelles prestations."
+>
+  <PageHeader
+    image="actualites.hero"
+    eyebrow="Actualités"
+    title="Actualités du cabinet"
+    intro="La vie du cabinet, ses partenariats, ses rencontres et ses nouvelles prestations."
+    crumbs={[{ label: 'Actualités' }]}
+  />
+  <ListeActualites items={all.slice(0, PAR_PAGE)} page={1} lastPage={lastPage} total={all.length} />
+</BaseLayout>

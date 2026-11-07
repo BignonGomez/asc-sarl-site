@@ -1,0 +1,186 @@
+---
+/**
+ * 6.2 Page article : titre, date, auteur, image de couverture, texte, boutons de partage,
+ * articles apparentés, appel à l'action (carte du pied de page).
+ * Contenu : src/content/actualites/<slug>.md
+ */
+import { render } from 'astro:content';
+import { ChevronRight, CalendarDays, UserPen, Tag, Link as LinkIcon, Mail, ArrowLeft } from '@lucide/astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteImage from '../../components/ui/SiteImage.astro';
+import SocialIcon from '../../components/ui/SocialIcon.astro';
+import ArticleCard from '../../components/actualites/ArticleCard.astro';
+import { getActualites, formatDateFr } from '../../lib/actualites';
+import { images, type ImageId } from '../../config/images';
+import { site } from '../../config/site';
+import { url } from '../../lib/url';
+
+export async function getStaticPaths() {
+  const all = await getActualites();
+  return all.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const all = await getActualites();
+const related = [
+  ...all.filter((a) => a.id !== entry.id && a.data.category === d.category),
+  ...all.filter((a) => a.id !== entry.id && a.data.category !== d.category),
+].slice(0, 3);
+
+// Adresse de partage : domaine officiel
+const shareUrl = new URL(`/actualites/${entry.id}`, site.url).href;
+const enc = encodeURIComponent;
+const shares = [
+  { name: 'LinkedIn', icon: 'linkedin', href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(shareUrl)}` },
+  { name: 'Facebook', icon: 'facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${enc(shareUrl)}` },
+  { name: 'WhatsApp', icon: 'whatsapp', href: `https://wa.me/?text=${enc(`${d.title} ${shareUrl}`)}` },
+];
+const iso = d.date.toISOString().slice(0, 10);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: d.title,
+  datePublished: iso,
+  author: { '@type': 'Organization', name: d.author },
+  publisher: { '@type': 'Organization', name: site.name, url: site.url },
+  mainEntityOfPage: shareUrl,
+  description: d.summary,
+};
+const cover = images[d.cover as ImageId];
+---
+<BaseLayout title={d.title} description={d.summary}>
+  <article>
+    <header class="article-head relative isolate overflow-hidden bg-mineral pb-14 pt-32 sm:pt-36 lg:pb-20 lg:pt-40">
+      <div class="container-site max-w-4xl text-center">
+        <nav aria-label="Fil d'Ariane">
+          <ol class="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 text-small text-muted">
+            <li><a href={url('/')} class="hover:text-forest hover:underline hover:underline-offset-4">Accueil</a></li>
+            <li class="flex items-center gap-1.5"><ChevronRight size={14} aria-hidden="true" /><a href={url('/actualites')} class="hover:text-forest hover:underline hover:underline-offset-4">Actualités</a></li>
+            <li class="flex items-center gap-1.5"><ChevronRight size={14} aria-hidden="true" /><span aria-current="page" class="font-semibold text-ink">{d.title}</span></li>
+          </ol>
+        </nav>
+        <p class="mt-8 inline-flex items-center gap-2 rounded-full bg-forest px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-white">
+          <Tag size={13} aria-hidden="true" /> {d.category}
+        </p>
+        <h1 class="mt-6 text-h1 text-forest">{d.title}</h1>
+        <p class="mx-auto mt-6 max-w-2xl text-lead text-muted">{d.summary}</p>
+        <ul class="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-small text-muted">
+          <li class="inline-flex items-center gap-2"><CalendarDays size={16} aria-hidden="true" class="text-brand" /> <time datetime={iso}>{formatDateFr(d.date)}</time></li>
+          <li class="inline-flex items-center gap-2"><UserPen size={16} aria-hidden="true" class="text-brand" /> <span><span class="sr-only">Auteur : </span>{d.author}</span></li>
+        </ul>
+      </div>
+    </header>
+
+    <div class="container-site">
+      <figure class="cover -mt-6 lg:-mt-10" data-reveal>
+        <div class:list={['aspect-[1200/630] overflow-hidden', cover.fit === 'contain' ? 'bg-white p-6 sm:p-10' : '']}>
+          <SiteImage id={d.cover as ImageId} sizes="(min-width: 64rem) 60rem, 100vw" priority />
+        </div>
+      </figure>
+
+      <div class="mx-auto grid max-w-5xl gap-10 py-14 lg:grid-cols-[4rem_1fr] lg:gap-12 lg:py-20">
+        <!-- Partage -->
+        <aside aria-label="Partager l'article" class="order-2 lg:order-1">
+          <div class="flex items-center gap-2 lg:sticky lg:top-28 lg:flex-col">
+            <span class="mr-2 text-eyebrow uppercase text-muted lg:mb-2 lg:mr-0 lg:[writing-mode:vertical-rl] lg:rotate-180">Partager</span>
+            {shares.map((s) => (
+              <a href={s.href} target="_blank" rel="noopener noreferrer" class="share" aria-label={`Partager sur ${s.name} (nouvel onglet)`}>
+                <SocialIcon name={s.icon as any} size={17} />
+              </a>
+            ))}
+            <a href={`mailto:?subject=${enc(d.title)}&body=${enc(shareUrl)}`} class="share" aria-label="Partager par e-mail"><Mail size={17} aria-hidden="true" /></a>
+            <button type="button" class="share" data-copy={shareUrl} aria-label="Copier le lien de l'article">
+              <LinkIcon size={17} aria-hidden="true" />
+            </button>
+            <span class="sr-only" aria-live="polite" data-copy-status></span>
+          </div>
+        </aside>
+
+        <div class="prose-asc order-1 lg:order-2" data-reveal>
+          <Content />
+        </div>
+      </div>
+    </div>
+  </article>
+
+  {related.length > 0 && (
+    <section aria-labelledby="related-title" class="section-y bg-mineral">
+      <div class="container-site">
+        <h2 id="related-title" class="text-h2 text-forest">Articles apparentés</h2>
+        <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {related.map((a) => (
+            <li><ArticleCard slug={a.id} title={a.data.title} date={a.data.date} category={a.data.category} summary={a.data.summary} cover={a.data.cover} headingLevel="h3" /></li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <div class="container-site pb-16">
+    <a href={url('/actualites')} class="inline-flex items-center gap-2 font-semibold text-forest hover:text-brand">
+      <ArrowLeft size={18} aria-hidden="true" /> Toutes les actualités
+    </a>
+  </div>
+
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+</BaseLayout>
+
+<style>
+  .article-head::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(ellipse 50% 70% at 100% 0%, rgb(18 128 75 / 0.1), transparent 70%), radial-gradient(ellipse 45% 60% at 0% 100%, rgb(174 36 69 / 0.08), transparent 70%);
+  }
+  .cover {
+    position: relative;
+    max-width: 60rem;
+    margin-inline: auto;
+    overflow: hidden;
+    border-radius: 1.75rem;
+    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lift);
+    background: #fff;
+  }
+  .share {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.875rem;
+    color: var(--color-forest);
+    background: var(--color-mineral);
+    box-shadow: inset 0 0 0 1px var(--color-line);
+    transition: color 0.2s, background-color 0.2s, transform 0.3s var(--ease-out-soft);
+  }
+  .share:hover { color: #fff; background: var(--color-brand); transform: translateY(-2px); }
+  .share[data-copied] { color: #fff; background: var(--color-forest); }
+
+  /* Texte de l'article */
+  .prose-asc { max-width: var(--container-prose); font-size: 1.0625rem; line-height: 1.8; color: rgb(31 31 31 / 0.9); }
+  .prose-asc :global(p + p) { margin-top: 1.25em; }
+  .prose-asc :global(p:first-child) { font-size: var(--text-lead); color: var(--color-ink); }
+  .prose-asc :global(h2) { margin-top: 2em; font-size: var(--text-h3); color: var(--color-forest); }
+  .prose-asc :global(h3) { margin-top: 1.6em; font-size: var(--text-h4); color: var(--color-forest); }
+  .prose-asc :global(ul) { margin-top: 1em; padding-left: 1.25em; list-style: disc; }
+  .prose-asc :global(li + li) { margin-top: 0.4em; }
+  .prose-asc :global(a) { color: var(--color-brand); text-decoration: underline; text-underline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { .share:hover { transform: none; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) =>
+    btn.addEventListener('click', async () => {
+      const status = document.querySelector('[data-copy-status]');
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy!);
+        btn.setAttribute('data-copied', '');
+        if (status) status.textContent = 'Lien copié.';
+        setTimeout(() => btn.removeAttribute('data-copied'), 2000);
+      } catch {
+        if (status) status.textContent = 'Copie impossible : sélectionnez l’adresse dans la barre du navigateur.';
+      }
+    }),
+  );
+</script>

@@ -1,0 +1,96 @@
+---
+/** Liste paginée des actualités avec filtres par catégorie (protocole 6.2). */
+import { ChevronLeft, ChevronRight } from '@lucide/astro';
+import ArticleCard from './ArticleCard.astro';
+import { url } from '../../lib/url';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props { items: CollectionEntry<'actualites'>[]; page: number; lastPage: number; total: number }
+const { items, page, lastPage, total } = Astro.props;
+const cats = [...new Set(items.map((i) => i.data.category))];
+const pageUrl = (n: number) => url(n === 1 ? '/actualites' : `/actualites/page/${n}`);
+---
+<section aria-labelledby="liste-title" class="section-y bg-mineral">
+  <div class="container-site">
+    <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <div data-reveal>
+        <h2 id="liste-title" class="text-h2 text-forest">Toutes les actualités</h2>
+        <p class="mt-3 text-muted">{total} article{total > 1 ? 's' : ''} publié{total > 1 ? 's' : ''}</p>
+      </div>
+      {cats.length > 0 && (
+        <div class="js-only" data-reveal>
+          <p id="filtre-label" class="text-eyebrow uppercase text-brand">Filtrer par catégorie</p>
+          <div class="mt-3 flex flex-wrap gap-2" role="group" aria-labelledby="filtre-label">
+            <button type="button" class="filtre" aria-pressed="true" data-filtre="">Toutes</button>
+            {cats.map((c) => <button type="button" class="filtre" aria-pressed="false" data-filtre={c}>{c}</button>)}
+          </div>
+          <p class="sr-only" aria-live="polite" data-filtre-status></p>
+        </div>
+      )}
+    </div>
+
+    <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-articles>
+      {items.map((a, i) => (
+        <li data-category={a.data.category} data-reveal style={`--reveal-delay:${(i % 3) * 80}ms`}>
+          <ArticleCard slug={a.id} title={a.data.title} date={a.data.date} category={a.data.category} summary={a.data.summary} cover={a.data.cover} />
+        </li>
+      ))}
+    </ul>
+
+    {lastPage > 1 && (
+      <nav aria-label="Pagination des actualités" class="mt-14 flex items-center justify-center gap-2">
+        {page > 1 && <a href={pageUrl(page - 1)} class="pager" rel="prev"><ChevronLeft size={18} aria-hidden="true" /><span class="sr-only">Page précédente</span></a>}
+        {Array.from({ length: lastPage }, (_, i) => i + 1).map((n) => (
+          <a href={pageUrl(n)} class:list={['pager', n === page && 'is-current']} aria-current={n === page ? 'page' : undefined}>{n}</a>
+        ))}
+        {page < lastPage && <a href={pageUrl(page + 1)} class="pager" rel="next"><ChevronRight size={18} aria-hidden="true" /><span class="sr-only">Page suivante</span></a>}
+      </nav>
+    )}
+  </div>
+</section>
+
+<style>
+  :global(html:not(.js)) .js-only { display: none; }
+  .filtre {
+    padding: 0.5rem 0.95rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-forest);
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-line);
+    transition: background-color 0.2s, color 0.2s;
+  }
+  .filtre:hover { box-shadow: inset 0 0 0 1px var(--color-forest); }
+  .filtre[aria-pressed='true'] { color: #fff; background: var(--color-forest); box-shadow: none; }
+  [data-articles] > li[hidden] { display: none; }
+  .pager {
+    display: grid;
+    place-items: center;
+    min-width: 2.75rem;
+    height: 2.75rem;
+    padding: 0 0.75rem;
+    border-radius: 999px;
+    font-weight: 700;
+    color: var(--color-forest);
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-line);
+  }
+  .pager:hover { box-shadow: inset 0 0 0 1px var(--color-forest); }
+  .pager.is-current { color: #fff; background: var(--color-brand); box-shadow: none; }
+</style>
+
+<script>
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-filtre]')];
+  const items = [...document.querySelectorAll<HTMLElement>('[data-articles] > li')];
+  const status = document.querySelector('[data-filtre-status]');
+  buttons.forEach((b) =>
+    b.addEventListener('click', () => {
+      const cat = b.dataset.filtre;
+      buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      let n = 0;
+      items.forEach((li) => { const show = !cat || li.dataset.category === cat; li.hidden = !show; if (show) n++; });
+      if (status) status.textContent = `${n} article${n > 1 ? 's' : ''} affiché${n > 1 ? 's' : ''}.`;
+    }),
+  );
+</script>

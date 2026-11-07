@@ -1,0 +1,60 @@
+---
+/** Vignette d'actualité : image, catégorie, date, titre, résumé (protocole 6.2). */
+import { CalendarDays, ArrowRight } from '@lucide/astro';
+import SiteImage from '../ui/SiteImage.astro';
+import { formatDateFr } from '../../lib/actualites';
+import { url } from '../../lib/url';
+import type { ImageId } from '../../config/images';
+
+interface Props { slug: string; title: string; date: Date; category: string; summary: string; cover: string; headingLevel?: 'h2' | 'h3' }
+const { slug, title, date, category, summary, cover, headingLevel = 'h2' } = Astro.props;
+const H = headingLevel;
+---
+<article class="acard group" data-category={category}>
+  <div class="acard__media">
+    <SiteImage id={cover as ImageId} sizes="(min-width: 64rem) 24rem, (min-width: 40rem) 50vw, 100vw" class="transition-transform duration-700 group-hover:scale-[1.04]" />
+    <span class="acard__cat">{category}</span>
+  </div>
+  <div class="flex flex-1 flex-col p-6 sm:p-7">
+    <p class="inline-flex items-center gap-2 text-small text-muted">
+      <CalendarDays size={15} aria-hidden="true" /> <time datetime={date.toISOString().slice(0, 10)}>{formatDateFr(date)}</time>
+    </p>
+    <H class="mt-3 text-h4 text-forest">
+      <a href={url(`/actualites/${slug}`)} class="after:absolute after:inset-0 focus-visible:outline-none">{title}</a>
+    </H>
+    <p class="mt-3 flex-1 text-small text-muted">{summary}</p>
+    <span aria-hidden="true" class="mt-6 inline-flex items-center gap-2 text-small font-semibold text-brand">
+      Lire l'article <ArrowRight size={16} class="transition-transform group-hover:translate-x-1" />
+    </span>
+  </div>
+</article>
+
+<style>
+  .acard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-card);
+    transition: transform 0.45s var(--ease-out-soft), box-shadow 0.45s;
+  }
+  .acard:hover { transform: translateY(-5px); box-shadow: inset 0 0 0 1px rgb(35 67 18 / 0.25), var(--shadow-lift); }
+  .acard:has(a:focus-visible) { outline: 2px solid var(--color-brand); outline-offset: 3px; }
+  .acard__media { position: relative; aspect-ratio: 1200 / 630; overflow: hidden; background: #fff; border-bottom: 1px solid var(--color-line); }
+  .acard__cat {
+    position: absolute;
+    top: 0.875rem;
+    left: 0.875rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--color-forest);
+    box-shadow: 0 6px 14px -8px rgb(16 29 8 / 0.6);
+  }
+  @media (prefers-reduced-motion: reduce) { .acard:hover { transform: none; } }
+</style>

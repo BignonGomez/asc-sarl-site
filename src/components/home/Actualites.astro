@@ -1,27 +1,39 @@
 ---
+/** Accueil, section 6 : dernière actualité publiée (src/content/actualites). */
 import { CalendarDays, ArrowRight } from '@lucide/astro';
 import SectionHeading from '../ui/SectionHeading.astro';
 import SiteImage from '../ui/SiteImage.astro';
+import ArrowLink from '../ui/ArrowLink.astro';
+import { getActualites, formatDateFr } from '../../lib/actualites';
+import type { ImageId } from '../../config/images';
 import { url } from '../../lib/url';
----
-<section aria-labelledby="actualites-title" class="section-y bg-mineral">
-  <div class="container-site">
-    <SectionHeading id="actualites-title" title="Actualités" />
 
-    <article class="group relative mt-14 grid overflow-hidden rounded-card border border-line bg-white shadow-card transition-[box-shadow,border-color] duration-300 hover:border-forest/40 hover:shadow-lift md:grid-cols-2 lg:mt-16 lg:max-w-4xl" data-reveal>
-      <div class="relative aspect-[16/10] overflow-hidden border-b border-line bg-white md:aspect-auto md:min-h-64 md:border-b-0 md:border-r">
-        <div class="absolute inset-4"><SiteImage id="accueil.actualite-lancement" sizes="(min-width: 48rem) 28rem, 100vw" /></div>
+const [latest] = await getActualites();
+---
+{latest && (
+  <section aria-labelledby="actualites-title" class="section-y bg-mineral">
+    <div class="container-site">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <SectionHeading id="actualites-title" title="Actualités" />
+        <div class="shrink-0" data-reveal><ArrowLink href="/actualites">Toutes les actualités</ArrowLink></div>
       </div>
-      <div class="flex flex-col p-7 sm:p-9">
-        <p class="inline-flex items-center gap-2 text-small text-muted">
-          <CalendarDays size={16} aria-hidden="true" /> [date de mise en ligne]
-        </p>
-        <h3 class="mt-4 text-h3 text-forest">
-          <a href={url('/actualites/asc-sarl-lance-son-site-internet')} class="after:absolute after:inset-0 focus-visible:outline-none">Alkebulan Services et Conseils lance son site internet</a>
-        </h3>
-        <p class="mt-4 flex-1 text-body text-muted">Le site présente le cabinet, ses domaines d'expertise, son approche méthodologique et son équipe.</p>
-        <span aria-hidden="true" class="mt-7 inline-flex items-center gap-2 font-semibold text-forest">Lire l'article <ArrowRight size={18} class="transition-transform duration-200 group-hover:translate-x-1" /></span>
-      </div>
-    </article>
-  </div>
-</section>
+
+      <article class="group relative mt-14 grid overflow-hidden rounded-card border border-line bg-white shadow-card transition-[box-shadow,border-color] duration-300 hover:border-forest/40 hover:shadow-lift md:grid-cols-2 lg:mt-16 lg:max-w-4xl" data-reveal>
+        <div class="relative aspect-[16/10] overflow-hidden border-b border-line bg-white md:aspect-auto md:min-h-64 md:border-b-0 md:border-r">
+          <div class="absolute inset-4"><SiteImage id={latest.data.cover as ImageId} sizes="(min-width: 48rem) 28rem, 100vw" /></div>
+        </div>
+        <div class="flex flex-col p-7 sm:p-9">
+          <p class="inline-flex items-center gap-2 text-small text-muted">
+            <CalendarDays size={16} aria-hidden="true" /> <time datetime={latest.data.date.toISOString().slice(0, 10)}>{formatDateFr(latest.data.date)}</time>
+            <span aria-hidden="true">·</span> {latest.data.category}
+          </p>
+          <h3 class="mt-4 text-h3 text-forest">
+            <a href={url(`/actualites/${latest.id}`)} class="after:absolute after:inset-0 focus-visible:outline-none">{latest.data.title}</a>
+          </h3>
+          <p class="mt-4 flex-1 text-body text-muted">{latest.data.summary}</p>
+          <span aria-hidden="true" class="mt-7 inline-flex items-center gap-2 font-semibold text-forest">Lire l'article <ArrowRight size={18} class="transition-transform duration-200 group-hover:translate-x-1" /></span>
+        </div>
+      </article>
+    </div>
+  </section>
+)}

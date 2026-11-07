@@ -1,0 +1,25 @@
+---
+/** Pages 2, 3… de la liste des actualités (générées seulement s'il y a plus de PAR_PAGE articles). */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/page/PageHeader.astro';
+import ListeActualites from '../../../components/actualites/ListeActualites.astro';
+import { getActualites, PAR_PAGE } from '../../../lib/actualites';
+
+export async function getStaticPaths() {
+  const all = await getActualites();
+  const lastPage = Math.ceil(all.length / PAR_PAGE);
+  return Array.from({ length: Math.max(0, lastPage - 1) }, (_, i) => ({ params: { page: String(i + 2) } }));
+}
+const page = Number(Astro.params.page);
+const all = await getActualites();
+const lastPage = Math.ceil(all.length / PAR_PAGE);
+---
+<BaseLayout title={`Actualités — page ${page}`} description="Les actualités d'Alkebulan Services et Conseils.">
+  <PageHeader
+    image="actualites.hero"
+    eyebrow="Actualités"
+    title="Actualités du cabinet"
+    crumbs={[{ label: 'Actualités', href: '/actualites' }, { label: `Page ${page}` }]}
+  />
+  <ListeActualites items={all.slice((page - 1) * PAR_PAGE, page * PAR_PAGE)} page={page} lastPage={lastPage} total={all.length} />
+</BaseLayout>

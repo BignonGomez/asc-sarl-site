@@ -212,6 +212,15 @@ export const images = {
     note: 'Photo de terrain (Picture4.png).',
   },
 
+  // ---------------- Rubrique Actualités ----------------
+  'actualites.hero': {
+    src: terrainPlantation,
+    alt: '',
+    status: 'provisoire',
+    position: 'center 30%',
+    note: "Photo de terrain (Picture6.png, déjà utilisée sur l'accueil) ; prévoir une photo de la vie du cabinet.",
+  },
+
   // ---------------- Rubrique Réalisations ----------------
   'realisations.hero': {
     src: terrainSemis,
