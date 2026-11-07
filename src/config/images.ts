@@ -35,6 +35,10 @@ import terrainPiquetage2 from '../assets/images/terrain-piquetage-2.png'; // Pic
 import terrainRepiquage2 from '../assets/images/terrain-repiquage-2.png'; // Picture14.png
 import economieRurale from '../assets/images/economie-rurale.png';
 import ecotourisme from '../assets/images/ecotourisme.png';
+import terrainSemis from '../assets/images/terrain-semis-detail.png'; // Picture10.png
+import terrainRepiquage1 from '../assets/images/terrain-repiquage-1.png'; // Picture13.png
+import terrainGroupe2 from '../assets/images/terrain-groupe-2.png'; // Picture9.png
+import terrainPlanches2 from '../assets/images/terrain-planches-2.png'; // Picture3.png
 import ogImage from '../assets/logo/og-image-1200x630.png';
 
 export type ImageSlot = {
@@ -206,6 +210,33 @@ export const images = {
     alt: 'Un intervenant anime une séance de travail devant des participants',
     status: 'définitif',
     note: 'Photo de terrain (Picture4.png).',
+  },
+
+  // ---------------- Rubrique Réalisations ----------------
+  'realisations.hero': {
+    src: terrainSemis,
+    alt: '',
+    status: 'définitif',
+    position: 'center 45%',
+    note: 'Photo de terrain (Picture10.png) — à confirmer : prise lors de la mission de Za-Kpota.',
+  },
+  'mission.zakpota.2': {
+    src: terrainRepiquage1,
+    alt: 'Participants repiquant de jeunes plants sur une parcelle',
+    status: 'définitif',
+    note: 'Photo de terrain (Picture13.png) — à confirmer : mission de Za-Kpota.',
+  },
+  'mission.zakpota.3': {
+    src: terrainGroupe2,
+    alt: 'Groupe de participants au travail sur des planches de culture',
+    status: 'définitif',
+    note: 'Photo de terrain (Picture9.png) — à confirmer : mission de Za-Kpota.',
+  },
+  'mission.zakpota.4': {
+    src: terrainPlanches2,
+    alt: 'Planches de culture préparées sur une grande parcelle',
+    status: 'définitif',
+    note: 'Photo de terrain (Picture3.png) — à confirmer : mission de Za-Kpota.',
   },
 } satisfies Record<string, ImageSlot>;
 
