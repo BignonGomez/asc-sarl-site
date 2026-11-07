@@ -7,13 +7,13 @@ import SiteImage from '../ui/SiteImage.astro';
 import Button from '../ui/Button.astro';
 import { site } from '../../config/site';
 ---
-<section aria-labelledby="hero-title" class="relative isolate flex min-h-[min(46rem,calc(100svh-4.5rem))] items-center overflow-hidden bg-forest-night text-white lg:min-h-[min(50rem,calc(100svh-5rem))]">
+<section aria-labelledby="hero-title" class="relative isolate flex min-h-[min(48rem,100svh)] items-center overflow-hidden bg-forest-night text-white lg:min-h-[min(54rem,100svh)]">
   <div class="absolute inset-0 -z-20"><SiteImage id="accueil.hero" sizes="100vw" priority /></div>
   <!-- Voile vert en dégradé : garantit la lisibilité du texte sur la photo -->
   <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(16_29_8/0.78)_0%,rgb(16_29_8/0.62)_40%,rgb(16_29_8/0.80)_75%,rgb(16_29_8/0.94)_100%)]"></div>
   <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_60%_at_50%_45%,rgb(16_29_8/0.45),transparent_75%),radial-gradient(ellipse_55%_50%_at_100%_100%,rgb(174_36_69/0.28),transparent_70%)]"></div>
 
-  <div class="container-site flex flex-col items-center py-20 text-center sm:py-24 lg:py-28">
+  <div class="container-site flex flex-col items-center pb-20 pt-32 text-center sm:pb-24 sm:pt-36 lg:pb-28 lg:pt-40">
     <p class="hero-in inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-eyebrow uppercase text-white backdrop-blur-sm" style="--d:0ms">
       <span aria-hidden="true" class="h-1.5 w-1.5 rounded-full bg-[#f3a9b8]"></span>
       Cabinet d'études et de conseil · Cotonou, Bénin

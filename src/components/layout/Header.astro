@@ -1,95 +1,89 @@
 ---
-import { ChevronDown, Menu, X, ArrowRight } from '@lucide/astro';
+/**
+ * En-tête en capsule flottante (verre), barre de progression de lecture, méga-menus en verre,
+ * tiroir mobile plein écran. La couche de verre est un élément séparé : un parent avec backdrop-filter
+ * empêcherait le flou des sous-menus.
+ */
+import { ChevronDown, ArrowRight, Building, Target, Users, Route, Mail, Phone } from '@lucide/astro';
 import { site, nav } from '../../config/site';
 import { expertises } from '../../data/expertises';
 import { url, isActive } from '../../lib/url';
 import Button from '../ui/Button.astro';
+import ExpertiseIcon from '../ui/ExpertiseIcon.astro';
 import logo from '../../assets/logo/logo-full.svg';
 
 const current = Astro.url.pathname;
-const items = nav.map((item) =>
-  item.href === '/expertises'
-    ? {
-        ...item,
-        children: [
-          { label: 'Tous nos domaines', href: '/expertises' },
-          ...expertises.map((e) => ({ label: e.title, href: `/expertises/${e.slug}` })),
-        ],
-      }
-    : item,
-);
+const navIcons: Record<string, any> = { building: Building, target: Target, users: Users, route: Route };
+
+type Child = { label: string; href: string; desc?: string; icon?: string; expertise?: (typeof expertises)[number]['icon'] };
+const items = nav.map((item) => {
+  const children: Child[] =
+    item.href === '/expertises'
+      ? expertises.map((e) => ({ label: e.title, href: `/expertises/${e.slug}`, desc: e.short, expertise: e.icon }))
+      : (item.children ?? []);
+  return { ...item, children, hasMenu: children.length > 1, wide: children.length > 5 };
+});
+const panelId = (href: string) => `menu-${href.replace(/\W/g, '') || 'accueil'}`;
 ---
-<header
-  id="site-header"
-  class="sticky top-0 z-50 border-b border-white/70 bg-white/80 shadow-header backdrop-blur-xl backdrop-saturate-150 transition-[box-shadow,background-color] duration-300 data-[scrolled]:bg-white/90 data-[scrolled]:shadow-header-scrolled"
->
-  <!-- Filet d'accent (relief) : dégradé rouge de la maquette -->
-  <span aria-hidden="true" class="absolute inset-x-0 top-0 h-[3px] bg-linear-to-r from-brand-deep via-brand to-[#e0587a]"></span>
-  <div class="container-site flex h-[4.5rem] items-center justify-between gap-4 lg:h-20">
-    <!-- Logo officiel (version couleur sur fond clair) -->
-    <a href={url('/')} class="flex shrink-0 items-center rounded-ui">
-      <img src={logo.src} alt={`${site.name} – retour à l'accueil`} width="122" height="56" class="h-12 w-auto lg:h-14" fetchpriority="high" />
+<div class="scroll-progress" aria-hidden="true" data-progress></div>
+
+<header id="site-header" class="site-header" data-header>
+  <div class="site-header__bar">
+    <span class="site-header__glass" aria-hidden="true"></span>
+
+    <a href={url('/')} class="flex shrink-0 items-center rounded-full px-2 py-1">
+      <img src={logo.src} alt={`${site.name} – retour à l'accueil`} width="96" height="44" class="h-10 w-auto sm:h-11" fetchpriority="high" />
     </a>
 
     <!-- Navigation bureau -->
-    <nav aria-label="Navigation principale" class="hidden xl:block">
+    <nav aria-label="Navigation principale" class="mx-auto hidden xl:block">
       <ul class="flex items-center gap-0.5">
         {items.map((item) => {
           const active = isActive(current, item.href);
-          const hasChildren = item.children && item.children.length > 0;
           return (
-            <li class="group/nav relative" data-dropdown={hasChildren ? '' : undefined}>
-              <div class="flex items-center">
-                <a
-                  href={url(item.href)}
-                  aria-current={active ? 'page' : undefined}
-                  class:list={[
-                    'relative whitespace-nowrap rounded-ui px-2.5 py-2 text-[0.9375rem] font-medium transition-colors',
-                    active ? 'text-brand' : 'text-ink hover:text-brand',
-                    'after:absolute after:inset-x-2.5 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:bg-brand after:transition-transform',
-                    active ? 'after:scale-x-100' : 'after:scale-x-0',
-                    hasChildren && 'pr-0.5',
-                  ]}
-                >
-                  {item.label}
-                </a>
-                {hasChildren && (
+            <li class="mnav-item relative" data-mnav-item={item.hasMenu ? '' : undefined}>
+              {item.hasMenu ? (
+                <>
                   <button
                     type="button"
-                    class="rounded-ui p-0.5 text-ink/50 transition-colors hover:text-brand"
+                    class:list={['mnav-trigger', active && 'is-active']}
                     aria-expanded="false"
-                    aria-controls={`sub-${item.href.replace(/\W/g, '')}`}
-                    data-dropdown-toggle
+                    aria-controls={panelId(item.href)}
+                    data-mnav-trigger
                   >
-                    <span class="sr-only">Ouvrir le sous-menu {item.label}</span>
-                    <ChevronDown size={15} aria-hidden="true" class="transition-transform duration-200 group-hover/nav:rotate-180" />
+                    {item.label}
+                    <ChevronDown size={15} aria-hidden="true" class="mnav-chev" />
                   </button>
-                )}
-              </div>
-              {hasChildren && (
-                <div
-                  id={`sub-${item.href.replace(/\W/g, '')}`}
-                  class="invisible absolute left-1/2 top-full z-10 -translate-x-1/2 translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover/nav:visible group-hover/nav:translate-y-0 group-hover/nav:opacity-100 group-data-[open]/nav:visible group-data-[open]/nav:translate-y-0 group-data-[open]/nav:opacity-100"
-                >
-                  <ul
-                    class:list={[
-                      'rounded-card border border-line bg-white p-2 shadow-lift',
-                      item.children!.length > 5 ? 'grid w-[34rem] grid-cols-2 gap-x-2' : 'w-72',
-                    ]}
-                  >
-                    {item.children!.map((child, i) => (
-                      <li class:list={[item.children!.length > 5 && i === 0 && 'col-span-2 mb-1 border-b border-line pb-1']}>
-                        <a
-                          href={url(child.href)}
-                          class="flex items-center justify-between gap-3 rounded-ui px-3 py-2.5 text-small font-medium text-ink transition-colors hover:bg-mineral hover:text-forest"
-                        >
-                          {child.label}
-                          {item.children!.length > 5 && i === 0 && <ArrowRight size={16} aria-hidden="true" />}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                  <div id={panelId(item.href)} class:list={['mega', item.wide && 'mega--wide']} data-mnav-panel>
+                    <div class="mega__inner">
+                      <p class="mega__title">{item.label}</p>
+                      <ul class:list={['grid gap-1', item.wide && 'grid-cols-2 gap-x-3']}>
+                        {item.children.map((c) => {
+                          const Icon = c.icon ? navIcons[c.icon] : null;
+                          return (
+                            <li>
+                              <a href={url(c.href)} class="mega__link" aria-current={current.replace(/\/$/, '') === url(c.href).replace(/\/$/, '') ? 'page' : undefined}>
+                                <span class="mega__icon">
+                                  {c.expertise ? <ExpertiseIcon name={c.expertise} size={18} /> : Icon && <Icon size={18} stroke-width={1.75} aria-hidden="true" />}
+                                </span>
+                                <span class="flex flex-col leading-snug">
+                                  <span class="mega__label">{c.label}</span>
+                                  {c.desc && <span class="mega__desc">{c.desc}</span>}
+                                </span>
+                              </a>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                      <a href={url(item.href)} class="mega__all">
+                        {item.href === '/expertises' ? 'Voir tous nos domaines' : `Découvrir ${item.label.toLowerCase()}`}
+                        <ArrowRight size={16} aria-hidden="true" />
+                      </a>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <a href={url(item.href)} class:list={['mnav-trigger', active && 'is-active']} aria-current={active ? 'page' : undefined}>{item.label}</a>
               )}
             </li>
           );
@@ -97,100 +91,409 @@ const items = nav.map((item) =>
       </ul>
     </nav>
 
-    <div class="flex items-center gap-3">
-      <div class="hidden sm:block"><Button href={site.cta.href}>{site.cta.label}</Button></div>
-      <button
-        type="button"
-        id="menu-toggle"
-        class="inline-flex min-h-11 items-center gap-2 rounded-ui border border-line px-3.5 text-small font-semibold text-ink transition-colors hover:border-forest xl:hidden"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-      >
-        <Menu size={20} aria-hidden="true" class="menu-open" />
-        <X size={20} aria-hidden="true" class="menu-close hidden" />
-        <span>Menu</span>
+    <div class="ml-auto flex shrink-0 items-center gap-2 xl:ml-0">
+      <div class="hidden sm:block"><Button href={site.cta.href} class="!min-h-11 !rounded-full !px-5">{site.cta.label}</Button></div>
+      <button type="button" class="burger xl:hidden" aria-expanded="false" aria-controls="drawer" data-burger>
+        <span></span><span></span>
+        <span class="sr-only">Menu</span>
       </button>
     </div>
   </div>
 
-  <!-- Navigation mobile et tablette -->
-  <div id="mobile-menu" hidden class="max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-line bg-white xl:hidden">
-    <nav aria-label="Navigation principale (mobile)" class="container-site py-4">
-      <ul class="divide-y divide-line">
-        {items.map((item) => {
-          const active = isActive(current, item.href);
-          return item.children && item.children.length > 0 ? (
-            <li>
-              <details class="group/acc" open={active}>
-                <summary class:list={['flex cursor-pointer list-none items-center justify-between py-4 font-display text-lg font-semibold [&::-webkit-details-marker]:hidden', active ? 'text-brand' : 'text-ink']}>
-                  {item.label}
-                  <ChevronDown size={20} aria-hidden="true" class="text-muted transition-transform group-open/acc:rotate-180" />
-                </summary>
-                <ul class="mb-4 space-y-1 border-l-2 border-forest-mist pl-4">
-                  {item.children.map((child) => (
-                    <li>
-                      <a href={url(child.href)} class="block rounded-ui py-2 text-body text-ink/85 hover:text-forest">{child.label}</a>
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            </li>
-          ) : (
-            <li>
-              <a href={url(item.href)} aria-current={active ? 'page' : undefined} class:list={['block py-4 font-display text-lg font-semibold', active ? 'text-brand' : 'text-ink']}>
-                {item.label}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-      <div class="mt-6 sm:hidden"><Button href={site.cta.href} size="lg" class="w-full" arrow>{site.cta.label}</Button></div>
-    </nav>
+  <!-- Tiroir mobile et tablette -->
+  <div id="drawer" class="drawer xl:hidden" hidden data-drawer>
+    <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="Menu principal">
+      <nav aria-label="Navigation principale (mobile)">
+        <ul>
+          {items.map((item) => {
+            const active = isActive(current, item.href);
+            return item.hasMenu ? (
+              <li class="drawer__group">
+                <details open={active}>
+                  <summary class:list={[active && 'text-brand']}>
+                    {item.label}
+                    <ChevronDown size={20} aria-hidden="true" class="drawer__chev" />
+                  </summary>
+                  <ul class="drawer__links">
+                    {item.children.map((c) => <li><a href={url(c.href)}>{c.label}</a></li>)}
+                    <li class="col-span-full"><a href={url(item.href)} class="!font-semibold !text-brand">{item.href === '/expertises' ? 'Voir tous nos domaines' : `Découvrir ${item.label.toLowerCase()}`} →</a></li>
+                  </ul>
+                </details>
+              </li>
+            ) : (
+              <li class="drawer__group">
+                <a href={url(item.href)} class:list={['drawer__single', active && 'text-brand']} aria-current={active ? 'page' : undefined}>{item.label}</a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+      <div class="mt-6"><Button href={site.cta.href} size="lg" class="w-full !rounded-full" arrow>{site.cta.label}</Button></div>
+      <div class="drawer__contact">
+        <a href={`mailto:${site.email}`}><Mail size={18} aria-hidden="true" /> {site.email}</a>
+        <span><Phone size={18} aria-hidden="true" /> {site.phone.display}</span>
+      </div>
+    </div>
   </div>
 </header>
 
+<style>
+  /* ---------- Barre de progression ---------- */
+  .scroll-progress {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 101;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-brand-deep), var(--color-brand), var(--color-flame));
+    transform-origin: 0 50%;
+    transform: scaleX(var(--progress, 0));
+    pointer-events: none;
+  }
+
+  /* ---------- Capsule ---------- */
+  .site-header {
+    position: fixed;
+    top: 12px;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding-inline: clamp(10px, 2vw, 20px);
+    pointer-events: none;
+    transition: transform 0.5s var(--ease-out-soft);
+  }
+  .site-header.is-hidden { transform: translateY(calc(-100% - 24px)); }
+  .site-header__bar {
+    position: relative;
+    isolation: isolate;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: calc(var(--container-site) + 2rem);
+    height: 64px;
+    margin-inline: auto;
+    padding: 0 8px 0 10px;
+    border-radius: 999px;
+    transition: height 0.4s var(--ease-out-soft);
+  }
+  .site-header__glass {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(150deg, rgb(255 255 255 / 0.86), rgb(255 255 255 / 0.68) 55%, rgb(255 255 255 / 0.8));
+    -webkit-backdrop-filter: blur(18px) saturate(165%);
+    backdrop-filter: blur(18px) saturate(165%);
+
+    box-shadow: var(--shadow-glass);
+    transition: box-shadow 0.4s var(--ease-out-soft);
+  }
+  /* Fine bordure lumineuse (dégradé) */
+  .site-header__glass::before,
+  .mega__inner::before,
+  .drawer__panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: var(--glass-edge);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  .site-header.is-scrolled .site-header__bar { height: 58px; }
+  .site-header.is-scrolled .site-header__glass { box-shadow: var(--shadow-glass-strong); }
+
+  /* ---------- Liens ---------- */
+  .mnav-trigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    height: 2.5rem;
+    padding: 0 0.75rem;
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--color-ink);
+    transition: background-color 0.18s, color 0.18s;
+  }
+  .mnav-trigger:hover,
+  .mnav-item[data-open] .mnav-trigger { background: rgb(35 67 18 / 0.07); color: var(--color-forest); }
+  .mnav-trigger.is-active { color: var(--color-brand); font-weight: 600; }
+  .mnav-trigger.is-active::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 3px;
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--color-brand);
+    transform: translateX(-50%);
+  }
+  .mnav-chev { opacity: 0.6; transition: transform 0.3s var(--ease-out-soft); }
+  .mnav-item[data-open] .mnav-chev { transform: rotate(180deg); }
+
+  /* ---------- Méga-menus en verre ---------- */
+  .mega {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    padding-top: 14px; /* pont invisible : le survol ne se perd pas entre le lien et le panneau */
+    width: min(22rem, calc(100vw - 32px));
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -8px) scale(0.985);
+    transform-origin: 50% 0;
+    transition: opacity 0.22s var(--ease-out-soft), transform 0.32s var(--ease-out-soft), visibility 0.32s;
+  }
+  .mega--wide { width: min(40rem, calc(100vw - 32px)); }
+  .mnav-item[data-open] .mega {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0) scale(1);
+  }
+  .mega__inner {
+    position: relative;
+    isolation: isolate;
+    padding: 1rem;
+    border-radius: 1.5rem;
+    background: linear-gradient(150deg, rgb(255 255 255 / 0.95), rgb(255 255 255 / 0.88));
+    -webkit-backdrop-filter: blur(24px) saturate(165%);
+    backdrop-filter: blur(24px) saturate(165%);
+
+    box-shadow: var(--shadow-glass-strong);
+  }
+  .mega__title {
+    margin: 0.25rem 0.625rem 0.625rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .mega__link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5625rem 0.625rem;
+    border-radius: 0.875rem;
+    transition: background-color 0.18s;
+  }
+  .mega__link:hover,
+  .mega__link:focus-visible,
+  .mega__link[aria-current='page'] { background: rgb(35 67 18 / 0.06); }
+  .mega__icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.6875rem;
+    color: var(--color-forest);
+    background: var(--color-forest-soft);
+    box-shadow: inset 0 0 0 1px rgb(35 67 18 / 0.1);
+    transition: color 0.18s, background-color 0.18s;
+  }
+  .mega__link:hover .mega__icon { color: #fff; background: var(--color-brand); }
+  .mega__label { font-size: 0.9063rem; font-weight: 600; color: var(--color-ink); }
+  .mega__desc { font-size: 0.78rem; color: var(--color-muted); }
+  .mega__all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0.75rem 0.625rem 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-brand);
+  }
+  .mega__all:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  /* ---------- Burger ---------- */
+  .burger {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: rgb(35 67 18 / 0.08);
+  }
+  .burger > span:not(.sr-only) {
+    position: absolute;
+    left: 13px;
+    right: 13px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--color-forest);
+    transition: transform 0.4s var(--ease-out-soft);
+  }
+  .burger > span:first-child { top: 17px; }
+  .burger > span:nth-child(2) { top: 25px; }
+  .burger[aria-expanded='true'] > span:first-child { transform: translateY(4px) rotate(45deg); }
+  .burger[aria-expanded='true'] > span:nth-child(2) { transform: translateY(-4px) rotate(-45deg); }
+
+  /* ---------- Tiroir ---------- */
+  .drawer {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    padding: 86px 10px 10px;
+    pointer-events: auto;
+  }
+  .drawer[hidden] { display: none; }
+  .drawer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(16 29 8 / 0.45);
+    opacity: 0;
+    transition: opacity 0.35s var(--ease-out-soft);
+  }
+  .drawer__panel {
+    position: relative;
+    isolation: isolate;
+    max-height: 100%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0.75rem 1.25rem 1.25rem;
+    border-radius: 1.5rem;
+    background: linear-gradient(150deg, rgb(255 255 255 / 0.95), rgb(250 250 247 / 0.9));
+    -webkit-backdrop-filter: blur(26px) saturate(165%);
+    backdrop-filter: blur(26px) saturate(165%);
+
+    box-shadow: var(--shadow-glass-strong);
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+    transform-origin: 50% 0;
+    transition: opacity 0.3s var(--ease-out-soft), transform 0.4s var(--ease-out-soft);
+  }
+  .drawer.is-open::before { opacity: 1; }
+  .drawer.is-open .drawer__panel { opacity: 1; transform: none; }
+  .drawer__group { border-bottom: 1px solid var(--color-line); }
+  .drawer__group summary,
+  .drawer__single {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0.25rem;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+  }
+  .drawer__group summary::-webkit-details-marker { display: none; }
+  .drawer__chev { color: var(--color-muted); transition: transform 0.3s var(--ease-out-soft); }
+  .drawer__group details[open] .drawer__chev { color: var(--color-brand); transform: rotate(180deg); }
+  .drawer__links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.125rem 0.75rem;
+    padding: 0 0.25rem 1rem;
+  }
+  @media (width < 30rem) { .drawer__links { grid-template-columns: 1fr; } }
+  .drawer__links a { display: block; padding: 0.5625rem 0; font-size: 0.96rem; color: rgb(31 31 31 / 0.8); }
+  .drawer__links a:hover { color: var(--color-forest); }
+  .drawer__contact { display: grid; gap: 0.25rem; margin-top: 0.875rem; }
+  .drawer__contact > * { display: flex; align-items: center; gap: 0.625rem; padding: 0.625rem 0.25rem; font-size: 0.95rem; color: var(--color-muted); }
+  .drawer__contact :global(svg) { color: var(--color-brand); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header.is-hidden { transform: none; }
+  }
+</style>
+
 <script>
-  const header = document.getElementById('site-header')!;
-  const onScroll = () => header.toggleAttribute('data-scrolled', window.scrollY > 8);
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
+  const header = document.querySelector<HTMLElement>('[data-header]')!;
+  const progress = document.querySelector<HTMLElement>('[data-progress]')!;
+  const burger = document.querySelector<HTMLButtonElement>('[data-burger]')!;
+  const drawer = document.querySelector<HTMLElement>('[data-drawer]')!;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  // Menu mobile
-  const toggle = document.getElementById('menu-toggle')!;
-  const panel = document.getElementById('mobile-menu')!;
-  const setOpen = (open: boolean) => {
-    toggle.setAttribute('aria-expanded', String(open));
-    panel.hidden = !open;
-    toggle.querySelector('.menu-open')?.classList.toggle('hidden', open);
-    toggle.querySelector('.menu-close')?.classList.toggle('hidden', !open);
-    document.documentElement.classList.toggle('overflow-hidden', open);
-  };
-  toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      setOpen(false);
-      document.querySelectorAll('[data-dropdown][data-open]').forEach((d) => {
-        d.removeAttribute('data-open');
-        d.querySelector('[data-dropdown-toggle]')?.setAttribute('aria-expanded', 'false');
-      });
+  // Défilement : barre de progression, capsule réduite, masquage en descente / retour en montée
+  let lastY = window.scrollY;
+  let ticking = false;
+  const update = () => {
+    const y = window.scrollY;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.setProperty('--progress', String(max > 0 ? Math.min(y / max, 1) : 0));
+    header.classList.toggle('is-scrolled', y > 24);
+    const menuOpen = drawer.classList.contains('is-open') || header.querySelector('[data-mnav-item][data-open]') || header.contains(document.activeElement);
+    if (!reduce.matches && !menuOpen) {
+      if (y > lastY + 4 && y > 160) header.classList.add('is-hidden');
+      else if (y < lastY - 4) header.classList.remove('is-hidden');
     }
-  });
-  window.matchMedia('(min-width: 80rem)').addEventListener('change', (m) => m.matches && setOpen(false));
+    if (y < 160) header.classList.remove('is-hidden');
+    lastY = y;
+    ticking = false;
+  };
+  update();
+  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  header.addEventListener('focusin', () => header.classList.remove('is-hidden'));
 
-  // Sous-menus bureau : ouverture au clavier / au clic sur le chevron
-  document.querySelectorAll<HTMLElement>('[data-dropdown]').forEach((dd) => {
-    const btn = dd.querySelector('[data-dropdown-toggle]')!;
-    btn.addEventListener('click', () => {
-      const open = !dd.hasAttribute('data-open');
-      document.querySelectorAll('[data-dropdown][data-open]').forEach((o) => o !== dd && o.removeAttribute('data-open'));
-      dd.toggleAttribute('data-open', open);
-      btn.setAttribute('aria-expanded', String(open));
+  // Méga-menus : survol (souris), clic et clavier
+  const items = [...header.querySelectorAll<HTMLElement>('[data-mnav-item]')];
+  const setOpen = (item: HTMLElement, open: boolean) => {
+    item.toggleAttribute('data-open', open);
+    item.querySelector('[data-mnav-trigger]')?.setAttribute('aria-expanded', String(open));
+  };
+  const closeAll = (except?: HTMLElement) => items.forEach((i) => i !== except && setOpen(i, false));
+  items.forEach((item) => {
+    const trigger = item.querySelector<HTMLButtonElement>('[data-mnav-trigger]')!;
+    let timer: number | undefined;
+    item.addEventListener('pointerenter', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      clearTimeout(timer);
+      closeAll(item);
+      setOpen(item, true);
     });
-    dd.addEventListener('focusout', (e) => {
-      if (!dd.contains(e.relatedTarget as Node)) {
-        dd.removeAttribute('data-open');
-        btn.setAttribute('aria-expanded', 'false');
-      }
+    item.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      timer = window.setTimeout(() => setOpen(item, false), 140);
+    });
+    trigger.addEventListener('click', () => {
+      const open = !item.hasAttribute('data-open');
+      closeAll(item);
+      setOpen(item, open);
+    });
+    item.addEventListener('focusout', (e) => {
+      if (!item.contains(e.relatedTarget as Node)) setOpen(item, false);
     });
   });
+
+  // Tiroir mobile
+  const openDrawer = (open: boolean) => {
+    burger.setAttribute('aria-expanded', String(open));
+    document.documentElement.classList.toggle('overflow-hidden', open);
+    if (open) {
+      drawer.hidden = false;
+      header.classList.remove('is-hidden');
+      requestAnimationFrame(() => drawer.classList.add('is-open'));
+      drawer.querySelector<HTMLElement>('summary, a')?.focus({ preventScroll: true });
+    } else {
+      drawer.classList.remove('is-open');
+      window.setTimeout(() => { if (!drawer.classList.contains('is-open')) drawer.hidden = true; }, reduce.matches ? 0 : 350);
+    }
+  };
+  burger.addEventListener('click', () => openDrawer(burger.getAttribute('aria-expanded') !== 'true'));
+  drawer.addEventListener('click', (e) => { if (e.target === drawer) openDrawer(false); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (burger.getAttribute('aria-expanded') === 'true') { openDrawer(false); burger.focus(); }
+    const open = items.find((i) => i.hasAttribute('data-open'));
+    if (open) { setOpen(open, false); open.querySelector<HTMLElement>('[data-mnav-trigger]')?.focus(); }
+  });
+  // Piège du focus dans le tiroir
+  drawer.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const f = [...drawer.querySelectorAll<HTMLElement>('a, summary, button')].filter((el) => el.offsetParent !== null);
+    const all = [burger, ...f];
+    const i = all.indexOf(document.activeElement as HTMLElement);
+    if (e.shiftKey && i <= 0) { e.preventDefault(); all[all.length - 1].focus(); }
+    else if (!e.shiftKey && i === all.length - 1) { e.preventDefault(); all[0].focus(); }
+  });
+  window.matchMedia('(min-width: 80rem)').addEventListener('change', (m) => m.matches && openDrawer(false));
 </script>

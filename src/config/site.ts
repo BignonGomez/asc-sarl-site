@@ -48,19 +48,23 @@ export const features = {
   homePartners: true,  // Section 7 : seulement avec l'accord écrit de la Commune de Za-Kpota
 };
 
-export type NavItem = { label: string; href: string; children?: { label: string; href: string }[] };
+export type NavChild = { label: string; href: string; desc?: string; icon?: string };
+export type NavItem = { label: string; href: string; children?: NavChild[] };
 
-/** Menu principal à 7 rubriques — seules les pages publiées au lancement sont listées (annexe E). */
+/**
+ * Menu principal à 7 rubriques — seules les pages publiées au lancement sont listées (annexe E).
+ * Une rubrique n'ouvre un sous-menu que si elle compte plusieurs pages publiées.
+ */
 export const nav: NavItem[] = [
   { label: 'Accueil', href: '/' },
   {
     label: 'Le Cabinet',
     href: '/cabinet',
     children: [
-      { label: 'Présentation du cabinet', href: '/cabinet' },
-      { label: 'Vision, mission et valeurs', href: '/cabinet/vision-mission-valeurs' },
-      { label: 'Notre équipe', href: '/cabinet/equipe' },
-      { label: 'Notre approche méthodologique', href: '/cabinet/approche' },
+      { label: 'Présentation du cabinet', href: '/cabinet', desc: 'Identité, statut et positionnement', icon: 'building' },
+      { label: 'Vision, mission et valeurs', href: '/cabinet/vision-mission-valeurs', desc: 'Le cap et les principes qui nous guident', icon: 'target' },
+      { label: 'Notre équipe', href: '/cabinet/equipe', desc: 'Responsables et experts associés', icon: 'users' },
+      { label: 'Notre approche méthodologique', href: '/cabinet/approche', desc: 'Une démarche en cinq étapes', icon: 'route' },
     ],
   },
   {
