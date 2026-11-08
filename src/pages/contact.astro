@@ -1,0 +1,415 @@
+---
+/**
+ * Page Contact — protocole complet, chapitre 8 (page pensée en priorité pour les mobiles).
+ * Blocs : introduction, coordonnées officielles, boutons d'action, formulaire, renvoi vers la FAQ.
+ * Envoi : public/contact-envoi.php (Hostinger). Sur GitHub Pages : mode démonstration (aucun envoi).
+ * Les boutons « Appeler » et « WhatsApp » s'affichent dès que les numéros officiels sont renseignés
+ * (src/config/site.ts : phone.href, social WhatsApp).
+ */
+import { MapPin, Phone, Mail, Building, PhoneCall, Send, Paperclip, CircleCheck, CircleExclamationPoint, LoaderCircle, ArrowRight, MessageCircleQuestionMark, PenLine } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/page/PageHeader.astro';
+import SocialIcon from '../components/ui/SocialIcon.astro';
+import { site } from '../config/site';
+import { natures, domainesFormulaire, pieceJointe, formEndpoint, formDemo } from '../data/contact';
+import { url } from '../lib/url';
+
+const whatsapp = site.social.find((s) => s.icon === 'whatsapp')?.href ?? null;
+const actions = [
+  ...(site.phone.href ? [{ label: 'Appeler', href: site.phone.href, icon: 'phone' }] : []),
+  ...(whatsapp ? [{ label: 'WhatsApp', href: whatsapp, icon: 'whatsapp' }] : []),
+  { label: 'Envoyer un courriel', href: `mailto:${site.email}`, icon: 'mail' },
+  { label: 'Remplir le formulaire', href: '#formulaire', icon: 'form' },
+];
+---
+<BaseLayout
+  title="Contact"
+  description="Contactez Alkebulan Services et Conseils à Cotonou : demande d'information, demande d'accompagnement, transmission de termes de référence ou proposition de partenariat."
+  cta={false}
+>
+  <PageHeader
+    image="contact.hero"
+    eyebrow="Contact"
+    title="Parlons de votre projet"
+    intro="Demande d'information, demande d'accompagnement, transmission de termes de référence ou proposition de partenariat : écrivez-nous ou appelez-nous. Nous étudierons votre demande avec attention."
+    crumbs={[{ label: 'Contact' }]}
+  />
+
+  <!-- Boutons d'action (prioritaires sur mobile) -->
+  <nav aria-label="Nous contacter rapidement" class="border-b border-line bg-white">
+    <ul class="container-site grid grid-cols-2 gap-3 py-5 sm:flex sm:flex-wrap sm:justify-center">
+      {actions.map((a) => (
+        <li>
+          <a href={a.href} class="action" target={a.icon === 'whatsapp' ? '_blank' : undefined} rel={a.icon === 'whatsapp' ? 'noopener noreferrer' : undefined}>
+            {a.icon === 'phone' && <PhoneCall size={18} aria-hidden="true" />}
+            {a.icon === 'whatsapp' && <SocialIcon name="whatsapp" size={18} />}
+            {a.icon === 'mail' && <Mail size={18} aria-hidden="true" />}
+            {a.icon === 'form' && <PenLine size={18} aria-hidden="true" />}
+            {a.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <section aria-label="Coordonnées et formulaire" class="section-y bg-mineral">
+    <div class="container-site grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <!-- Coordonnées officielles -->
+      <aside class="grid content-start gap-6 lg:col-span-5" aria-labelledby="coord-title">
+        <div class="coord" data-reveal>
+          <h2 id="coord-title" class="font-display text-h3 text-white">Coordonnées</h2>
+          <dl class="mt-7 grid gap-6">
+            <div class="coord__row">
+              <dt class="coord__icon"><Building size={18} aria-hidden="true" /><span class="sr-only">Dénomination</span></dt>
+              <dd><span class="block font-display font-semibold text-white">{site.name}</span><span class="text-small text-white/75">Société à responsabilité limitée</span></dd>
+            </div>
+            <div class="coord__row">
+              <dt class="coord__icon"><MapPin size={18} aria-hidden="true" /><span class="sr-only">Adresse du siège</span></dt>
+              <dd><address class="not-italic leading-relaxed text-white/90">{site.address.lines.map((l) => <span class="block">{l}</span>)}</address></dd>
+            </div>
+            <div class="coord__row">
+              <dt class="coord__icon"><Phone size={18} aria-hidden="true" /><span class="sr-only">Téléphone</span></dt>
+              <dd class="text-white/90">{site.phone.href ? <a href={site.phone.href} class="hover:underline">{site.phone.display}</a> : site.phone.display}</dd>
+            </div>
+            <div class="coord__row">
+              <dt class="coord__icon"><Mail size={18} aria-hidden="true" /><span class="sr-only">Courriel</span></dt>
+              <dd><a href={`mailto:${site.email}`} class="font-semibold text-white underline-offset-4 hover:underline">{site.email}</a></dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="motifs" data-reveal style="--reveal-delay:80ms">
+          <p class="text-eyebrow uppercase text-brand">Vous pouvez nous écrire pour</p>
+          <ul class="mt-4 grid gap-2">
+            {natures.filter((n) => n !== 'Autre').map((n) => (
+              <li class="flex items-center gap-2.5 text-ink"><CircleCheck size={17} aria-hidden="true" class="shrink-0 text-forest" /> {n === 'Information' ? "Une demande d'information" : n === "Demande d'accompagnement" ? "Une demande d'accompagnement" : n === 'Transmission de termes de référence' ? 'Transmettre des termes de référence' : 'Proposer un partenariat'}</li>
+            ))}
+          </ul>
+        </div>
+
+        <a href={url('/ressources/faq')} class="faq-link group" data-reveal style="--reveal-delay:120ms">
+          <span class="faq-link__icon"><MessageCircleQuestionMark size={20} aria-hidden="true" /></span>
+          <span class="flex-1">
+            <span class="block font-display font-semibold text-forest">Questions fréquentes</span>
+            <span class="block text-small text-muted">Termes de référence, déroulement d'une mission, livrables…</span>
+          </span>
+          <ArrowRight size={18} aria-hidden="true" class="text-brand transition-transform group-hover:translate-x-1" />
+        </a>
+      </aside>
+
+      <!-- Formulaire -->
+      <div id="formulaire" class="scroll-mt-28 lg:col-span-7">
+        <div class="form-card" data-reveal>
+          <h2 class="text-h3 text-forest">Écrivez-nous</h2>
+          <p class="mt-2 text-small text-muted">Les champs marqués d'un astérisque (<span aria-hidden="true" class="text-brand">*</span>) sont obligatoires.</p>
+
+          <div class="form-errors" role="alert" tabindex="-1" hidden data-errors>
+            <p class="flex items-center gap-2 font-semibold"><CircleExclamationPoint size={18} aria-hidden="true" /> <span data-errors-title>Le formulaire contient des erreurs :</span></p>
+            <ul class="mt-2 list-disc pl-6" data-errors-list></ul>
+          </div>
+
+          <form
+            class="mt-7 grid gap-5 sm:grid-cols-2"
+            action={url(formEndpoint)}
+            method="post"
+            enctype="multipart/form-data"
+            data-contact-form
+            data-demo={formDemo ? '' : undefined}
+          >
+            <div class="field">
+              <label for="nom">Nom et prénom <span class="req" aria-hidden="true">*</span></label>
+              <input id="nom" name="nom" type="text" autocomplete="name" required maxlength="120" aria-describedby="nom-err" />
+              <p id="nom-err" class="err" data-err></p>
+            </div>
+            <div class="field">
+              <label for="organisation">Organisation <span class="req" aria-hidden="true">*</span></label>
+              <input id="organisation" name="organisation" type="text" autocomplete="organization" required maxlength="150" aria-describedby="organisation-err" />
+              <p id="organisation-err" class="err" data-err></p>
+            </div>
+            <div class="field">
+              <label for="fonction">Fonction</label>
+              <input id="fonction" name="fonction" type="text" autocomplete="organization-title" maxlength="120" />
+            </div>
+            <div class="field">
+              <label for="email">Adresse électronique <span class="req" aria-hidden="true">*</span></label>
+              <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" aria-describedby="email-err" />
+              <p id="email-err" class="err" data-err></p>
+            </div>
+            <div class="field">
+              <label for="telephone">Téléphone ou WhatsApp <span class="req" aria-hidden="true">*</span></label>
+              <input id="telephone" name="telephone" type="tel" autocomplete="tel" required maxlength="30" pattern="[0-9+\(\)\s.\-]{6,30}" aria-describedby="telephone-aide telephone-err" />
+              <p id="telephone-aide" class="aide">Avec l'indicatif, par exemple +229…</p>
+              <p id="telephone-err" class="err" data-err></p>
+            </div>
+            <div class="field">
+              <label for="nature">Nature de la demande <span class="req" aria-hidden="true">*</span></label>
+              <select id="nature" name="nature" required aria-describedby="nature-err">
+                <option value="">Choisir…</option>
+                {natures.map((n) => <option value={n}>{n}</option>)}
+              </select>
+              <p id="nature-err" class="err" data-err></p>
+            </div>
+            <div class="field sm:col-span-2">
+              <label for="domaine">Domaine concerné</label>
+              <select id="domaine" name="domaine">
+                <option value="">Choisir…</option>
+                {domainesFormulaire.map((d) => <option value={d}>{d}</option>)}
+              </select>
+            </div>
+            <div class="field sm:col-span-2">
+              <label for="message">Message <span class="req" aria-hidden="true">*</span></label>
+              <textarea id="message" name="message" rows="6" required maxlength="5000" aria-describedby="message-err"></textarea>
+              <p id="message-err" class="err" data-err></p>
+            </div>
+            <div class="field sm:col-span-2">
+              <label for="piece">Pièce jointe (termes de référence, document de présentation…)</label>
+              <label for="piece" class="file">
+                <Paperclip size={18} aria-hidden="true" class="shrink-0 text-forest" />
+                <span data-file-name>Choisir un fichier PDF ou Word (au plus {pieceJointe.maxMo} Mo)</span>
+              </label>
+              <input id="piece" name="piece" type="file" class="sr-only" accept={pieceJointe.extensions.join(',')} aria-describedby="piece-err" data-max={pieceJointe.maxMo * 1024 * 1024} />
+              <p id="piece-err" class="err" data-err></p>
+            </div>
+
+            <!-- Protection contre les envois automatiques : champ piège invisible + délai minimal -->
+            <div class="piege" aria-hidden="true">
+              <label for="site_web">Ne pas remplir ce champ</label>
+              <input id="site_web" name="site_web" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+            <input type="hidden" name="ts" value="" data-ts />
+
+            <div class="field sm:col-span-2">
+              <!-- Toute la ligne est cliquable (zone tactile plus grande sur mobile) -->
+              <label class="consent" for="consentement">
+                <input id="consentement" name="consentement" type="checkbox" value="oui" required aria-describedby="consentement-err" />
+                <span>
+                  J'accepte que les informations saisies soient utilisées par {site.name} pour répondre à ma demande, conformément à la <a href={url('/politique-de-confidentialite')} class="font-semibold text-brand underline underline-offset-4">politique de confidentialité</a>. <span class="req" aria-hidden="true">*</span>
+                </span>
+              </label>
+              <p id="consentement-err" class="err" data-err></p>
+            </div>
+
+            <div class="sm:col-span-2">
+              <button type="submit" class="submit btn-sheen" data-submit>
+                <Send size={18} aria-hidden="true" class="i-send" />
+                <LoaderCircle size={18} aria-hidden="true" class="i-load hidden animate-spin" />
+                <span data-submit-label>Envoyer votre message</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Confirmation -->
+          <div class="form-ok" role="status" tabindex="-1" hidden data-ok>
+            <span class="form-ok__icon"><CircleCheck size={30} aria-hidden="true" /></span>
+            <p class="mt-5 font-display text-h3 text-forest" data-ok-title>Merci, votre message a bien été envoyé.</p>
+            <p class="mt-3 text-muted" data-ok-text>Un accusé de réception vous a été adressé par courrier électronique.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 3rem;
+    padding: 0 1.2rem;
+    border-radius: 999px;
+    font-weight: 600;
+    color: var(--color-forest);
+    background: var(--color-mineral);
+    box-shadow: inset 0 0 0 1px var(--color-line);
+    transition: background-color 0.2s, color 0.2s, transform 0.3s var(--ease-out-soft);
+  }
+  .action:hover { color: #fff; background: var(--color-forest); transform: translateY(-2px); }
+
+  .coord {
+    padding: 2rem;
+    border-radius: 1.5rem;
+    background: radial-gradient(ellipse 80% 70% at 100% 0%, rgb(18 128 75 / 0.55), transparent 70%), radial-gradient(ellipse 70% 60% at 0% 100%, rgb(174 36 69 / 0.35), transparent 70%), var(--color-forest-night);
+    box-shadow: var(--shadow-lift);
+  }
+  .coord__row { display: flex; gap: 1rem; }
+  .coord__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.5rem; height: 2.5rem; border-radius: 0.8rem; color: var(--color-flame); background: rgb(255 255 255 / 0.08); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12); }
+  .motifs { padding: 1.5rem 1.75rem; border-radius: 1.5rem; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line); }
+  .faq-link { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; border-radius: 1.5rem; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line); transition: box-shadow 0.3s; }
+  .faq-link:hover { box-shadow: inset 0 0 0 1px rgb(35 67 18 / 0.3), var(--shadow-lift); }
+  .faq-link__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.75rem; height: 2.75rem; border-radius: 0.9rem; color: #fff; background: var(--color-brand); }
+
+  /* Formulaire */
+  .form-card { padding: clamp(1.5rem, 4vw, 2.5rem); border-radius: 1.5rem; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lift); }
+  .field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .field > label:first-child { font-size: 0.9375rem; font-weight: 600; color: var(--color-ink); }
+  .req { color: var(--color-brand); }
+  .field input:not([type='checkbox']):not([type='file']), .field select, .field textarea {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.7rem 0.95rem;
+    border-radius: 0.75rem;
+    font: inherit;
+    color: var(--color-ink);
+    background: var(--color-mineral);
+    border: 1.5px solid transparent;
+    box-shadow: inset 0 0 0 1px var(--color-line);
+    transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+  }
+  .field textarea { resize: vertical; min-height: 9rem; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--color-forest); background: #fff; box-shadow: 0 0 0 4px rgb(35 67 18 / 0.12); }
+  .field [aria-invalid='true'] { border-color: var(--color-brand) !important; background: var(--color-brand-soft) !important; }
+  .aide { font-size: 0.8125rem; color: var(--color-muted); }
+  .err { font-size: 0.8125rem; font-weight: 600; color: var(--color-brand); }
+  .err:empty { display: none; }
+  .file {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.25rem;
+    padding: 0.7rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.9375rem;
+    color: var(--color-muted);
+    background: var(--color-mineral);
+    border: 1.5px dashed rgb(35 67 18 / 0.3);
+    cursor: pointer;
+    overflow-wrap: anywhere;
+  }
+  .file:hover { border-color: var(--color-forest); }
+  #piece:focus-visible + .err, .file:has(+ #piece:focus-visible) { outline: 2px solid var(--color-brand); outline-offset: 3px; }
+  .consent { display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; padding: 0.75rem 0.9rem; border-radius: 0.9rem; background: var(--color-mineral); font-size: 0.9375rem; line-height: 1.55; color: var(--color-ink); }
+  .consent input { flex-shrink: 0; width: 1.25rem; height: 1.25rem; margin-top: 0.15rem; accent-color: var(--color-forest); }
+  .piege { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  .submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    width: 100%;
+    min-height: 3.5rem;
+    padding: 0 2rem;
+    border-radius: 999px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(180deg, #c02c50, var(--color-brand));
+    box-shadow: var(--shadow-button);
+    transition: transform 0.25s var(--ease-out-soft), box-shadow 0.25s;
+  }
+  @media (width >= 40rem) { .submit { width: auto; } }
+  .submit:hover { transform: translateY(-2px); box-shadow: var(--shadow-button-hover); }
+  .submit[disabled] { opacity: 0.7; cursor: progress; transform: none; }
+  .form-errors { margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: 1rem; font-size: 0.9375rem; color: var(--color-brand-deep); background: var(--color-brand-soft); box-shadow: inset 0 0 0 1px rgb(174 36 69 / 0.25); }
+  .form-errors a { text-decoration: underline; }
+  .form-ok { padding: 2.5rem 1rem; text-align: center; }
+  .form-ok__icon { display: inline-grid; place-items: center; width: 4.5rem; height: 4.5rem; border-radius: 999px; color: #fff; background: var(--color-forest); box-shadow: 0 0 0 10px var(--color-forest-soft); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .action:hover, .submit:hover { transform: none; }
+    :global(.animate-spin) { animation: none; }
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  if (form) {
+    form.noValidate = true; // messages d'erreur personnalisés et accessibles
+    const ts = form.querySelector<HTMLInputElement>('[data-ts]');
+    if (ts) ts.value = String(Date.now());
+    const errorsBox = document.querySelector<HTMLElement>('[data-errors]')!;
+    const errorsList = document.querySelector<HTMLElement>('[data-errors-list]')!;
+    const ok = document.querySelector<HTMLElement>('[data-ok]')!;
+    const btn = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const file = form.querySelector<HTMLInputElement>('#piece')!;
+    const fileName = form.querySelector('[data-file-name]')!;
+    const fileDefault = fileName.textContent;
+
+    file.addEventListener('change', () => { fileName.textContent = file.files?.[0]?.name ?? fileDefault; });
+
+    const labelOf = (el: HTMLElement) => (form.querySelector(`label[for="${el.id}"]`)?.textContent ?? '').replace('*', '').trim();
+    const messageFor = (el: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement): string => {
+      if (el.id === 'piece') {
+        const f = (el as HTMLInputElement).files?.[0];
+        if (!f) return '';
+        if (!/\.(pdf|docx?)$/i.test(f.name)) return 'Le fichier doit être au format PDF ou Word.';
+        if (f.size > Number(el.dataset.max)) return 'Le fichier dépasse la taille maximale autorisée.';
+        return '';
+      }
+      if (el.validity.valueMissing) return el.type === 'checkbox' ? 'Merci de cocher cette case pour envoyer votre message.' : 'Ce champ est obligatoire.';
+      if (el.validity.typeMismatch) return 'Adresse électronique invalide (exemple : nom@organisation.bj).';
+      if (el.validity.patternMismatch) return 'Numéro invalide : chiffres, espaces et « + » uniquement.';
+      if (el.validity.tooLong) return 'Texte trop long.';
+      return '';
+    };
+    const check = (el: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement) => {
+      const msg = messageFor(el);
+      const err = document.getElementById(`${el.id}-err`);
+      if (err) err.textContent = msg;
+      el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+      return msg;
+    };
+    const fields = [...form.querySelectorAll<HTMLInputElement>('input:not([type=hidden]):not([name=site_web]), select, textarea')];
+    fields.forEach((el) => el.addEventListener('blur', () => { if (el.getAttribute('aria-invalid')) check(el); }));
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorsList.innerHTML = '';
+      const errorsTitle = errorsBox.querySelector('[data-errors-title]')!;
+      errorsTitle.textContent = 'Le formulaire contient des erreurs :';
+      const problems = fields.map((el) => ({ el, msg: check(el) })).filter((p) => p.msg);
+      if (problems.length) {
+        problems.forEach(({ el, msg }) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = `#${el.id}`;
+          a.textContent = `${el.id === 'consentement' ? 'Consentement' : labelOf(el)} : ${msg}`;
+          a.addEventListener('click', (ev) => { ev.preventDefault(); el.focus(); });
+          li.append(a);
+          errorsList.append(li);
+        });
+        errorsBox.hidden = false;
+        errorsBox.focus();
+        return;
+      }
+      errorsBox.hidden = true;
+
+      const showOk = (title?: string, text?: string) => {
+        if (title) ok.querySelector('[data-ok-title]')!.textContent = title;
+        if (text) ok.querySelector('[data-ok-text]')!.textContent = text;
+        form.hidden = true;
+        ok.hidden = false;
+        ok.focus();
+      };
+
+      // Mode démonstration (site de test GitHub Pages : pas de script d'envoi)
+      if (form.hasAttribute('data-demo')) {
+        showOk('Formulaire en mode démonstration', "Votre message est valide, mais il n'a pas été envoyé : l'envoi sera activé sur le site définitif.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.querySelector('.i-send')?.classList.add('hidden');
+      btn.querySelector('.i-load')?.classList.remove('hidden');
+      btn.querySelector('[data-submit-label]')!.textContent = 'Envoi en cours…';
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) throw new Error(data.message || "L'envoi a échoué.");
+        showOk();
+      } catch (err) {
+        const li = document.createElement('li');
+        li.textContent = `${(err as Error).message} Vous pouvez aussi nous écrire directement à l'adresse indiquée dans les coordonnées.`;
+        errorsList.append(li);
+        errorsTitle.textContent = "Votre message n'a pas pu être envoyé :";
+        errorsBox.hidden = false;
+        errorsBox.focus();
+      } finally {
+        btn.disabled = false;
+        btn.querySelector('.i-send')?.classList.remove('hidden');
+        btn.querySelector('.i-load')?.classList.add('hidden');
+        btn.querySelector('[data-submit-label]')!.textContent = 'Envoyer votre message';
+      }
+    });
+  }
+</script>

@@ -6,8 +6,9 @@ import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import { site, noindex } from '../config/site';
 
-interface Props { title?: string; description?: string; cta?: { title?: string; text?: string } }
-const { title, description = site.description, cta } = Astro.props;
+/** robots : force la directive (ex. « noindex, nofollow » pour une page de confirmation) */
+interface Props { title?: string; description?: string; cta?: { title?: string; text?: string } | false; robots?: string }
+const { title, description = site.description, cta, robots } = Astro.props;
 const fullTitle = title ? `${title} | ${site.shortName}` : `${site.shortName} | Études et conseil en environnement, climat et développement territorial`;
 // URL canonique toujours rattachée au domaine officiel asc-sarl.com (même sur la version de test)
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -21,7 +22,7 @@ const canonical = new URL(path, site.url).href;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {(noindex || robots) && <meta name="robots" content={robots ?? 'noindex, nofollow'} />}
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#234312" />
     <meta property="og:type" content="website" />

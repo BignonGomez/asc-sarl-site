@@ -236,6 +236,15 @@ export const images = {
     note: 'Photo de séance de travail (Picture4.png, déjà utilisée) ; prévoir une image propre à la FAQ ou à la relation client.',
   },
 
+  // ---------------- Page Contact ----------------
+  'contact.hero': {
+    src: terrainGroupe1,
+    alt: '',
+    status: 'provisoire',
+    position: 'center 45%',
+    note: 'Photo de terrain (Picture5.png, déjà utilisée) ; prévoir une photo du siège ou de l\u2019équipe.',
+  },
+
   // ---------------- Rubrique Réalisations ----------------
   'realisations.hero': {
     src: terrainSemis,

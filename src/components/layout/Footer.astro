@@ -13,10 +13,12 @@ import { site, footerLinks, legalLinks } from '../../config/site';
 import { expertises } from '../../data/expertises';
 import { url } from '../../lib/url';
 
-interface Props { cta?: { title?: string; text?: string } }
+/** cta = false : masque la carte d'appel (page Contact, qui est elle-même l'appel à l'action) */
+interface Props { cta?: { title?: string; text?: string } | false }
 const { cta = {} } = Astro.props;
-const ctaTitle = cta.title ?? 'Un projet, une étude, des termes de référence à partager ?';
-const ctaText = cta.text ?? `${site.name} étudie avec vous vos besoins et vos problématiques, que vous soyez une institution publique, une collectivité territoriale, une organisation ou une entreprise. Transmettez-nous votre demande ou vos termes de référence.`;
+const showCta = cta !== false;
+const ctaTitle = (cta || {}).title ?? 'Un projet, une étude, des termes de référence à partager ?';
+const ctaText = (cta || {}).text ?? `${site.name} étudie avec vous vos besoins et vos problématiques, que vous soyez une institution publique, une collectivité territoriale, une organisation ou une entreprise. Transmettez-nous votre demande ou vos termes de référence.`;
 
 // Réseaux sociaux : seules les icônes dont le lien est renseigné sont affichées ; l'e-mail est toujours présent
 const socials = [
@@ -34,7 +36,8 @@ const socials = [
   <!-- Trait d'accent -->
   <div aria-hidden="true" class="h-1 bg-linear-to-r from-brand-deep via-[#e0587a] to-brand shadow-[0_0_18px_2px_rgb(224_88_122/0.55)]"></div>
 
-  <!-- Carte d'appel à l'action -->
+  <!-- Carte d'appel à l'action (masquée sur la page Contact) -->
+  {showCta && (
   <section aria-labelledby="footer-cta-title" class="container-site pt-16 sm:pt-20 lg:pt-24">
     <div class="sf-cta" data-reveal data-spot>
       <span aria-hidden="true" class="sf-cta__glow"></span>
@@ -53,10 +56,11 @@ const socials = [
       </div>
     </div>
   </section>
+  )}
 
   <!-- Colonnes -->
   <div class="container-site">
-    <div class="sf-main">
+    <div class:list={['sf-main', !showCta && 'sf-main--nocta']}>
       <div class="sf-brand">
         <a href={url('/')} class="inline-flex rounded-ui">
           <img src={logoWhite.src} alt={`${site.name} – accueil`} width="174" height="80" class="h-20 w-auto" />
@@ -232,6 +236,7 @@ const socials = [
     padding-block: 2.75rem;
     border-top: 1px solid rgb(255 255 255 / 0.14);
   }
+  .sf-main--nocta { margin-top: 0; border-top: 0; padding-top: clamp(3.5rem, 7vw, 5rem); }
   .sf-brand, .sf-col--wide { grid-column: 1 / -1; }
   @media (width >= 48rem) {
     .sf-main { grid-template-columns: repeat(3, minmax(0, 1fr)); }
