@@ -90,3 +90,24 @@
     .js [data-reveal] { opacity: 1; transform: none; }
   }
 }
+
+/* Texte introductif encadré : deux traits fins et symétriques (14 × 1,5 px), de la couleur exacte du texte,
+   à 11 px de part et d'autre, centrés verticalement. Décoratifs : ignorés par les lecteurs d'écran (pseudo-éléments vides). */
+@layer components {
+  .eyebrow-framed {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+  }
+  .eyebrow-framed::before,
+  .eyebrow-framed::after {
+    content: '';
+    flex-shrink: 0;
+    width: 14px;
+    height: 1.5px;
+    border-radius: 1px;
+    background: currentColor;
+  }
+  /* L'espacement des lettres ajoute un blanc après la dernière lettre : on le compense pour une symétrie exacte */
+  .eyebrow-framed::after { margin-inline-start: calc(-1 * var(--text-eyebrow--letter-spacing, 0em)); }
+}

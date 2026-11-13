@@ -1,10 +1,10 @@
 ---
-/** Titre de section (H2 vert) avec filet jaune soleil et texte d'introduction facultatif. */
+/** Titre de section (H2 vert) précédé d'un court accent jaune soleil (28 × 3 px) et texte d'introduction facultatif. */
 interface Props { title: string; intro?: string; id?: string; tone?: 'default' | 'light'; class?: string }
 const { title, intro, id, tone = 'default', class: extra = '' } = Astro.props;
 ---
 <div class:list={['max-w-3xl', extra]} data-reveal>
-  <span aria-hidden="true" class:list={['mb-6 block h-1 w-12 rounded-full', tone === 'light' ? 'bg-white/80' : 'bg-sun']}></span>
+  <span aria-hidden="true" class:list={['mb-5 block h-[3px] w-7 rounded-full', tone === 'light' ? 'bg-white/80' : 'bg-sun']}></span>
   <h2 id={id} class:list={['text-h2', tone === 'light' ? 'text-white' : 'text-forest']}>{title}</h2>
   {intro && <p class:list={['mt-5 text-lead', tone === 'light' ? 'text-white/85' : 'text-muted']}>{intro}</p>}
 </div>
