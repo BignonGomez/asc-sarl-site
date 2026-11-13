@@ -53,7 +53,7 @@ import { url } from '../../lib/url';
             <article class="domaine__card group" data-spot>
               <div class="relative aspect-[16/9] overflow-hidden">
                 <SiteImage id={`expertise.${e.slug}` as any} sizes="(min-width: 48rem) 36rem, 100vw" class="transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-[1.05]" />
-                <span aria-hidden="true" class="absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,rgb(16_29_8/0.55))]"></span>
+                <span aria-hidden="true" class="absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,rgb(15_38_24/0.55))]"></span>
                 <span aria-hidden="true" class="domaine__num">{String(i + 1).padStart(2, '0')}</span>
               </div>
               <div class="relative flex flex-1 flex-col p-6 sm:p-8">
@@ -109,7 +109,7 @@ import { url } from '../../lib/url';
     transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
   }
   .besoin__chip:hover { box-shadow: inset 0 0 0 1px var(--color-forest); }
-  .besoin__chip[aria-pressed='true'] { color: #fff; background: var(--color-brand); box-shadow: 0 8px 18px -10px rgb(174 36 69 / 0.8); }
+  .besoin__chip[aria-pressed='true'] { color: #fff; background: var(--color-brand); box-shadow: 0 8px 18px -10px rgb(74 115 32 / 0.96); }
   [data-domaines].is-filtering .domaine:not(.is-match) { opacity: 0.35; filter: saturate(0.4); }
   [data-domaines].is-filtering .domaine.is-match .domaine__card { box-shadow: 0 0 0 2px var(--color-brand), var(--shadow-lift); }
   .domaine { transition: opacity 0.4s var(--ease-out-soft), filter 0.4s; }
@@ -127,7 +127,7 @@ import { url } from '../../lib/url';
     box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-card);
     transition: transform 0.5s var(--ease-out-soft), box-shadow 0.5s var(--ease-out-soft);
   }
-  .domaine__card:hover { transform: translateY(-6px); box-shadow: inset 0 0 0 1px rgb(35 67 18 / 0.25), var(--shadow-lift); }
+  .domaine__card:hover { transform: translateY(-6px); box-shadow: inset 0 0 0 1px rgb(31 77 46 / 0.25), var(--shadow-lift); }
   .domaine__card:has(a:focus-visible) { outline: 2px solid var(--color-brand); outline-offset: 3px; }
   /* Halo qui suit la souris */
   .domaine__card::after {
@@ -137,7 +137,7 @@ import { url } from '../../lib/url';
     z-index: 1;
     pointer-events: none;
     border-radius: inherit;
-    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, -20%), rgb(174 36 69 / 0.08), transparent 45%);
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, -20%), rgb(252 209 42 / 0.05), transparent 45%);
     opacity: 0;
     transition: opacity 0.4s;
   }
@@ -164,7 +164,7 @@ import { url } from '../../lib/url';
     border-radius: 1rem;
     color: var(--color-forest);
     background: #fff;
-    box-shadow: inset 0 0 0 1px var(--color-line), 0 10px 24px -12px rgb(16 29 8 / 0.45);
+    box-shadow: inset 0 0 0 1px var(--color-line), 0 10px 24px -12px rgb(15 38 24 / 0.45);
     transition: background-color 0.3s, color 0.3s;
   }
   @media (width >= 40rem) { .domaine__icon { left: 2rem; } }
@@ -198,7 +198,7 @@ import { url } from '../../lib/url';
     font-weight: 700;
     line-height: 1;
     color: transparent;
-    -webkit-text-stroke: 1.5px rgb(174 36 69 / 0.22);
+    -webkit-text-stroke: 1.5px rgb(74 115 32 / 0.26);
   }
   .etape__icon {
     display: grid;

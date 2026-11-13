@@ -101,7 +101,7 @@ const actions = [
       <div id="formulaire" class="scroll-mt-28 lg:col-span-7">
         <div class="form-card" data-reveal>
           <h2 class="text-h3 text-forest">Écrivez-nous</h2>
-          <p class="mt-2 text-small text-muted">Les champs marqués d'un astérisque (<span aria-hidden="true" class="text-brand">*</span>) sont obligatoires.</p>
+          <p class="mt-2 text-small text-muted">Les champs marqués d'un astérisque (<span aria-hidden="true" class="text-danger">*</span>) sont obligatoires.</p>
 
           <div class="form-errors" role="alert" tabindex="-1" hidden data-errors>
             <p class="flex items-center gap-2 font-semibold"><CircleExclamationPoint size={18} aria-hidden="true" /> <span data-errors-title>Le formulaire contient des erreurs :</span></p>
@@ -230,21 +230,21 @@ const actions = [
   .coord {
     padding: 2rem;
     border-radius: 1.5rem;
-    background: radial-gradient(ellipse 80% 70% at 100% 0%, rgb(18 128 75 / 0.55), transparent 70%), radial-gradient(ellipse 70% 60% at 0% 100%, rgb(174 36 69 / 0.35), transparent 70%), var(--color-forest-night);
+    background: radial-gradient(ellipse 80% 70% at 100% 0%, rgb(74 115 32 / 0.55), transparent 70%), radial-gradient(ellipse 70% 60% at 0% 100%, rgb(252 209 42 / 0.21), transparent 70%), var(--color-forest-night);
     box-shadow: var(--shadow-lift);
   }
   .coord__row { display: flex; gap: 1rem; }
-  .coord__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.5rem; height: 2.5rem; border-radius: 0.8rem; color: var(--color-flame); background: rgb(255 255 255 / 0.08); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12); }
+  .coord__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.5rem; height: 2.5rem; border-radius: 0.8rem; color: var(--color-sun); background: rgb(255 255 255 / 0.08); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12); }
   .motifs { padding: 1.5rem 1.75rem; border-radius: 1.5rem; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line); }
   .faq-link { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; border-radius: 1.5rem; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line); transition: box-shadow 0.3s; }
-  .faq-link:hover { box-shadow: inset 0 0 0 1px rgb(35 67 18 / 0.3), var(--shadow-lift); }
+  .faq-link:hover { box-shadow: inset 0 0 0 1px rgb(31 77 46 / 0.3), var(--shadow-lift); }
   .faq-link__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.75rem; height: 2.75rem; border-radius: 0.9rem; color: #fff; background: var(--color-brand); }
 
   /* Formulaire */
   .form-card { padding: clamp(1.5rem, 4vw, 2.5rem); border-radius: 1.5rem; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lift); }
   .field { display: flex; flex-direction: column; gap: 0.4rem; }
   .field > label:first-child { font-size: 0.9375rem; font-weight: 600; color: var(--color-ink); }
-  .req { color: var(--color-brand); }
+  .req { color: var(--color-danger); }
   .field input:not([type='checkbox']):not([type='file']), .field select, .field textarea {
     width: 100%;
     min-height: 3rem;
@@ -258,10 +258,10 @@ const actions = [
     transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
   }
   .field textarea { resize: vertical; min-height: 9rem; }
-  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--color-forest); background: #fff; box-shadow: 0 0 0 4px rgb(35 67 18 / 0.12); }
-  .field [aria-invalid='true'] { border-color: var(--color-brand) !important; background: var(--color-brand-soft) !important; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--color-forest); background: #fff; box-shadow: 0 0 0 4px rgb(31 77 46 / 0.12); }
+  .field [aria-invalid='true'] { border-color: var(--color-danger) !important; background: var(--color-danger-soft) !important; }
   .aide { font-size: 0.8125rem; color: var(--color-muted); }
-  .err { font-size: 0.8125rem; font-weight: 600; color: var(--color-brand); }
+  .err { font-size: 0.8125rem; font-weight: 600; color: var(--color-danger); }
   .err:empty { display: none; }
   .file {
     display: flex;
@@ -273,7 +273,7 @@ const actions = [
     font-size: 0.9375rem;
     color: var(--color-muted);
     background: var(--color-mineral);
-    border: 1.5px dashed rgb(35 67 18 / 0.3);
+    border: 1.5px dashed rgb(31 77 46 / 0.3);
     cursor: pointer;
     overflow-wrap: anywhere;
   }
@@ -292,15 +292,15 @@ const actions = [
     padding: 0 2rem;
     border-radius: 999px;
     font-weight: 600;
-    color: #fff;
-    background: linear-gradient(180deg, #c02c50, var(--color-brand));
+    color: var(--color-forest-deep);
+    background: linear-gradient(180deg, var(--color-sun-light), var(--color-sun));
     box-shadow: var(--shadow-button);
     transition: transform 0.25s var(--ease-out-soft), box-shadow 0.25s;
   }
   @media (width >= 40rem) { .submit { width: auto; } }
   .submit:hover { transform: translateY(-2px); box-shadow: var(--shadow-button-hover); }
   .submit[disabled] { opacity: 0.7; cursor: progress; transform: none; }
-  .form-errors { margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: 1rem; font-size: 0.9375rem; color: var(--color-brand-deep); background: var(--color-brand-soft); box-shadow: inset 0 0 0 1px rgb(174 36 69 / 0.25); }
+  .form-errors { margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: 1rem; font-size: 0.9375rem; color: var(--color-danger); background: var(--color-danger-soft); box-shadow: inset 0 0 0 1px rgb(180 35 24 / 0.25); }
   .form-errors a { text-decoration: underline; }
   .form-ok { padding: 2.5rem 1rem; text-align: center; }
   .form-ok__icon { display: inline-grid; place-items: center; width: 4.5rem; height: 4.5rem; border-radius: 999px; color: #fff; background: var(--color-forest); box-shadow: 0 0 0 10px var(--color-forest-soft); }

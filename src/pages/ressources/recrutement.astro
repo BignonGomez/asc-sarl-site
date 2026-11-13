@@ -67,7 +67,7 @@ const etapes = [
       </div>
       <div class="lg:col-span-6" data-reveal style="--reveal-delay:120ms">
         <div class="profils">
-          <p class="text-eyebrow uppercase text-flame">Profils recherchés</p>
+          <p class="text-eyebrow uppercase text-leaf-light">Profils recherchés</p>
           <p class="mt-3 font-display text-h3 text-white">Des compétences en lien avec nos domaines</p>
           <ul class="mt-7 grid gap-3 sm:grid-cols-2">
             {domaines.map((d) => (
@@ -180,7 +180,7 @@ const etapes = [
   .profils {
     padding: 2rem;
     border-radius: 1.5rem;
-    background: radial-gradient(ellipse 70% 70% at 100% 0%, rgb(18 128 75 / 0.55), transparent 70%), radial-gradient(ellipse 60% 60% at 0% 100%, rgb(174 36 69 / 0.35), transparent 70%), var(--color-forest-night);
+    background: radial-gradient(ellipse 70% 70% at 100% 0%, rgb(74 115 32 / 0.55), transparent 70%), radial-gradient(ellipse 60% 60% at 0% 100%, rgb(252 209 42 / 0.21), transparent 70%), var(--color-forest-night);
     box-shadow: var(--shadow-lift);
   }
   @media (width >= 40rem) { .profils { padding: 2.5rem; } }
@@ -195,7 +195,7 @@ const etapes = [
     background: rgb(255 255 255 / 0.07);
     box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
   }
-  .profil__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 0.75rem; color: var(--color-flame); background: rgb(255 255 255 / 0.08); }
+  .profil__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 0.75rem; color: var(--color-sun); background: rgb(255 255 255 / 0.08); }
 
   /* Aucune offre en cours */
   .aucune {
@@ -216,7 +216,7 @@ const etapes = [
     z-index: -1;
     height: 80%;
     filter: blur(30px);
-    background: radial-gradient(closest-side, rgb(18 128 75 / 0.14), rgb(174 36 69 / 0.08) 60%, transparent);
+    background: radial-gradient(closest-side, rgb(74 115 32 / 0.14), rgb(252 209 42 / 0.05) 60%, transparent);
   }
   .aucune__icon {
     display: inline-grid;
@@ -226,7 +226,7 @@ const etapes = [
     border-radius: 1.25rem;
     color: var(--color-forest);
     background: var(--color-forest-soft);
-    box-shadow: inset 0 0 0 1px rgb(35 67 18 / 0.12);
+    box-shadow: inset 0 0 0 1px rgb(31 77 46 / 0.12);
   }
 
   /* Bouton e-mail (relief, comme les boutons principaux) */
@@ -240,8 +240,8 @@ const etapes = [
     padding: 0 1.6rem;
     border-radius: 999px;
     font-weight: 600;
-    color: #fff;
-    background: linear-gradient(180deg, #c02c50, var(--color-brand));
+    color: var(--color-forest-deep);
+    background: linear-gradient(180deg, var(--color-sun-light), var(--color-sun));
     box-shadow: var(--shadow-button);
     transition: transform 0.25s var(--ease-out-soft), box-shadow 0.25s;
   }
@@ -260,7 +260,7 @@ const etapes = [
 
   /* Étapes */
   .etape { position: relative; overflow: hidden; padding: 1.5rem; border-radius: 1.25rem; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line); }
-  .etape__num { position: absolute; top: -0.5rem; right: 0.75rem; font-family: var(--font-display); font-size: 4.5rem; font-weight: 700; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px rgb(174 36 69 / 0.22); }
+  .etape__num { position: absolute; top: -0.5rem; right: 0.75rem; font-family: var(--font-display); font-size: 4.5rem; font-weight: 700; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px rgb(74 115 32 / 0.26); }
   .etape__icon { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 0.875rem; color: #fff; background: linear-gradient(135deg, var(--color-forest), var(--color-forest-night)); }
 
   .donnees { display: flex; gap: 0.9rem; padding: 1.25rem 1.4rem; border-radius: 1.25rem; font-size: 0.9375rem; color: var(--color-ink); background: #fff; box-shadow: inset 0 0 0 1px var(--color-line); }

@@ -10,7 +10,7 @@ import SiteImage from '../ui/SiteImage.astro';
 import Button from '../ui/Button.astro';
 import { site } from '../../config/site';
 
-// Titre découpé en mots pour l'animation (les mots « accent » sont en rose)
+// Titre découpé en mots pour l'animation (les mots « accent » sont en vert feuille clair)
 const segments = [
   { text: 'Bâtir ensemble des territoires', accent: false },
   { text: 'durables et résilients', accent: true },
@@ -29,8 +29,8 @@ const cards = [
 <section aria-labelledby="hero-title" class="hero relative isolate flex min-h-[min(48rem,100svh)] items-center overflow-clip bg-forest-night text-white lg:min-h-[min(56rem,100svh)]" data-hero>
   <div class="absolute inset-0 -z-30"><SiteImage id="accueil.hero" sizes="100vw" priority /></div>
   <!-- Voile vert en dégradé : lisibilité du texte -->
-  <div aria-hidden="true" class="absolute inset-0 -z-20 bg-[linear-gradient(180deg,rgb(16_29_8/0.80)_0%,rgb(16_29_8/0.64)_40%,rgb(16_29_8/0.82)_75%,rgb(16_29_8/0.95)_100%)]"></div>
-  <div aria-hidden="true" class="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_70%_60%_at_50%_45%,rgb(16_29_8/0.45),transparent_75%),radial-gradient(ellipse_55%_50%_at_100%_100%,rgb(174_36_69/0.30),transparent_70%),radial-gradient(ellipse_45%_45%_at_0%_0%,rgb(18_128_75/0.25),transparent_70%)]"></div>
+  <div aria-hidden="true" class="absolute inset-0 -z-20 bg-[linear-gradient(180deg,rgb(15_38_24/0.80)_0%,rgb(15_38_24/0.64)_40%,rgb(15_38_24/0.82)_75%,rgb(15_38_24/0.95)_100%)]"></div>
+  <div aria-hidden="true" class="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_70%_60%_at_50%_45%,rgb(15_38_24/0.45),transparent_75%),radial-gradient(ellipse_55%_50%_at_100%_100%,rgb(252_209_42/0.18),transparent_70%),radial-gradient(ellipse_45%_45%_at_0%_0%,rgb(74_115_32/0.25),transparent_70%)]"></div>
 
   <!-- Motif décoratif : lignes ondulantes vertes très légères -->
   <svg aria-hidden="true" class="hero-waves pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[70%] w-full" viewBox="0 0 1440 560" preserveAspectRatio="none" fill="none">
@@ -49,10 +49,10 @@ const cards = [
       Cabinet d'études et de conseil · Cotonou, Bénin
     </p>
 
-    <h1 id="hero-title" class="mt-7 max-w-[48rem] text-display text-white [text-shadow:0_2px_24px_rgb(16_29_8/0.45)]">
+    <h1 id="hero-title" class="mt-7 max-w-[48rem] text-display text-white [text-shadow:0_2px_24px_rgb(15_38_24/0.45)]">
       {words.map(({ w, accent, i }) => (
         <>
-          <span class="w"><span class:list={['wi', accent && 'text-flame']} style={`--wi:${i}`}>{w}</span></span>{' '}
+          <span class="w"><span class:list={['wi', accent && 'text-leaf-light']} style={`--wi:${i}`}>{w}</span></span>{' '}
         </>
       ))}
     </h1>
@@ -91,13 +91,13 @@ const cards = [
   }
 
   /* Pastille animée du badge */
-  .hero-pulse { position: relative; width: 8px; height: 8px; border-radius: 999px; background: var(--color-flame); }
+  .hero-pulse { position: relative; width: 8px; height: 8px; border-radius: 999px; background: var(--color-sun); }
   .hero-pulse::after {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: var(--color-flame);
+    background: var(--color-sun);
     animation: hero-pulse 2.4s var(--ease-out-soft) 3;
   }
   @keyframes hero-pulse { to { transform: scale(3); opacity: 0; } }
@@ -112,7 +112,7 @@ const cards = [
   @keyframes word-up { from { transform: translateY(108%); } to { transform: none; } }
 
   /* ---------- Motif ---------- */
-  .hero-waves { color: rgb(195 214 181 / 0.10); }
+  .hero-waves { color: rgb(198 216 180 / 0.10); }
 
   /* ---------- Cartes flottantes (grand écran) ---------- */
   .hero-float { display: none; position: absolute; inset: 0; z-index: 5; pointer-events: none; }
@@ -146,9 +146,9 @@ const cards = [
     width: 2.375rem;
     height: 2.375rem;
     border-radius: 0.75rem;
-    color: #fff;
-    background: linear-gradient(135deg, var(--color-brand), var(--color-brand-deep));
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.25), 0 8px 18px -8px rgb(174 36 69 / 0.8);
+    color: var(--color-forest-deep);
+    background: linear-gradient(135deg, var(--color-sun-light), var(--color-sun));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5), 0 8px 18px -8px rgb(204 150 0 / 0.7);
   }
   .fcard__value { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: #fff; }
   .fcard__label { margin-top: 0.125rem; font-size: 0.78rem; color: rgb(255 255 255 / 0.75); }

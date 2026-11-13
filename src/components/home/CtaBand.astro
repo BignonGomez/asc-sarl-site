@@ -3,8 +3,8 @@ import { Mail } from '@lucide/astro';
 import Button from '../ui/Button.astro';
 import { site } from '../../config/site';
 ---
-<section aria-labelledby="cta-title" class="relative isolate overflow-hidden bg-brand text-white">
-  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_90%_at_100%_0%,rgb(255_255_255/0.12),transparent_60%),radial-gradient(ellipse_60%_80%_at_0%_100%,rgb(141_2_47/0.6),transparent_70%)]"></div>
+<section aria-labelledby="cta-title" class="relative isolate overflow-hidden bg-forest text-white">
+  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_90%_at_100%_0%,rgb(252_209_42/0.16),transparent_60%),radial-gradient(ellipse_60%_80%_at_0%_100%,rgb(168_196_90/0.22),transparent_70%),linear-gradient(160deg,transparent_40%,rgb(15_38_24/0.45))]"></div>
   <div class="container-site grid gap-10 py-20 lg:grid-cols-12 lg:items-center lg:py-28">
     <div class="lg:col-span-8" data-reveal>
       <h2 id="cta-title" class="text-h2 text-white">Un projet, une étude, des termes de référence à partager ?</h2>
@@ -13,7 +13,7 @@ import { site } from '../../config/site';
       </p>
     </div>
     <div class="flex flex-col items-start gap-5 lg:col-span-4 lg:items-end" data-reveal style="--reveal-delay:120ms">
-      <Button href={site.cta.href} variant="white" size="lg" arrow>{site.cta.label}</Button>
+      <Button href={site.cta.href} size="lg" arrow>{site.cta.label}</Button>
       <a href={`mailto:${site.email}`} class="inline-flex items-center gap-2 text-small font-medium text-white/85 hover:text-white hover:underline hover:underline-offset-4">
         <Mail size={16} aria-hidden="true" /> {site.email}
       </a>

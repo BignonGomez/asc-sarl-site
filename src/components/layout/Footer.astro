@@ -1,9 +1,9 @@
 ---
 /**
- * Pied de page : carte d'appel à l'action en verre (remplace l'ancien bandeau rouge),
+ * Pied de page : carte d'appel à l'action en verre (remplace l’ancien bandeau de couleur),
  * 5 colonnes (présentation, navigation, expertises, siège social, informations légales),
  * grand mot en contour « ALKEBULAN » animé au défilement, barre du bas.
- * Fond : dégradé émeraude → vert forêt, deux halos (vert clair, rose) et léger grain.
+ * Fond : dégradé vert forêt, deux halos (vert feuille, soleil) et léger grain.
  */
 import { MapPin, Phone, Mail, ArrowUpRight } from '@lucide/astro';
 import SocialIcon from '../ui/SocialIcon.astro';
@@ -30,19 +30,19 @@ const socials = [
   <!-- Fond -->
   <div aria-hidden="true" class="sf-bg absolute inset-0 -z-10">
     <span class="sf-halo sf-halo--green"></span>
-    <span class="sf-halo sf-halo--rose"></span>
+    <span class="sf-halo sf-halo--sun"></span>
     <span class="sf-grain"></span>
   </div>
   <!-- Trait d'accent -->
-  <div aria-hidden="true" class="h-1 bg-linear-to-r from-brand-deep via-[#e0587a] to-brand shadow-[0_0_18px_2px_rgb(224_88_122/0.55)]"></div>
+  <div aria-hidden="true" class="h-1 bg-linear-to-r from-leaf via-sun to-leaf shadow-[0_0_18px_2px_rgb(252_209_42/0.45)]"></div>
 
   <!-- Carte d'appel à l'action (masquée sur la page Contact) -->
   {showCta && (
   <section aria-labelledby="footer-cta-title" class="container-site pt-16 sm:pt-20 lg:pt-24">
     <div class="sf-cta" data-reveal data-spot>
       <span aria-hidden="true" class="sf-cta__glow"></span>
-      <p class="inline-flex items-center gap-3 text-eyebrow uppercase text-emerald-mist">
-        <span aria-hidden="true" class="h-px w-6 bg-flame"></span>Parlons de votre projet<span aria-hidden="true" class="h-px w-6 bg-flame"></span>
+      <p class="inline-flex items-center gap-3 text-eyebrow uppercase text-leaf-light">
+        <span aria-hidden="true" class="h-px w-6 bg-sun"></span>Parlons de votre projet<span aria-hidden="true" class="h-px w-6 bg-sun"></span>
       </p>
       <h2 id="footer-cta-title" class="mx-auto mt-5 max-w-[22ch] text-h2 text-white">{ctaTitle}</h2>
       <p class="mx-auto mt-5 max-w-2xl text-lead text-white">
@@ -143,17 +143,17 @@ const socials = [
 <style>
   /* ---------- Fond ---------- */
   .sf-bg {
-    background: linear-gradient(170deg, #0e6c3f 0%, #0b5a33 26%, #0a4529 52%, var(--color-emerald-deep) 78%, #052614 100%);
+    background: linear-gradient(170deg, #2a6239 0%, #22552f 26%, #1b4627 52%, var(--color-forest-deep) 78%, #0c2214 100%);
     overflow: hidden;
   }
   .sf-halo { position: absolute; border-radius: 50%; filter: blur(20px); }
   .sf-halo--green {
     width: 60vmax; height: 60vmax; top: -28vmax; left: -18vmax;
-    background: radial-gradient(closest-side, rgb(110 231 160 / 0.2), transparent);
+    background: radial-gradient(closest-side, rgb(168 196 90 / 0.22), transparent);
   }
-  .sf-halo--rose {
+  .sf-halo--sun {
     width: 52vmax; height: 52vmax; top: 18%; right: -20vmax;
-    background: radial-gradient(closest-side, rgb(224 88 122 / 0.30), rgb(174 36 69 / 0.12) 55%, transparent);
+    background: radial-gradient(closest-side, rgb(252 209 42 / 0.20), rgb(252 209 42 / 0.06) 55%, transparent);
   }
   .sf-grain {
     position: absolute;
@@ -182,7 +182,7 @@ const socials = [
     inset: 0;
     padding: 1px;
     border-radius: inherit;
-    background: linear-gradient(155deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.08) 35%, rgb(255 255 255 / 0.04) 65%, rgb(243 169 184 / 0.6));
+    background: linear-gradient(155deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.08) 35%, rgb(255 255 255 / 0.04) 65%, rgb(252 209 42 / 0.55));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -195,7 +195,7 @@ const socials = [
     z-index: -1;
     height: 110%;
     filter: blur(10px);
-    background: radial-gradient(closest-side, rgb(224 88 122 / 0.45), rgb(110 231 160 / 0.12) 60%, transparent);
+    background: radial-gradient(closest-side, rgb(252 209 42 / 0.30), rgb(168 196 90 / 0.14) 60%, transparent);
   }
   /* Halo qui suit la souris */
   .sf-cta::after {
@@ -225,7 +225,7 @@ const socials = [
     box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.25), inset 0 0 0 1px rgb(255 255 255 / 0.2), 0 10px 30px -14px rgb(0 0 0 / 0.6);
     transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s var(--ease-out-soft);
   }
-  .sf-glass-btn:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), inset 0 0 0 1px rgb(243 169 184 / 0.6), 0 14px 36px -14px rgb(224 88 122 / 0.5); }
+  .sf-glass-btn:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), inset 0 0 0 1px rgb(252 209 42 / 0.6), 0 14px 36px -14px rgb(252 209 42 / 0.4); }
 
   /* ---------- Colonnes ---------- */
   .sf-main {
@@ -254,7 +254,7 @@ const socials = [
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--color-emerald-mist);
+    color: var(--color-leaf-light);
   }
   .sf-col li + li { margin-top: 0.625rem; }
   .sf-link {
@@ -262,7 +262,7 @@ const socials = [
     color: rgb(255 255 255 / 0.85);
     transition: color 0.2s;
   }
-  .sf-link:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--color-flame); }
+  .sf-link:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--color-sun); }
   .sf-contact li { display: flex; gap: 0.75rem; font-size: 0.9375rem; line-height: 1.55; color: rgb(255 255 255 / 0.88); }
   .sf-contact li + li { margin-top: 0.875rem; }
   .sf-icon {
@@ -272,7 +272,7 @@ const socials = [
     width: 2rem;
     height: 2rem;
     border-radius: 0.625rem;
-    color: var(--color-emerald-mist);
+    color: var(--color-leaf-light);
     background: rgb(255 255 255 / 0.1);
     box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16);
   }
@@ -288,7 +288,7 @@ const socials = [
     transition: color 0.2s, background-color 0.2s, box-shadow 0.2s, transform 0.3s var(--ease-out-soft);
   }
   .sf-social:hover {
-    color: var(--color-emerald-deep);
+    color: var(--color-forest-deep);
     background: #fff;
     transform: translateY(-3px);
     box-shadow: 0 10px 22px -10px rgb(0 0 0 / 0.6);
@@ -306,7 +306,7 @@ const socials = [
     white-space: nowrap;
     color: transparent;
     -webkit-text-stroke: 1px rgb(255 255 255 / 0.22);
-    background: linear-gradient(180deg, rgb(243 169 184 / 0.28), rgb(243 169 184 / 0.04) 70%, transparent);
+    background: linear-gradient(180deg, rgb(252 209 42 / 0.26), rgb(168 196 90 / 0.05) 70%, transparent);
     -webkit-background-clip: text;
     background-clip: text;
     user-select: none;

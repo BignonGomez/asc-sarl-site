@@ -1,5 +1,5 @@
 ---
-/** Bouton-lien. Variantes : primary (rouge), secondary (contour vert), light (contour blanc sur fond sombre), white (fond blanc). */
+/** Bouton-lien. Variantes : primary (jaune soleil, texte vert forêt), secondary (contour vert), light (contour blanc sur fond sombre), white (fond blanc). */
 import { ArrowRight } from '@lucide/astro';
 import { url } from '../../lib/url';
 
@@ -13,10 +13,10 @@ interface Props {
 const { href, variant = 'primary', size = 'md', arrow = false, class: extra = '' } = Astro.props;
 
 const variants = {
-  primary: 'btn-sheen bg-linear-to-b from-[#c02c50] to-brand text-white shadow-button hover:-translate-y-0.5 hover:from-brand hover:to-brand-hover hover:shadow-button-hover active:translate-y-0 active:shadow-none',
+  primary: 'btn-sheen bg-linear-to-b from-sun-light to-sun text-forest-deep shadow-button hover:-translate-y-0.5 hover:from-sun hover:to-sun-hover hover:shadow-button-hover active:translate-y-0 active:shadow-none',
   secondary: 'border-[1.5px] border-forest text-forest hover:bg-forest hover:text-white',
   light: 'border-[1.5px] border-white/70 bg-white/5 text-white backdrop-blur-sm hover:bg-white hover:text-forest-night',
-  white: 'bg-white text-brand hover:bg-brand-soft',
+  white: 'bg-white text-forest hover:bg-sun-soft',
 };
 const sizes = { md: 'min-h-12 px-6 text-[0.9375rem]', lg: 'min-h-14 px-7 text-base' };
 ---

@@ -24,7 +24,7 @@ const canonical = new URL(path, site.url).href;
     <meta name="description" content={description} />
     {(noindex || robots) && <meta name="robots" content={robots ?? 'noindex, nofollow'} />}
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#234312" />
+    <meta name="theme-color" content="#1f4d2e" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content={site.name} />
@@ -44,7 +44,7 @@ const canonical = new URL(path, site.url).href;
     <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
   <body class="flex min-h-dvh flex-col">
-    <a href="#contenu" class="sr-only z-[60] rounded-ui bg-brand px-4 py-3 font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Aller au contenu</a>
+    <a href="#contenu" class="sr-only z-[60] rounded-ui bg-forest px-4 py-3 font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Aller au contenu</a>
     <Header />
     <main id="contenu" class="flex-1">
       <slot />

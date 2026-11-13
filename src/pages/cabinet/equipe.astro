@@ -33,9 +33,9 @@ const initials = (m: (typeof team)[number]) =>
               {m.photo ? (
                 <Image src={m.photo} alt={`Portrait de ${m.firstName} ${m.lastName}`} widths={[400, 800]} sizes="(min-width: 64rem) 24rem, (min-width: 40rem) 50vw, 100vw" class="aspect-[4/3] w-full object-cover" />
               ) : (
-                <div aria-hidden="true" class="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[linear-gradient(135deg,var(--color-forest-soft),#dfe8d8)]">
+                <div aria-hidden="true" class="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[linear-gradient(135deg,var(--color-forest-soft),#e4ecd3)]">
                   <span aria-hidden="true" class="absolute inset-0 opacity-[0.07] [background-image:repeating-linear-gradient(135deg,var(--color-forest)_0_1px,transparent_1px_12px)]"></span>
-                  <span aria-hidden="true" class="relative flex size-24 items-center justify-center rounded-full bg-white font-display text-3xl font-bold text-forest shadow-[0_8px_24px_-12px_rgb(16_29_8/0.4)] ring-4 ring-white/60">{initials(m)}</span>
+                  <span aria-hidden="true" class="relative flex size-24 items-center justify-center rounded-full bg-white font-display text-3xl font-bold text-forest shadow-[0_8px_24px_-12px_rgb(15_38_24/0.4)] ring-4 ring-white/60">{initials(m)}</span>
                 </div>
               )}
               <div class="flex flex-1 flex-col p-6 sm:p-7">

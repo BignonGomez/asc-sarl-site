@@ -1,39 +1,50 @@
 /*
  * SYSTÈME DE DESIGN — ASC SARL
  * Source unique des couleurs, polices, tailles, espacements et rayons.
- * Couleurs issues de la maquette Stitch (« Souverain Institutional ») et du papier en-tête du cabinet.
+ * Palette « Forêt & Soleil » (novembre 2026) : construite à partir des maquettes validées par le cabinet
+ * (Page d'accueil écoresponsable / Construire les territoires durables de demain).
+ * Rôles : vert forêt = structure et titres ; vert feuille = accents de texte et pictogrammes ;
+ * jaune soleil = actions principales et touches lumineuses (jamais en texte sur fond clair : contraste 1,5:1) ;
+ * crème = fonds doux. Le rouge « danger » est réservé aux erreurs de formulaire.
  * Toute valeur visuelle du site doit passer par ces jetons (classes Tailwind générées automatiquement).
  */
 @theme {
-  /* ---------- Couleurs de marque ---------- */
-  --color-brand: #ae2445;          /* Rouge framboise : actions principales, H1, signature */
-  --color-brand-hover: #931e3a;
-  --color-brand-deep: #8d022f;
-  --color-brand-soft: #fbeef1;     /* Fond très léger (badges, survols) */
+  /* ---------- Vert forêt : couleur institutionnelle ---------- */
+  --color-forest: #1f4d2e;         /* Titres H2, pictogrammes, liens structurants (9,7:1 sur blanc) */
+  --color-forest-hover: #173d24;
+  --color-forest-deep: #143720;    /* Pied de page, texte sur jaune (8,2:1) */
+  --color-forest-night: #0f2618;   /* Fonds sombres (héros, sections immersives) */
+  --color-forest-soft: #edf3e6;    /* Fond léger (badges, pastilles) */
+  --color-forest-mist: #c6d8b4;
 
-  --color-forest: #234312;         /* Vert forêt : H2, pictogrammes, pied de page */
-  --color-forest-hover: #1a330d;
-  --color-forest-night: #101d08;   /* Fond du bandeau d'accueil */
-  --color-forest-soft: #eef3ea;
-  --color-forest-mist: #c3d6b5;
+  /* ---------- Vert feuille : accent de marque ---------- */
+  --color-brand: #4a7320;          /* Accents de texte, liens, numéros, surtitres (5,6:1 sur blanc) */
+  --color-brand-hover: #3d6119;
+  --color-brand-deep: #2f4c13;
+  --color-brand-soft: #f0f5e1;     /* Fond très léger (badges, survols) */
+  --color-leaf: #a8c45a;           /* Vert tendre décoratif (traits, halos, mot « durables » des maquettes) */
+  --color-leaf-light: #c3da7f;     /* Accents de texte sur fond sombre (10,4:1 sur forest-night) */
 
-  /* Verts vifs du pied de page (dégradé émeraude → vert profond) */
-  --color-emerald: #12804b;        /* Émeraude vif (contraste texte blanc : 4,9:1) */
-  --color-emerald-deep: #073d22;   /* Vert profond */
-  --color-emerald-mist: #b9ecd0;   /* Titres et pictogrammes sur fond vert */
-  --color-flame: #f3a9b8;          /* Rose lumineux : accents sur fond sombre */
+  /* ---------- Jaune soleil : actions et lumière ---------- */
+  --color-sun: #fcd12a;            /* Boutons principaux, filets, pictogrammes sur fond sombre */
+  --color-sun-light: #fde36b;      /* Haut du dégradé des boutons */
+  --color-sun-hover: #f5c010;
+  --color-sun-strong: #e0a800;     /* Pastilles d'état « en cours » sur fond clair */
+  --color-sun-soft: #fff7d6;
 
-  /* ---------- Neutres ---------- */
-  --color-ink: #1f1f1f;            /* Texte principal */
-  --color-muted: #555555;          /* Texte secondaire, métadonnées */
-  --color-line: #e5e7eb;           /* Bordures et séparateurs */
-  --color-mineral: #f5f6f2;        /* Fond des sections alternées */
-  --color-placeholder: #eceee9;    /* Fond neutre (zones d’image en cours de chargement) */
+  /* ---------- Neutres (légèrement teintés de vert) ---------- */
+  --color-ink: #1c2a21;            /* Texte principal (15:1) */
+  --color-muted: #556058;          /* Texte secondaire, métadonnées (6,6:1) */
+  --color-line: #e2e6d8;           /* Bordures et séparateurs */
+  --color-mineral: #f5f7ec;        /* Fond crème des sections alternées */
+  --color-placeholder: #eceee2;    /* Fond neutre (zones d’image en cours de chargement) */
   --color-paper: #ffffff;
 
   /* ---------- Statuts ---------- */
-  --color-status-ongoing: #8a5a00;
-  --color-status-ongoing-bg: #fff4d6;
+  --color-status-ongoing: #7a5c00;
+  --color-status-ongoing-bg: #fff7d6;
+  --color-danger: #b42318;         /* Erreurs de formulaire uniquement (6,6:1) */
+  --color-danger-soft: #fef3f2;
 
   /* ---------- Polices ---------- */
   --font-display: "Space Grotesk Variable", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
@@ -92,18 +103,18 @@
   --radius-card: 0.75rem;          /* Cartes */
 
   /* ---------- Ombres (très discrètes, cf. maquette) ---------- */
-  --shadow-card: 0 1px 2px rgb(16 29 8 / 0.04);
-  --shadow-lift: 0 18px 40px -24px rgb(16 29 8 / 0.28);
-  --shadow-header: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 1px 0 rgb(16 29 8 / 0.06), 0 6px 14px -6px rgb(16 29 8 / 0.12), 0 18px 36px -18px rgb(16 29 8 / 0.28);
-  --shadow-header-scrolled: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 1px 0 rgb(16 29 8 / 0.08), 0 10px 22px -8px rgb(16 29 8 / 0.18), 0 26px 48px -20px rgb(16 29 8 / 0.38);
+  --shadow-card: 0 1px 2px rgb(15 38 24 / 0.04);
+  --shadow-lift: 0 18px 40px -24px rgb(15 38 24 / 0.28);
+  --shadow-header: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 1px 0 rgb(15 38 24 / 0.06), 0 6px 14px -6px rgb(15 38 24 / 0.12), 0 18px 36px -18px rgb(15 38 24 / 0.28);
+  --shadow-header-scrolled: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 1px 0 rgb(15 38 24 / 0.08), 0 10px 22px -8px rgb(15 38 24 / 0.18), 0 26px 48px -20px rgb(15 38 24 / 0.38);
   /* Relief des boutons principaux : reflet en haut, arête en bas, ombre portée teintée */
-  --shadow-button: inset 0 1px 0 rgb(255 255 255 / 0.22), inset 0 -2px 0 rgb(0 0 0 / 0.18), 0 2px 4px rgb(141 2 47 / 0.25), 0 10px 22px -10px rgb(174 36 69 / 0.7);
-  --shadow-button-hover: inset 0 1px 0 rgb(255 255 255 / 0.25), inset 0 -2px 0 rgb(0 0 0 / 0.2), 0 4px 8px rgb(141 2 47 / 0.25), 0 18px 32px -12px rgb(174 36 69 / 0.75);
+  --shadow-button: inset 0 1px 0 rgb(255 255 255 / 0.55), inset 0 -2px 0 rgb(150 105 0 / 0.28), 0 2px 4px rgb(120 90 0 / 0.18), 0 10px 22px -10px rgb(204 150 0 / 0.65);
+  --shadow-button-hover: inset 0 1px 0 rgb(255 255 255 / 0.6), inset 0 -2px 0 rgb(150 105 0 / 0.3), 0 4px 8px rgb(120 90 0 / 0.2), 0 18px 32px -12px rgb(204 150 0 / 0.75);
 
   /* ---------- Verre (capsule de menu, panneaux) ---------- */
-  --glass-edge: linear-gradient(155deg, rgb(255 255 255 / 0.95), rgb(35 67 18 / 0.1) 35%, rgb(35 67 18 / 0.06) 65%, rgb(174 36 69 / 0.35));
-  --shadow-glass: inset 0 1px 0 rgb(255 255 255 / 0.9), 0 12px 32px -18px rgb(16 29 8 / 0.35);
-  --shadow-glass-strong: inset 0 1px 0 rgb(255 255 255 / 0.9), 0 22px 50px -20px rgb(16 29 8 / 0.5);
+  --glass-edge: linear-gradient(155deg, rgb(255 255 255 / 0.95), rgb(31 77 46 / 0.1) 35%, rgb(31 77 46 / 0.06) 65%, rgb(252 209 42 / 0.45));
+  --shadow-glass: inset 0 1px 0 rgb(255 255 255 / 0.9), 0 12px 32px -18px rgb(15 38 24 / 0.35);
+  --shadow-glass-strong: inset 0 1px 0 rgb(255 255 255 / 0.9), 0 22px 50px -20px rgb(15 38 24 / 0.5);
 
   /* ---------- Animations ---------- */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
