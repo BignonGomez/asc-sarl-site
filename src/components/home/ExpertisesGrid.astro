@@ -9,25 +9,28 @@ import { url } from '../../lib/url';
 <section aria-labelledby="expertises-title" class="section-y bg-mineral">
   <div class="container-site">
     <SectionHeading id="expertises-title" title="Nos domaines d'expertise" />
-    <ul class="mt-14 grid gap-5 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-6">
+    <ul class="mt-12 grid gap-x-6 gap-y-6 sm:grid-cols-2 lg:mt-14 xl:grid-cols-4">
       {expertises.map((e, i) => (
-        <li data-reveal style={`--reveal-delay:${(i % 4) * 70}ms`}>
-          <article class="card group relative flex h-full flex-col overflow-hidden rounded-card border border-line bg-white shadow-card transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1 hover:border-forest/40 hover:shadow-lift">
+        <li class="row-span-4 grid grid-rows-subgrid gap-y-0" data-reveal style={`--reveal-delay:${(i % 4) * 70}ms`}>
+          <article class="card group relative row-span-4 grid grid-rows-subgrid gap-y-0 overflow-hidden rounded-card border border-line bg-white shadow-card transition-[border-color,box-shadow,transform] duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:border-forest/30 hover:shadow-lift">
             <div class="aspect-[16/10] overflow-hidden bg-mineral">
-              <SiteImage id={`expertise.${e.slug}` as any} sizes="(min-width: 64rem) 18rem, (min-width: 40rem) 50vw, 100vw" class="transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-[1.04]" />
+              <SiteImage id={`expertise.${e.slug}` as any} sizes="(min-width: 80rem) 18rem, (min-width: 40rem) 50vw, 100vw" class="transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-[1.04]" />
             </div>
-            <div class="flex flex-1 flex-col px-6 pb-6">
+            <div class="row-span-3 grid grid-rows-subgrid gap-y-0 px-6 pb-7">
+              <div>
               <span class="relative -mt-6 mb-5 inline-flex size-12 items-center justify-center rounded-ui border border-line bg-white text-forest shadow-card transition-colors duration-300 group-hover:border-forest group-hover:bg-forest group-hover:text-white">
                 <ExpertiseIcon name={e.icon} size={22} />
               </span>
-              <h3 class="text-h4 text-forest">
+              <h3 class="text-h4 leading-snug text-forest">
                 <a href={url(`/expertises/${e.slug}`)} class="after:absolute after:inset-0 focus-visible:outline-none">{e.title}</a>
               </h3>
-              <p class="mt-3 flex-1 text-small text-muted">{e.summary}</p>
-              <span aria-hidden="true" class="mt-6 inline-flex items-center gap-2 text-small font-semibold text-forest">
+              </div>
+              <p class="mt-3 text-[0.9375rem] leading-relaxed text-ink/70">{e.summary}</p>
+              <span aria-hidden="true" class="mt-6 inline-flex items-center gap-2 self-end text-small font-semibold text-forest">
                 En savoir plus <ArrowRight size={16} class="transition-transform duration-200 group-hover:translate-x-1" />
               </span>
             </div>
+            <span aria-hidden="true" class="card__bar"></span>
           </article>
         </li>
       ))}
@@ -38,4 +41,19 @@ import { url } from '../../lib/url';
 <style>
   /* Anneau de focus visible sur toute la carte quand son lien est sélectionné au clavier */
   .card:has(a:focus-visible) { outline: 2px solid var(--color-brand); outline-offset: 3px; }
+  /* Survol : fin trait jaune soleil qui se déploie au bas de la carte */
+  .card__bar {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 3px;
+    background: var(--color-sun);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s var(--ease-out-soft);
+  }
+  .card:hover .card__bar, .card:has(a:focus-visible) .card__bar { transform: scaleX(1); }
+  @media (prefers-reduced-motion: reduce) {
+    .card, .card :global(img) { transition: none !important; transform: none !important; }
+    .card__bar { transition: none; }
+  }
 </style>

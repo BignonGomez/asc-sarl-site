@@ -39,7 +39,7 @@ const words = segments.flatMap((s) => s.text.split(' ').map((w) => ({ w, accent:
 
       <span aria-hidden="true" class="hero-rise mt-8 block h-[3px] w-10 rounded-full bg-sun" style="--d:460ms"></span>
 
-      <p class="hero-rise mt-7 max-w-xl text-lead text-muted" style="--d:520ms">
+      <p class="hero-rise mt-7 max-w-[34rem] text-lead text-ink/80" style="--d:520ms">
         <strong class="font-semibold text-ink">{site.name}</strong> accompagne les institutions publiques, les collectivités, les organisations et les entreprises face aux enjeux environnementaux, climatiques et territoriaux : du diagnostic des besoins aux solutions techniques adaptées, jusqu'à l'accompagnement de vos projets.
       </p>
       <div class="hero-rise mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4" style="--d:640ms">
@@ -48,7 +48,7 @@ const words = segments.flatMap((s) => s.text.split(' ').map((w) => ({ w, accent:
       </div>
     </div>
 
-    <div class="hero-photo lg:col-span-6 xl:col-span-6">
+    <div class="hero-photo lg:col-span-6 lg:pl-4 xl:col-span-6 xl:pl-8">
       <div class="hero-photo__frame">
         <SiteImage id="accueil.hero" sizes="(min-width: 64rem) 50vw, 100vw" priority />
       </div>
@@ -103,7 +103,7 @@ const words = segments.flatMap((s) => s.text.split(' ').map((w) => ({ w, accent:
     box-shadow: var(--shadow-lift);
   }
   @media (width >= 64rem) {
-    .hero-photo__frame { aspect-ratio: 5 / 5.2; border-radius: 2.5rem 2.5rem 2.5rem 11rem; }
+    .hero-photo__frame { aspect-ratio: 1 / 1; border-radius: 2.5rem 2.5rem 2.5rem 11rem; }
     .hero-photo::before { inset: 2rem -1.5rem -1.5rem 2rem; border-radius: 2.5rem 2.5rem 2.5rem 12rem; }
   }
   @keyframes photo-in {

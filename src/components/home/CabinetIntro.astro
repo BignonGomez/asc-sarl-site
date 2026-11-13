@@ -1,24 +1,46 @@
 ---
+/**
+ * Accueil, section 2 : présentation du cabinet.
+ * Complète le héro sans le répéter : statut et ancrage, puis trois points clés
+ * (formulations reprises des pages Le Cabinet, Équipe et FAQ, aucune information nouvelle).
+ */
+import { MapPin, Users, Handshake } from '@lucide/astro';
 import SectionHeading from '../ui/SectionHeading.astro';
 import ArrowLink from '../ui/ArrowLink.astro';
 import SiteImage from '../ui/SiteImage.astro';
+
+const points = [
+  { icon: MapPin, title: 'Ancré au Bénin', text: "Siège à Cotonou ; interventions auprès d'acteurs nationaux et locaux, en milieu urbain comme en milieu rural." },
+  { icon: Users, title: 'Pluridisciplinaire', text: 'Des équipes aux compétences complémentaires, constituées selon les besoins de chaque mission.' },
+  { icon: Handshake, title: 'Au service des acteurs publics et privés', text: 'Administrations, collectivités territoriales, organisations de développement, entreprises et porteurs de projets.' },
+];
 ---
 <section aria-labelledby="cabinet-title" class="section-y bg-white">
   <div class="container-site grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
     <div class="lg:col-span-6">
       <SectionHeading id="cabinet-title" title="Un cabinet béninois au service des territoires" />
-      <p class="mt-8 text-lead text-ink/90" data-reveal>
-        <strong class="font-semibold text-forest">Alkebulan Services et Conseils</strong> est une société à responsabilité limitée (SARL) de droit béninois, immatriculée à Cotonou en 2025. Nous intervenons en environnement, changements climatiques, gestion de l'eau, aménagement du territoire, agriculture durable et développement local.
+      <p class="mt-7 max-w-xl text-lead text-ink/85" data-reveal>
+        <strong class="font-semibold text-forest">Alkebulan Services et Conseils</strong> est une société à responsabilité limitée de droit béninois, immatriculée à Cotonou en 2025. Le cabinet adapte la composition de ses équipes et ses méthodes à la nature de chaque mission et au contexte de chaque territoire.
       </p>
-      <p class="mt-5 text-body text-muted" data-reveal>
-        Nos compétences pluridisciplinaires sont au service des administrations publiques, des collectivités territoriales, des organisations de développement, des entreprises et des porteurs de projets, avec une préoccupation constante : apporter des réponses adaptées aux réalités de chaque territoire.
-      </p>
-      <div class="mt-9" data-reveal>
+      <ul class="mt-9 grid gap-5" data-reveal>
+        {points.map((p) => (
+          <li class="flex gap-4">
+            <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-forest-soft text-forest">
+              <p.icon size={20} stroke-width={1.9} aria-hidden="true" />
+            </span>
+            <span>
+              <span class="block font-display text-h4 text-forest">{p.title}</span>
+              <span class="mt-1 block text-[0.9375rem] leading-relaxed text-muted">{p.text}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+      <div class="mt-10" data-reveal>
         <ArrowLink href="/cabinet">En savoir plus sur le cabinet</ArrowLink>
       </div>
     </div>
     <div class="lg:col-span-6" data-reveal style="--reveal-delay:120ms">
-      <div class="relative aspect-[4/3] overflow-hidden rounded-card shadow-lift ring-1 ring-black/5">
+      <div class="relative aspect-[4/3] overflow-hidden rounded-[1.75rem] shadow-lift ring-1 ring-black/5 lg:aspect-[4/4.4]">
         <SiteImage id="accueil.cabinet" sizes="(min-width: 64rem) 36rem, 100vw" />
       </div>
     </div>
