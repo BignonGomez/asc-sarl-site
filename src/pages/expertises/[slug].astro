@@ -137,8 +137,8 @@ const split = L.presentation !== 'quote';
               <SectionHeading id="prestations-title" title="Ce que nous faisons" intro="Nos prestations dans ce domaine." />
               <div class="list-panel mt-10" data-reveal>
                 <span class="list-panel__icon"><ExpertiseIcon name={domain.icon} size={30} /></span>
-                <p class="mt-6 font-display text-[3.5rem] font-bold leading-none text-white">{String(nbPrestations).padStart(2, '0')}</p>
-                <p class="mt-2 text-small font-semibold uppercase tracking-[0.12em] text-forest-mist">prestations</p>
+                <p class="mt-6 font-display text-[3.5rem] font-bold leading-none text-forest">{String(nbPrestations).padStart(2, '0')}</p>
+                <p class="mt-2 text-small font-semibold uppercase tracking-[0.12em] text-brand">prestations</p>
               </div>
             </div>
           </div>
@@ -159,7 +159,7 @@ const split = L.presentation !== 'quote';
             {page.prestations.map((p, i) => (
               <li class:list={['bento__item', i === 0 && 'bento__item--lead']} data-reveal style={`--reveal-delay:${(i % 3) * 80}ms`}>
                 <span class="bento__icon"><Icon name={p.icon} size={i === 0 ? 26 : 22} /></span>
-                <h3 class:list={['mt-auto pt-8 font-display leading-snug', i === 0 ? 'text-h3 text-white' : 'text-h4 text-forest']}>{p.title}</h3>
+                <h3 class:list={['mt-auto pt-8 font-display leading-snug', i === 0 ? 'text-h3 text-forest' : 'text-h4 text-forest']}>{p.title}</h3>
               </li>
             ))}
           </ul>
@@ -232,21 +232,21 @@ const split = L.presentation !== 'quote';
   </section>
 
   <!-- 5. Publics -->
-  <section id="publics" aria-labelledby="publics-title" class="publics section-y scroll-mt-24 text-white">
+  <section id="publics" aria-labelledby="publics-title" class="publics section-y scroll-mt-24">
     <div class="container-site">
-      <SectionHeading id="publics-title" title="Pour qui ?" tone="light" intro="Nous accompagnons les acteurs publics et privés." />
+      <SectionHeading id="publics-title" title="Pour qui ?" intro="Nous accompagnons les acteurs publics et privés." />
       <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {publics.map((p, i) => (
           <li class="public" data-reveal style={`--reveal-delay:${(i % 3) * 70}ms`}>
             <span class="public__icon"><Icon name={p.icon} size={20} /></span>
-            <span class="font-display text-h4 text-white">{p.label}</span>
+            <span class="font-display text-h4 text-forest">{p.label}</span>
           </li>
         ))}
       </ul>
       {page.publicsSpecific && (
         <div class="mt-10 flex flex-wrap items-center gap-2" data-reveal>
-          <span class="mr-2 text-eyebrow uppercase text-forest-mist">Dans ce domaine, en particulier</span>
-          {page.publicsSpecific.map((p) => <span class="rounded-full bg-white/10 px-3.5 py-1.5 text-small font-semibold text-white ring-1 ring-white/20">{p}</span>)}
+          <span class="mr-2 text-eyebrow uppercase text-brand">Dans ce domaine, en particulier</span>
+          {page.publicsSpecific.map((p) => <span class="rounded-full bg-white px-3.5 py-1.5 text-small font-semibold text-forest ring-1 ring-forest/15">{p}</span>)}
         </div>
       )}
     </div>
@@ -434,7 +434,9 @@ const split = L.presentation !== 'quote';
     overflow: hidden;
     padding: 2rem;
     border-radius: 1.5rem;
-    background: radial-gradient(ellipse 70% 80% at 100% 0%, rgb(74 115 32 / 0.55), transparent 70%), radial-gradient(ellipse 60% 70% at 0% 100%, rgb(252 209 42 / 0.21), transparent 70%), var(--color-forest-night);
+    background: radial-gradient(ellipse 70% 70% at 100% 0%, rgb(252 209 42 / 0.14), transparent 70%), #fff;
+    border-top: 4px solid var(--color-sun);
+    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lift);
   }
   .list-panel__icon {
     display: grid;
@@ -442,9 +444,9 @@ const split = L.presentation !== 'quote';
     width: 4rem;
     height: 4rem;
     border-radius: 1.1rem;
-    color: #fff;
-    background: rgb(255 255 255 / 0.1);
-    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.18);
+    color: var(--color-forest-deep);
+    background: var(--color-sun);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5);
   }
   .list-row {
     display: grid;
@@ -488,8 +490,9 @@ const split = L.presentation !== 'quote';
   }
   .bento__item:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
   .bento__item--lead {
-    background: radial-gradient(ellipse 80% 70% at 100% 0%, rgb(74 115 32 / 0.6), transparent 70%), radial-gradient(ellipse 70% 60% at 0% 100%, rgb(252 209 42 / 0.24), transparent 70%), var(--color-forest-night);
-    box-shadow: var(--shadow-lift);
+    background: radial-gradient(ellipse 70% 70% at 100% 0%, rgb(252 209 42 / 0.14), transparent 70%), #fff;
+    border-top: 4px solid var(--color-sun);
+    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lift);
   }
   .bento__icon {
     display: grid;
@@ -500,7 +503,7 @@ const split = L.presentation !== 'quote';
     color: var(--color-forest);
     background: var(--color-forest-soft);
   }
-  .bento__item--lead .bento__icon { width: 3.5rem; height: 3.5rem; color: #fff; background: rgb(255 255 255 / 0.12); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.2); }
+  .bento__item--lead .bento__icon { width: 3.5rem; height: 3.5rem; color: var(--color-forest-deep); background: var(--color-sun); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5); }
 
   /* ---------- Prestations : groupes par public ---------- */
   .groupe {
@@ -509,13 +512,13 @@ const split = L.presentation !== 'quote';
     background: #fff;
     box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-card);
   }
-  .groupe--dark { background: var(--color-forest-night); box-shadow: var(--shadow-lift); }
+  .groupe--dark { background: radial-gradient(ellipse 70% 70% at 100% 0%, rgb(252 209 42 / 0.14), transparent 70%), #fff; border-top: 4px solid var(--color-sun); box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lift); }
   .groupe__title { font-family: var(--font-sans); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-brand); }
-  .groupe--dark .groupe__title { color: var(--color-leaf-light); }
+  
   .groupe__item { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 1rem; background: var(--color-mineral); color: var(--color-forest); }
-  .groupe--dark .groupe__item { background: rgb(255 255 255 / 0.07); color: #fff; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1); }
+  .groupe--dark .groupe__item { background: var(--color-mineral); }
   .groupe__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.75rem; height: 2.75rem; border-radius: 0.875rem; color: #fff; background: var(--color-forest); }
-  .groupe--dark .groupe__icon { background: var(--color-brand); }
+  .groupe--dark .groupe__icon { color: var(--color-forest-deep); background: var(--color-sun); }
 
   /* ---------- Démarche : frise (verticale sur mobile, horizontale sur ordinateur) ---------- */
   .frise { position: relative; display: grid; gap: 1.25rem; }
@@ -613,16 +616,16 @@ const split = L.presentation !== 'quote';
     -webkit-text-stroke: 1.5px rgb(74 115 32 / 0.34);
   }
 
-  /* ---------- Publics : bande verte ---------- */
-  .publics { background: radial-gradient(ellipse 60% 80% at 100% 0%, rgb(74 115 32 / 0.45), transparent 70%), radial-gradient(ellipse 50% 70% at 0% 100%, rgb(252 209 42 / 0.15), transparent 70%), var(--color-forest-night); }
+  /* ---------- Publics : bande vert très pâle ---------- */
+  .publics { background: radial-gradient(ellipse 50% 70% at 100% 0%, rgb(252 209 42 / 0.08), transparent 70%), var(--color-mineral); }
   .public {
     display: flex;
     align-items: center;
     gap: 1rem;
     padding: 1.25rem 1.4rem;
     border-radius: 1.25rem;
-    background: linear-gradient(150deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.03));
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12), inset 0 0 0 1px rgb(255 255 255 / 0.12);
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-card);
   }
   .public__icon {
     display: grid;
@@ -631,8 +634,8 @@ const split = L.presentation !== 'quote';
     width: 2.75rem;
     height: 2.75rem;
     border-radius: 0.875rem;
-    color: var(--color-sun);
-    background: rgb(255 255 255 / 0.08);
+    color: var(--color-forest-deep);
+    background: var(--color-sun);
   }
 
   /* ---------- Experts ---------- */

@@ -52,28 +52,28 @@ const actions = [
     </ul>
   </nav>
 
-  <section aria-label="Coordonnées et formulaire" class="section-y bg-mineral">
+  <section aria-label="Coordonnées et formulaire" class="section-y bg-white">
     <div class="container-site grid gap-10 lg:grid-cols-12 lg:gap-12">
       <!-- Coordonnées officielles -->
       <aside class="grid content-start gap-6 lg:col-span-5" aria-labelledby="coord-title">
         <div class="coord" data-reveal>
-          <h2 id="coord-title" class="font-display text-h3 text-white">Coordonnées</h2>
+          <h2 id="coord-title" class="font-display text-h3 text-forest">Coordonnées</h2>
           <dl class="mt-7 grid gap-6">
             <div class="coord__row">
               <dt class="coord__icon"><Building size={18} aria-hidden="true" /><span class="sr-only">Dénomination</span></dt>
-              <dd><span class="block font-display font-semibold text-white">{site.name}</span><span class="text-small text-white/75">Société à responsabilité limitée</span></dd>
+              <dd><span class="block font-display font-semibold text-forest">{site.name}</span><span class="text-small text-muted">Société à responsabilité limitée</span></dd>
             </div>
             <div class="coord__row">
               <dt class="coord__icon"><MapPin size={18} aria-hidden="true" /><span class="sr-only">Adresse du siège</span></dt>
-              <dd><address class="not-italic leading-relaxed text-white/90">{site.address.lines.map((l) => <span class="block">{l}</span>)}</address></dd>
+              <dd><address class="not-italic leading-relaxed text-ink">{site.address.lines.map((l) => <span class="block">{l}</span>)}</address></dd>
             </div>
             <div class="coord__row">
               <dt class="coord__icon"><Phone size={18} aria-hidden="true" /><span class="sr-only">Téléphone</span></dt>
-              <dd class="text-white/90">{site.phone.href ? <a href={site.phone.href} class="hover:underline">{site.phone.display}</a> : site.phone.display}</dd>
+              <dd class="text-ink">{site.phone.href ? <a href={site.phone.href} class="hover:underline">{site.phone.display}</a> : site.phone.display}</dd>
             </div>
             <div class="coord__row">
               <dt class="coord__icon"><Mail size={18} aria-hidden="true" /><span class="sr-only">Courriel</span></dt>
-              <dd><a href={`mailto:${site.email}`} class="font-semibold text-white underline-offset-4 hover:underline">{site.email}</a></dd>
+              <dd><a href={`mailto:${site.email}`} class="font-semibold text-forest underline-offset-4 hover:underline">{site.email}</a></dd>
             </div>
           </dl>
         </div>
@@ -230,11 +230,11 @@ const actions = [
   .coord {
     padding: 2rem;
     border-radius: 1.5rem;
-    background: radial-gradient(ellipse 80% 70% at 100% 0%, rgb(74 115 32 / 0.55), transparent 70%), radial-gradient(ellipse 70% 60% at 0% 100%, rgb(252 209 42 / 0.21), transparent 70%), var(--color-forest-night);
-    box-shadow: var(--shadow-lift);
+    background: radial-gradient(ellipse 70% 60% at 100% 0%, rgb(252 209 42 / 0.12), transparent 70%), var(--color-mineral);
+    box-shadow: inset 0 0 0 1px rgb(31 77 46 / 0.08);
   }
   .coord__row { display: flex; gap: 1rem; }
-  .coord__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.5rem; height: 2.5rem; border-radius: 0.8rem; color: var(--color-sun); background: rgb(255 255 255 / 0.08); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12); }
+  .coord__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.5rem; height: 2.5rem; border-radius: 0.8rem; color: var(--color-forest-deep); background: var(--color-sun); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5); }
   .motifs { padding: 1.5rem 1.75rem; border-radius: 1.5rem; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line); }
   .faq-link { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; border-radius: 1.5rem; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line); transition: box-shadow 0.3s; }
   .faq-link:hover { box-shadow: inset 0 0 0 1px rgb(31 77 46 / 0.3), var(--shadow-lift); }

@@ -1,9 +1,9 @@
 ---
 /**
- * Pied de page : carte d'appel à l'action en verre (remplace l’ancien bandeau de couleur),
+ * Pied de page : carte d'appel à l'action claire sur fond blanc, puis bloc vert forêt :
  * 5 colonnes (présentation, navigation, expertises, siège social, informations légales),
  * grand mot en contour « ALKEBULAN » animé au défilement, barre du bas.
- * Fond : dégradé vert forêt, deux halos (vert feuille, soleil) et léger grain.
+ * Fond du bloc : dégradé vert forêt sobre et léger grain.
  */
 import { MapPin, Phone, Mail, ArrowUpRight } from '@lucide/astro';
 import SocialIcon from '../ui/SocialIcon.astro';
@@ -26,41 +26,41 @@ const socials = [
   { name: 'E-mail', icon: 'mail', href: `mailto:${site.email}`, external: false },
 ];
 ---
-<footer class="site-footer relative isolate overflow-clip text-white">
-  <!-- Fond -->
-  <div aria-hidden="true" class="sf-bg absolute inset-0 -z-10">
-    <span class="sf-halo sf-halo--green"></span>
-    <span class="sf-halo sf-halo--sun"></span>
-    <span class="sf-grain"></span>
-  </div>
-  <!-- Trait d'accent -->
-  <div aria-hidden="true" class="h-1 bg-linear-to-r from-leaf via-sun to-leaf shadow-[0_0_18px_2px_rgb(252_209_42/0.45)]"></div>
-
-  <!-- Carte d'appel à l'action (masquée sur la page Contact) -->
+<footer class="site-footer">
+  <!-- Carte d'appel à l'action, sur fond blanc (masquée sur la page Contact) -->
   {showCta && (
-  <section aria-labelledby="footer-cta-title" class="container-site pt-16 sm:pt-20 lg:pt-24">
-    <div class="sf-cta" data-reveal data-spot>
-      <span aria-hidden="true" class="sf-cta__glow"></span>
-      <p class="inline-flex items-center gap-3 text-eyebrow uppercase text-leaf-light">
-        <span aria-hidden="true" class="h-px w-6 bg-sun"></span>Parlons de votre projet<span aria-hidden="true" class="h-px w-6 bg-sun"></span>
-      </p>
-      <h2 id="footer-cta-title" class="mx-auto mt-5 max-w-[22ch] text-h2 text-white">{ctaTitle}</h2>
-      <p class="mx-auto mt-5 max-w-2xl text-lead text-white">
-        {ctaText}
-      </p>
-      <div class="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
-        <Button href={site.cta.href} size="lg" arrow class="!rounded-full">{site.cta.label}</Button>
-        <a href={`mailto:${site.email}`} class="sf-glass-btn">
-          <Mail size={18} aria-hidden="true" /> {site.email}
-        </a>
+  <section aria-labelledby="footer-cta-title" class="bg-white pb-20 pt-4 sm:pb-24 lg:pb-28">
+    <div class="container-site">
+      <div class="sf-cta" data-reveal>
+        <p class="inline-flex items-center gap-3 text-eyebrow uppercase text-brand">
+          <span aria-hidden="true" class="h-0.5 w-6 rounded-full bg-sun"></span>Parlons de votre projet<span aria-hidden="true" class="h-0.5 w-6 rounded-full bg-sun"></span>
+        </p>
+        <h2 id="footer-cta-title" class="mx-auto mt-5 max-w-[22ch] text-h2 text-forest">{ctaTitle}</h2>
+        <p class="mx-auto mt-5 max-w-2xl text-lead text-muted">
+          {ctaText}
+        </p>
+        <div class="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
+          <Button href={site.cta.href} size="lg" arrow class="!rounded-full">{site.cta.label}</Button>
+          <a href={`mailto:${site.email}`} class="sf-mail-btn">
+            <Mail size={18} aria-hidden="true" /> {site.email}
+          </a>
+        </div>
       </div>
     </div>
   </section>
   )}
 
+  <!-- Bloc vert forêt : informations structurantes -->
+  <div class="sf-dark relative isolate overflow-clip text-white">
+  <div aria-hidden="true" class="sf-bg absolute inset-0 -z-10">
+    <span class="sf-grain"></span>
+  </div>
+  <!-- Trait d'accent -->
+  <div aria-hidden="true" class="h-1 bg-linear-to-r from-leaf via-sun to-leaf"></div>
+
   <!-- Colonnes -->
   <div class="container-site">
-    <div class:list={['sf-main', !showCta && 'sf-main--nocta']}>
+    <div class="sf-main">
       <div class="sf-brand">
         <a href={url('/')} class="inline-flex rounded-ui">
           <img src={logoWhite.src} alt={`${site.name} – accueil`} width="174" height="80" class="h-20 w-auto" />
@@ -138,80 +138,37 @@ const socials = [
       </ul>
     </div>
   </div>
+  </div>
 </footer>
 
 <style>
-  /* ---------- Fond ---------- */
+  /* ---------- Fond du bloc vert ---------- */
   .sf-bg {
-    background: linear-gradient(170deg, #2a6239 0%, #22552f 26%, #1b4627 52%, var(--color-forest-deep) 78%, #0c2214 100%);
+    background: linear-gradient(175deg, #22552f 0%, var(--color-forest) 40%, var(--color-forest-deep) 100%);
     overflow: hidden;
-  }
-  .sf-halo { position: absolute; border-radius: 50%; filter: blur(20px); }
-  .sf-halo--green {
-    width: 60vmax; height: 60vmax; top: -28vmax; left: -18vmax;
-    background: radial-gradient(closest-side, rgb(168 196 90 / 0.22), transparent);
-  }
-  .sf-halo--sun {
-    width: 52vmax; height: 52vmax; top: 18%; right: -20vmax;
-    background: radial-gradient(closest-side, rgb(252 209 42 / 0.20), rgb(252 209 42 / 0.06) 55%, transparent);
   }
   .sf-grain {
     position: absolute;
     inset: 0;
-    opacity: 0.06;
+    opacity: 0.05;
     mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  /* ---------- Carte d'appel à l'action ---------- */
+  /* ---------- Carte d'appel à l'action (claire) ---------- */
   .sf-cta {
     position: relative;
-    isolation: isolate;
     overflow: hidden;
-    padding: clamp(2.5rem, 6vw, 5.5rem) clamp(1.25rem, 5vw, 5rem);
-    border-radius: 2.125rem;
+    padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 5vw, 5rem);
+    border-radius: 2rem;
     text-align: center;
-    background: linear-gradient(150deg, rgb(255 255 255 / 0.13), rgb(255 255 255 / 0.04) 55%, rgb(255 255 255 / 0.08));
-    -webkit-backdrop-filter: blur(16px) saturate(150%);
-    backdrop-filter: blur(16px) saturate(150%);
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.22), 0 30px 70px -30px rgb(0 0 0 / 0.6);
+    background:
+      radial-gradient(ellipse 45% 70% at 100% 0%, rgb(252 209 42 / 0.12), transparent 70%),
+      radial-gradient(ellipse 50% 80% at 0% 100%, rgb(168 196 90 / 0.16), transparent 70%),
+      var(--color-mineral);
+    box-shadow: inset 0 0 0 1px rgb(31 77 46 / 0.08);
   }
-  .sf-cta::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    padding: 1px;
-    border-radius: inherit;
-    background: linear-gradient(155deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.08) 35%, rgb(255 255 255 / 0.04) 65%, rgb(252 209 42 / 0.55));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
-  /* Halo lumineux sous la carte */
-  .sf-cta__glow {
-    position: absolute;
-    inset: auto 0 -55% 0;
-    z-index: -1;
-    height: 110%;
-    filter: blur(10px);
-    background: radial-gradient(closest-side, rgb(252 209 42 / 0.30), rgb(168 196 90 / 0.14) 60%, transparent);
-  }
-  /* Halo qui suit la souris */
-  .sf-cta::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    background: radial-gradient(480px circle at var(--mx, 50%) var(--my, -20%), rgb(255 255 255 / 0.12), transparent 45%);
-    opacity: 0;
-    transition: opacity 0.4s var(--ease-out-soft);
-    pointer-events: none;
-  }
-  .sf-cta:hover::after { opacity: 1; }
-
-  .sf-glass-btn {
+  .sf-mail-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -220,23 +177,20 @@ const socials = [
     padding: 0 1.75rem;
     border-radius: 999px;
     font-weight: 600;
-    color: #fff;
-    background: linear-gradient(150deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.05));
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.25), inset 0 0 0 1px rgb(255 255 255 / 0.2), 0 10px 30px -14px rgb(0 0 0 / 0.6);
-    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s var(--ease-out-soft);
+    color: var(--color-forest);
+    background: #fff;
+    box-shadow: inset 0 0 0 1.5px rgb(31 77 46 / 0.22);
+    transition: box-shadow 0.3s, transform 0.3s var(--ease-out-soft);
   }
-  .sf-glass-btn:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), inset 0 0 0 1px rgb(252 209 42 / 0.6), 0 14px 36px -14px rgb(252 209 42 / 0.4); }
+  .sf-mail-btn:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1.5px var(--color-forest), 0 12px 26px -16px rgb(15 38 24 / 0.4); }
 
   /* ---------- Colonnes ---------- */
   .sf-main {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 2.5rem 1.5rem;
-    margin-top: clamp(3.5rem, 7vw, 6rem);
-    padding-block: 2.75rem;
-    border-top: 1px solid rgb(255 255 255 / 0.14);
+    padding-block: clamp(3.5rem, 7vw, 5rem) 2.75rem;
   }
-  .sf-main--nocta { margin-top: 0; border-top: 0; padding-top: clamp(3.5rem, 7vw, 5rem); }
   .sf-brand, .sf-col--wide { grid-column: 1 / -1; }
   @media (width >= 48rem) {
     .sf-main { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -305,8 +259,8 @@ const socials = [
     text-align: center;
     white-space: nowrap;
     color: transparent;
-    -webkit-text-stroke: 1px rgb(255 255 255 / 0.22);
-    background: linear-gradient(180deg, rgb(252 209 42 / 0.26), rgb(168 196 90 / 0.05) 70%, transparent);
+    -webkit-text-stroke: 1px rgb(255 255 255 / 0.14);
+    background: linear-gradient(180deg, rgb(252 209 42 / 0.14), rgb(168 196 90 / 0.03) 70%, transparent);
     -webkit-background-clip: text;
     background-clip: text;
     user-select: none;
@@ -331,20 +285,12 @@ const socials = [
 
   @media (prefers-reduced-motion: reduce) {
     .sf-word { transform: none; }
-    .sf-social:hover, .sf-glass-btn:hover { transform: none; }
+    .sf-social:hover, .sf-mail-btn:hover { transform: none; }
   }
 </style>
 
 <script>
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  // Halo qui suit la souris sur la carte d'appel
-  document.querySelectorAll<HTMLElement>('[data-spot]').forEach((el) => {
-    el.addEventListener('pointermove', (e) => {
-      const r = el.getBoundingClientRect();
-      el.style.setProperty('--mx', `${e.clientX - r.left}px`);
-      el.style.setProperty('--my', `${e.clientY - r.top}px`);
-    });
-  });
   // Léger glissement horizontal du grand mot pendant le défilement
   const word = document.querySelector<HTMLElement>('[data-footer-word]');
   if (word && !reduce.matches) {

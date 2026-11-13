@@ -54,9 +54,9 @@ export const images = {
   // ---------------- Accueil ----------------
   'accueil.hero': {
     src: terrainPlantation,
-    alt: '', // image de fond décorative : le texte du héro porte l'information
+    alt: 'Femmes et hommes travaillant une parcelle lors d’une activité de terrain',
     status: 'définitif',
-    position: 'center 25%',
+    position: '35% center',
     note: 'Photo de terrain (Picture6.png).',
   },
   'accueil.cabinet': {

@@ -5,7 +5,7 @@
  * (Page d'accueil écoresponsable / Construire les territoires durables de demain).
  * Rôles : vert forêt = structure et titres ; vert feuille = accents de texte et pictogrammes ;
  * jaune soleil = actions principales et touches lumineuses (jamais en texte sur fond clair : contraste 1,5:1) ;
- * crème = fonds doux. Le rouge « danger » est réservé aux erreurs de formulaire.
+ * blanc dominant, vert très pâle pour rythmer les sections. Le rouge « danger » est réservé aux erreurs de formulaire.
  * Toute valeur visuelle du site doit passer par ces jetons (classes Tailwind générées automatiquement).
  */
 @theme {
@@ -24,6 +24,7 @@
   --color-brand-soft: #f0f5e1;     /* Fond très léger (badges, survols) */
   --color-leaf: #a8c45a;           /* Vert tendre décoratif (traits, halos, mot « durables » des maquettes) */
   --color-leaf-light: #c3da7f;     /* Accents de texte sur fond sombre (10,4:1 sur forest-night) */
+  --color-leaf-strong: #5e8f23;    /* Mots d'accent des grands titres sur fond clair uniquement (3,9:1, grands caractères) */
 
   /* ---------- Jaune soleil : actions et lumière ---------- */
   --color-sun: #fcd12a;            /* Boutons principaux, filets, pictogrammes sur fond sombre */
@@ -36,7 +37,8 @@
   --color-ink: #1c2a21;            /* Texte principal (15:1) */
   --color-muted: #556058;          /* Texte secondaire, métadonnées (6,6:1) */
   --color-line: #e2e6d8;           /* Bordures et séparateurs */
-  --color-mineral: #f5f7ec;        /* Fond crème des sections alternées */
+  --color-mineral: #f4f8f1;        /* Vert très pâle : sections alternées (le blanc reste le fond dominant) */
+  --color-mist: #f9fbf7;           /* Nuance encore plus légère (dégradés d’en-têtes) */
   --color-placeholder: #eceee2;    /* Fond neutre (zones d’image en cours de chargement) */
   --color-paper: #ffffff;
 
