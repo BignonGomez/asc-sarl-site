@@ -234,6 +234,8 @@ export const images = {
     note: "Photo de séance de travail (Picture1.png, déjà utilisée) ; prévoir une photo de l'équipe ou des locaux du cabinet.",
   },
 
+  // En-tête de la page FAQ : illustration public/images/hero-faq.svg (fournie par le cabinet le 15/11/2026
+  // sous le nom hero-asc-faq.svg), en arrière-plan complet. L'emplacement ci-dessous n'est plus affiché.
   'faq.hero': {
     src: formationSalle2,
     alt: '',
