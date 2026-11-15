@@ -1,39 +1,29 @@
 ---
-/** Accueil, section 6 : dernière actualité publiée (src/content/actualites). */
-import { CalendarDays, ArrowRight } from '@lucide/astro';
+/**
+ * Accueil, section 6 : dernières actualités publiées (src/content/actualites).
+ * Même carte que la rubrique Actualités (ArticleCard) pour une présentation homogène.
+ * Mise en page : introduction à gauche, une ou deux publications à droite selon le nombre disponible.
+ */
 import SectionHeading from '../ui/SectionHeading.astro';
-import SiteImage from '../ui/SiteImage.astro';
 import ArrowLink from '../ui/ArrowLink.astro';
-import { getActualites, formatDateFr } from '../../lib/actualites';
-import type { ImageId } from '../../config/images';
-import { url } from '../../lib/url';
-
-const [latest] = await getActualites();
+import ArticleCard from '../actualites/ArticleCard.astro';
+import { getActualites } from '../../lib/actualites';
+const latest = (await getActualites()).slice(0, 2);
 ---
-{latest && (
+{latest.length > 0 && (
   <section aria-labelledby="actualites-title" class="section-y bg-white">
-    <div class="container-site">
-      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-        <SectionHeading id="actualites-title" title="Actualités" />
-        <div class="shrink-0" data-reveal><ArrowLink href="/actualites">Toutes les actualités</ArrowLink></div>
+    <div class="container-site grid gap-10 lg:grid-cols-12 lg:gap-14">
+      <div class="lg:col-span-4">
+        <SectionHeading id="actualites-title" title="Actualités" intro="La vie du cabinet, ses partenariats, ses rencontres et ses nouvelles prestations." />
+        <div class="mt-8" data-reveal><ArrowLink href="/actualites">Toutes les actualités</ArrowLink></div>
       </div>
-
-      <article class="group relative mt-14 grid overflow-hidden rounded-card border border-line bg-white shadow-card transition-[box-shadow,border-color] duration-300 hover:border-forest/40 hover:shadow-lift md:grid-cols-2 lg:mt-16 lg:max-w-4xl" data-reveal>
-        <div class="relative aspect-[16/10] overflow-hidden border-b border-line bg-white md:aspect-auto md:min-h-64 md:border-b-0 md:border-r">
-          <div class="absolute inset-4"><SiteImage id={latest.data.cover as ImageId} sizes="(min-width: 48rem) 28rem, 100vw" /></div>
-        </div>
-        <div class="flex flex-col p-7 sm:p-9">
-          <p class="inline-flex items-center gap-2 text-small text-muted">
-            <CalendarDays size={16} aria-hidden="true" /> <time datetime={latest.data.date.toISOString().slice(0, 10)}>{formatDateFr(latest.data.date)}</time>
-            <span aria-hidden="true">·</span> {latest.data.category}
-          </p>
-          <h3 class="mt-4 text-h3 text-forest">
-            <a href={url(`/actualites/${latest.id}`)} class="after:absolute after:inset-0 focus-visible:outline-none">{latest.data.title}</a>
-          </h3>
-          <p class="mt-4 flex-1 text-body text-muted">{latest.data.summary}</p>
-          <span aria-hidden="true" class="mt-7 inline-flex items-center gap-2 font-semibold text-forest">Lire l'article <ArrowRight size={18} class="transition-transform duration-200 group-hover:translate-x-1" /></span>
-        </div>
-      </article>
+      <ul class:list={['grid gap-6 lg:col-span-8', latest.length > 1 && 'sm:grid-cols-2']}>
+        {latest.map((a, i) => (
+          <li data-reveal style={`--reveal-delay:${i * 90}ms`}>
+            <ArticleCard slug={a.id} title={a.data.title} date={a.data.date} category={a.data.category} summary={a.data.summary} cover={a.data.cover} headingLevel="h3" horizontal={latest.length === 1} />
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 )}
