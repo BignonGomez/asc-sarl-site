@@ -244,6 +244,8 @@ export const images = {
   },
 
   // ---------------- Page Contact ----------------
+  // En-tête de la page Contact : illustration public/images/hero-contact.svg (fournie par le cabinet le 15/11/2026
+  // sous le nom hero-asc-contact.svg), en arrière-plan complet. L'emplacement ci-dessous n'est plus affiché.
   'contact.hero': {
     src: terrainGroupe1,
     alt: '',
