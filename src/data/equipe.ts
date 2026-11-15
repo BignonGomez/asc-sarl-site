@@ -7,6 +7,17 @@
  */
 import type { ImageMetadata } from 'astro';
 
+/**
+ * Familles de compétences du cabinet — reprises mot pour mot de l'introduction de la page « Notre équipe »
+ * (src/pages/cabinet/equipe.astro). Affichées sur l'accueil (recommandation R5). Garder les deux textes cohérents.
+ */
+export const competences = [
+  { label: 'Environnement et changements climatiques', icon: 'leaf' },
+  { label: 'Agronomie et développement rural', icon: 'sprout' },
+  { label: 'Communication et sociologie du développement', icon: 'messages' },
+  { label: 'Accompagnement des collectivités', icon: 'landmark' },
+] as const;
+
 export type Member = {
   firstName: string;
   lastName: string;
