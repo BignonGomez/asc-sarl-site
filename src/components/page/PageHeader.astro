@@ -38,7 +38,7 @@ const jsonLd = {
     <>
       {background!.startsWith('/')
         ? <img src={url(background!)} alt="" width="1600" height="900" fetchpriority="high" decoding="async" class="absolute inset-0 -z-20 h-full w-full object-cover object-center" />
-        : <div class="absolute inset-0 -z-20"><SiteImage id={background as ImageId} sizes="100vw" priority alt="" /></div>}
+        : <div class="absolute inset-0 -z-20 bg-white lg:pt-24 lg:pb-3"><SiteImage id={background as ImageId} sizes="100vw" priority alt="" class="max-lg:object-cover" /></div>}
       <div aria-hidden="true" class="veil-left absolute inset-0 -z-10"></div>
     </>
   ) : (

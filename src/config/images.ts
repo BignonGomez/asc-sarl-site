@@ -268,7 +268,8 @@ export const images = {
     src: realisationsHero,
     alt: '',
     status: 'définitif',
-    position: 'center top', // calé en haut : en centré, la tête du personnage est coupée sur grand écran
+    position: 'right center', // personnage entier (tête et pieds) : contenu à droite sur ordinateur, recadré côté droit sur mobile
+    fit: 'contain',
     note: 'Illustration fournie par le cabinet (Realisations_hero.jfif, 1209 × 864 px).',
   },
   'mission.zakpota.2': {
