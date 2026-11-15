@@ -48,7 +48,7 @@ const split = L.presentation !== 'quote';
 ---
 <BaseLayout title={page.seoTitle} description={page.seoDescription}>
   <PageHeader
-    image={page.heroImage}
+    background={`/images/hero-expertise-${domain.slug}.svg`}
     eyebrow={`Domaine ${String(index + 1).padStart(2, '0')} · Nos expertises`}
     title={domain.title}
     intro={page.accroche}

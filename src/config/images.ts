@@ -51,6 +51,10 @@ export type ImageSlot = {
   note?: string;
 };
 
+// En-têtes de pages en illustration (arrière-plan complet, option background de PageHeader) depuis le 15/11/2026 :
+// accueil, recrutement, FAQ, contact, actualités (fournies par le cabinet) ; cabinet, vision, équipe, approche,
+// nos expertises et les 8 domaines (générées par scripts/heros/generate.py dans le même style).
+// Les emplacements « *.hero » de ces pages ne sont plus affichés en en-tête ; les autres photos restent utilisées.
 export const images = {
   // ---------------- Accueil ----------------
   // Arrière-plan du héro de l'accueil : illustration vectorielle public/images/hero-accueil.svg
