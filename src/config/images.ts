@@ -36,6 +36,7 @@ import terrainRepiquage2 from '../assets/images/terrain-repiquage-2.png'; // Pic
 import economieRurale from '../assets/images/economie-rurale.png';
 import ecotourisme from '../assets/images/ecotourisme.png';
 import terrainSemis from '../assets/images/terrain-semis-detail.png'; // Picture10.png
+import realisationsHero from '../assets/images/realisations-hero.jpg'; // Realisations_hero.jfif (fournie par le cabinet le 15/11/2026)
 import terrainRepiquage1 from '../assets/images/terrain-repiquage-1.png'; // Picture13.png
 import terrainGroupe2 from '../assets/images/terrain-groupe-2.png'; // Picture9.png
 import terrainPlanches2 from '../assets/images/terrain-planches-2.png'; // Picture3.png
@@ -257,12 +258,14 @@ export const images = {
   },
 
   // ---------------- Rubrique Réalisations ----------------
+  // En-tête de la page Réalisations, en arrière-plan complet (option background de PageHeader).
+  // Remplace depuis le 15/11/2026 la photo de terrain Picture10.png (terrainSemis).
   'realisations.hero': {
-    src: terrainSemis,
+    src: realisationsHero,
     alt: '',
     status: 'définitif',
-    position: 'center 45%',
-    note: 'Photo de terrain (Picture10.png) — à confirmer : prise lors de la mission de Za-Kpota.',
+    position: 'center top', // calé en haut : en centré, la tête du personnage est coupée sur grand écran
+    note: 'Illustration fournie par le cabinet (Realisations_hero.jfif, 1209 × 864 px).',
   },
   'mission.zakpota.2': {
     src: terrainRepiquage1,

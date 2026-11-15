@@ -13,8 +13,9 @@ import { site } from '../../config/site';
 interface Crumb { label: string; href?: string }
 /** image : identifiant de la photo d'en-tête dans src/config/images.ts (ex. 'cabinet.hero').
  *  Facultative : sans image (pages sobres, ex. pages légales), le texte occupe toute la largeur et l'en-tête est plus compact. */
-/** background : chemin d'une illustration de public/ (ex. '/images/hero-recrutement.svg') affichée en arrière-plan complet
- *  (cover, centrée) avec le même voile sombre à gauche que l'accueil ; textes en clair. Remplace la photo latérale. */
+/** background : image affichée en arrière-plan complet (cover) avec le même voile sombre à gauche que l'accueil ; textes en clair.
+ *  Remplace la photo latérale. Deux formes : chemin d'une illustration vectorielle de public/ (ex. '/images/hero-recrutement.svg'),
+ *  ou identifiant d'image de src/config/images.ts (ex. 'realisations.hero') pour une image matricielle, optimisée au build. */
 interface Props { title: string; eyebrow?: string; intro?: string; crumbs: Crumb[]; image?: ImageId; background?: string }
 const { title, eyebrow, intro, crumbs, image: photo, background } = Astro.props;
 const image = background ? undefined : photo;
@@ -35,7 +36,9 @@ const jsonLd = {
 <section class:list={['page-header relative isolate overflow-clip', dark && 'bg-forest-night text-white']}>
   {dark ? (
     <>
-      <img src={url(background!)} alt="" width="1600" height="900" fetchpriority="high" decoding="async" class="absolute inset-0 -z-20 h-full w-full object-cover object-center" />
+      {background!.startsWith('/')
+        ? <img src={url(background!)} alt="" width="1600" height="900" fetchpriority="high" decoding="async" class="absolute inset-0 -z-20 h-full w-full object-cover object-center" />
+        : <div class="absolute inset-0 -z-20"><SiteImage id={background as ImageId} sizes="100vw" priority alt="" /></div>}
       <div aria-hidden="true" class="veil-left absolute inset-0 -z-10"></div>
     </>
   ) : (
