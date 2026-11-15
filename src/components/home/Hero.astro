@@ -15,6 +15,12 @@ const segments = [
   { text: 'Bâtir ensemble des territoires', accent: false },
   { text: 'durables et résilients', accent: true },
 ];
+// Chiffres clés : uniquement des faits vérifiables (protocole, RCCM)
+const facts = [
+  { value: '8', label: "domaines d'expertise" },
+  { value: '2025', label: 'création à Cotonou' },
+  { value: 'SARL', label: 'de droit béninois' },
+];
 let wi = 0;
 const words = segments.flatMap((s) => s.text.split(' ').map((w) => ({ w, accent: s.accent, i: wi++ })));
 ---
@@ -22,7 +28,7 @@ const words = segments.flatMap((s) => s.text.split(' ').map((w) => ({ w, accent:
   <!-- Fond : blanc avec une lueur vert très pâle en haut à gauche et une touche soleil discrète -->
   <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_70%_at_0%_0%,var(--color-mineral),transparent_70%),radial-gradient(ellipse_35%_40%_at_100%_100%,rgb(252_209_42/0.08),transparent_70%)]"></div>
 
-  <div class="container-site grid items-center gap-12 pb-16 pt-32 sm:pt-36 lg:grid-cols-12 lg:gap-10 lg:pb-24 lg:pt-44">
+  <div class="container-site grid items-center gap-12 pb-16 pt-32 sm:pt-36 lg:grid-cols-12 lg:gap-10 lg:pb-20 lg:pt-36">
     <div class="lg:col-span-6 xl:col-span-6">
       <p class="hero-rise inline-flex items-center gap-2.5 rounded-full bg-forest-soft px-4 py-2 text-eyebrow uppercase text-brand" style="--d:50ms">
         <span aria-hidden="true" class="hero-pulse"></span>
@@ -46,6 +52,15 @@ const words = segments.flatMap((s) => s.text.split(' ').map((w) => ({ w, accent:
         <Button href={site.cta.href} size="lg" arrow>{site.cta.label}</Button>
         <Button href="/expertises" variant="secondary" size="lg">Découvrir nos expertises</Button>
       </div>
+
+      <dl class="hero-rise mt-10 grid max-w-xl grid-cols-3 gap-4 border-t border-line pt-7 sm:gap-6" style="--d:760ms">
+        {facts.map((f) => (
+          <div class="flex flex-col">
+            <dt class="order-2 mt-1 text-[0.8125rem] leading-snug text-muted sm:text-small">{f.label}</dt>
+            <dd class="order-1 font-display text-[1.375rem] font-bold leading-tight text-forest sm:text-[1.75rem]">{f.value}</dd>
+          </div>
+        ))}
+      </dl>
     </div>
 
     <div class="hero-photo lg:col-span-6 lg:pl-4 xl:col-span-6 xl:pl-8">

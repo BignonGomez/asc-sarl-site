@@ -82,7 +82,7 @@ const cover = images[d.cover as ImageId];
       <div class="mx-auto grid max-w-5xl gap-10 py-14 lg:grid-cols-[4rem_1fr] lg:gap-12 lg:py-20">
         <!-- Partage -->
         <aside aria-label="Partager l'article" class="order-2 lg:order-1">
-          <div class="flex items-center gap-2 lg:sticky lg:top-28 lg:flex-col">
+          <div class="flex flex-wrap items-center gap-2 lg:sticky lg:top-28 lg:flex-col lg:flex-nowrap">
             <span class="mr-2 text-eyebrow uppercase text-muted lg:mb-2 lg:mr-0 lg:[writing-mode:vertical-rl] lg:rotate-180">Partager</span>
             {shares.map((s) => (
               <a href={s.href} target="_blank" rel="noopener noreferrer" class="share" aria-label={`Partager sur ${s.name} (nouvel onglet)`}>
@@ -97,7 +97,7 @@ const cover = images[d.cover as ImageId];
           </div>
         </aside>
 
-        <div class="prose-asc order-1 lg:order-2" data-reveal>
+        <div class="prose-asc order-1 min-w-0 lg:order-2" data-reveal>
           <Content />
         </div>
       </div>
