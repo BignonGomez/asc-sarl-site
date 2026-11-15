@@ -1,6 +1,7 @@
 ---
 import { ArrowRight } from '@lucide/astro';
 import SectionHeading from '../ui/SectionHeading.astro';
+import ArrowLink from '../ui/ArrowLink.astro';
 import ExpertiseIcon from '../ui/ExpertiseIcon.astro';
 import SiteImage from '../ui/SiteImage.astro';
 import { expertises } from '../../data/expertises';
@@ -35,6 +36,9 @@ import { url } from '../../lib/url';
         </li>
       ))}
     </ul>
+    <div class="mt-12" data-reveal>
+      <ArrowLink href="/expertises#prestations">Voir toutes nos prestations, par famille</ArrowLink>
+    </div>
   </div>
 </section>
 

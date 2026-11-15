@@ -8,6 +8,7 @@ import SiteImage from '../../components/ui/SiteImage.astro';
 import ExpertiseIcon from '../../components/ui/ExpertiseIcon.astro';
 import StepIcon from '../../components/ui/StepIcon.astro';
 import ArrowLink from '../../components/ui/ArrowLink.astro';
+import PrestationsOverview from '../../components/expertises/PrestationsOverview.astro';
 import { expertises } from '../../data/expertises';
 import { besoins } from '../../data/expertises-pages';
 import { steps } from '../../data/approche';
@@ -75,7 +76,9 @@ import { url } from '../../lib/url';
   </section>
 
   <!-- Comment nous intervenons -->
-  <section aria-labelledby="intervention-title" class="section-y bg-white">
+  <PrestationsOverview />
+
+  <section aria-labelledby="intervention-title" class="section-y bg-mineral">
     <div class="container-site">
       <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <SectionHeading id="intervention-title" title="Comment nous intervenons" intro="Quel que soit le domaine, chaque mission suit une démarche en cinq étapes, adaptée à son contexte." />

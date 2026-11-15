@@ -8,7 +8,14 @@
  */
 import type { ImageId } from '../config/images';
 
-export type Prestation = { title: string; icon: string };
+/** family : famille de prestation pour la vue d'ensemble de la page « Nos expertises » (recommandation R4). */
+export type PrestationFamily = 'etudes' | 'accompagnement';
+export type Prestation = { title: string; icon: string; family: PrestationFamily };
+
+export const prestationFamilies: { id: PrestationFamily; title: string; intro: string }[] = [
+  { id: 'etudes', title: 'Études et diagnostics', intro: 'Comprendre une situation, évaluer des effets et concevoir des solutions.' },
+  { id: 'accompagnement', title: 'Accompagnement et renforcement des capacités', intro: 'Appuyer les acteurs, faciliter la concertation et transmettre les savoir-faire.' },
+];
 export type DomainPage = {
   slug: string;
   seoTitle: string;
@@ -55,11 +62,11 @@ export const domainPages: DomainPage[] = [
       "Les études environnementales et sociales permettent d'identifier ces effets en amont, de concevoir les mesures pour les éviter, les réduire ou les compenser, et de préparer les documents attendus par les autorités et par les partenaires techniques et financiers.",
     ],
     prestations: [
-      { title: "Études d'impact environnemental et social", icon: 'file-search' },
-      { title: 'Évaluations environnementales de projets et de programmes', icon: 'clipboard-check' },
-      { title: 'Audits et diagnostics environnementaux', icon: 'microscope' },
-      { title: 'Plans de gestion environnementale et sociale (PGES) et suivi de leur mise en œuvre', icon: 'list-checks' },
-      { title: 'Consultation des parties prenantes et analyse des enjeux sociaux, notamment ceux qui concernent les femmes et les groupes vulnérables', icon: 'messages-square' },
+      { title: "Études d'impact environnemental et social", icon: 'file-search', family: 'etudes' },
+      { title: 'Évaluations environnementales de projets et de programmes', icon: 'clipboard-check', family: 'etudes' },
+      { title: 'Audits et diagnostics environnementaux', icon: 'microscope', family: 'etudes' },
+      { title: 'Plans de gestion environnementale et sociale (PGES) et suivi de leur mise en œuvre', icon: 'list-checks', family: 'etudes' },
+      { title: 'Consultation des parties prenantes et analyse des enjeux sociaux, notamment ceux qui concernent les femmes et les groupes vulnérables', icon: 'messages-square', family: 'etudes' },
     ],
     steps: [
       "Cadrage de l'étude",
@@ -88,11 +95,11 @@ export const domainPages: DomainPage[] = [
       "Pour y faire face, les acteurs publics et privés ont besoin d'analyser leur vulnérabilité, d'identifier des mesures d'adaptation réalistes et d'intégrer le climat dans leurs documents de planification, en associant toutes les parties prenantes.",
     ],
     prestations: [
-      { title: "Stratégies et plans d'adaptation aux changements climatiques à l'échelle locale", icon: 'clipboard-list' },
-      { title: 'Diagnostics de vulnérabilité', icon: 'scan-search' },
-      { title: "Identification et hiérarchisation de mesures d'adaptation concrètes", icon: 'list-checks' },
-      { title: 'Stratégies de sensibilisation et de mobilisation des acteurs', icon: 'megaphone' },
-      { title: "Appui à l'intégration du climat dans les documents de planification", icon: 'file-text' },
+      { title: "Stratégies et plans d'adaptation aux changements climatiques à l'échelle locale", icon: 'clipboard-list', family: 'etudes' },
+      { title: 'Diagnostics de vulnérabilité', icon: 'scan-search', family: 'etudes' },
+      { title: "Identification et hiérarchisation de mesures d'adaptation concrètes", icon: 'list-checks', family: 'etudes' },
+      { title: 'Stratégies de sensibilisation et de mobilisation des acteurs', icon: 'megaphone', family: 'accompagnement' },
+      { title: "Appui à l'intégration du climat dans les documents de planification", icon: 'file-text', family: 'accompagnement' },
     ],
     steps: ['Diagnostics participatifs', 'Analyse documentaire et de terrain', 'Ateliers de concertation', 'Hiérarchisation des mesures'],
     stepsNote: 'Avec une attention particulière à la participation des femmes, en tenant compte de leurs besoins et de leur disponibilité.',
@@ -113,11 +120,11 @@ export const domainPages: DomainPage[] = [
       "Les analyses hydrologiques et hydrauliques éclairent les décisions d'aménagement, de planification et de gestion, et la gestion intégrée des ressources en eau (GIRE) permet d'organiser la concertation entre les différents usagers.",
     ],
     prestations: [
-      { title: 'Études hydrologiques et hydrauliques', icon: 'droplets' },
-      { title: 'Évaluation des ressources en eau et de leurs usages', icon: 'scan-search' },
-      { title: "Diagnostics de systèmes d'approvisionnement en eau", icon: 'microscope' },
-      { title: "Appui à l'élaboration de plans de gestion intégrée à l'échelle d'un bassin, d'un territoire ou d'une commune", icon: 'map' },
-      { title: 'Concertation entre usagers', icon: 'messages-square' },
+      { title: 'Études hydrologiques et hydrauliques', icon: 'droplets', family: 'etudes' },
+      { title: 'Évaluation des ressources en eau et de leurs usages', icon: 'scan-search', family: 'etudes' },
+      { title: "Diagnostics de systèmes d'approvisionnement en eau", icon: 'microscope', family: 'etudes' },
+      { title: "Appui à l'élaboration de plans de gestion intégrée à l'échelle d'un bassin, d'un territoire ou d'une commune", icon: 'map', family: 'accompagnement' },
+      { title: 'Concertation entre usagers', icon: 'messages-square', family: 'accompagnement' },
     ],
     steps: ['Analyse des données hydrologiques existantes', 'Observations de terrain', 'Diagnostic des usages', 'Concertation des usagers'],
     stepsNote: "Les liens avec l'agriculture, l'environnement et l'adaptation au climat sont systématiquement pris en compte.",
@@ -138,12 +145,12 @@ export const domainPages: DomainPage[] = [
       'Une planification bien conçue tient compte des enjeux environnementaux, climatiques, hydrauliques, agricoles et sociaux de chaque territoire.',
     ],
     prestations: [
-      { title: 'Études et conseils en planification urbaine et rurale', icon: 'map' },
-      { title: "Appui à l'élaboration ou à la révision des documents de planification locale prévus par la réglementation", icon: 'file-text' },
-      { title: 'Diagnostics territoriaux', icon: 'scan-search' },
-      { title: 'Analyse des risques et des contraintes', icon: 'triangle-alert' },
-      { title: "Identification d'actions d'aménagement", icon: 'list-checks' },
-      { title: "Concertation avec les acteurs locaux, en particulier l'accompagnement des collectivités territoriales", icon: 'messages-square' },
+      { title: 'Études et conseils en planification urbaine et rurale', icon: 'map', family: 'etudes' },
+      { title: "Appui à l'élaboration ou à la révision des documents de planification locale prévus par la réglementation", icon: 'file-text', family: 'accompagnement' },
+      { title: 'Diagnostics territoriaux', icon: 'scan-search', family: 'etudes' },
+      { title: 'Analyse des risques et des contraintes', icon: 'triangle-alert', family: 'etudes' },
+      { title: "Identification d'actions d'aménagement", icon: 'list-checks', family: 'etudes' },
+      { title: "Concertation avec les acteurs locaux, en particulier l'accompagnement des collectivités territoriales", icon: 'messages-square', family: 'accompagnement' },
     ],
     steps: ['Diagnostic territorial', 'Analyse des contraintes et des risques', 'Ateliers de concertation avec les acteurs locaux', "Formulation d'actions d'aménagement"],
     stepsNote: 'Des propositions formulées dans un langage accessible aux décideurs.',
@@ -164,11 +171,11 @@ export const domainPages: DomainPage[] = [
       "Le conseil et la formation permettent d'améliorer durablement la production, la transformation et la commercialisation, tout en préservant les sols, l'eau et la biodiversité.",
     ],
     prestations: [
-      { title: 'Études et conseils en agriculture durable', icon: 'sprout' },
-      { title: "Appui à la transformation, à la commercialisation et à l'élevage", icon: 'store' },
-      { title: 'Diagnostics de filières', icon: 'scan-search' },
-      { title: 'Appui aux organisations paysannes', icon: 'users' },
-      { title: 'Vulgarisation des bonnes pratiques et sensibilisation des producteurs', icon: 'megaphone' },
+      { title: 'Études et conseils en agriculture durable', icon: 'sprout', family: 'etudes' },
+      { title: "Appui à la transformation, à la commercialisation et à l'élevage", icon: 'store', family: 'accompagnement' },
+      { title: 'Diagnostics de filières', icon: 'scan-search', family: 'etudes' },
+      { title: 'Appui aux organisations paysannes', icon: 'users', family: 'accompagnement' },
+      { title: 'Vulgarisation des bonnes pratiques et sensibilisation des producteurs', icon: 'megaphone', family: 'accompagnement' },
     ],
     steps: [
       'Diagnostic des filières et des exploitations',
@@ -200,16 +207,16 @@ export const domainPages: DomainPage[] = [
       {
         title: 'Pour les collectivités territoriales',
         items: [
-          { title: 'Diagnostics économiques de territoires', icon: 'scan-search' },
-          { title: "Appui à l'élaboration de projets de développement local et à la recherche de financements", icon: 'hand-coins' },
-          { title: 'Appui à la gestion des services publics locaux', icon: 'landmark' },
+          { title: 'Diagnostics économiques de territoires', icon: 'scan-search', family: 'etudes' },
+          { title: "Appui à l'élaboration de projets de développement local et à la recherche de financements", icon: 'hand-coins', family: 'accompagnement' },
+          { title: 'Appui à la gestion des services publics locaux', icon: 'landmark', family: 'accompagnement' },
         ],
       },
       {
         title: 'Pour les entreprises et les porteurs de projets',
         items: [
-          { title: 'Analyse de chaînes de valeur locales', icon: 'route' },
-          { title: 'Conseil aux entreprises et aux porteurs de projets', icon: 'briefcase' },
+          { title: 'Analyse de chaînes de valeur locales', icon: 'route', family: 'etudes' },
+          { title: 'Conseil aux entreprises et aux porteurs de projets', icon: 'briefcase', family: 'accompagnement' },
         ],
       },
     ],
@@ -231,11 +238,11 @@ export const domainPages: DomainPage[] = [
       'Leur valorisation touristique doit préserver les écosystèmes, associer les communautés locales et contribuer à la conservation des ressources naturelles.',
     ],
     prestations: [
-      { title: "Études et conseils pour le développement d'un tourisme durable", icon: 'trees' },
-      { title: "Appui à l'aménagement et à la gestion de sites", icon: 'map-pinned' },
-      { title: 'Conception d’actions de conservation et de valorisation des ressources naturelles', icon: 'leaf' },
-      { title: 'Implication des communautés locales dans la gestion des sites', icon: 'users' },
-      { title: 'Sensibilisation des acteurs', icon: 'megaphone' },
+      { title: "Études et conseils pour le développement d'un tourisme durable", icon: 'trees', family: 'etudes' },
+      { title: "Appui à l'aménagement et à la gestion de sites", icon: 'map-pinned', family: 'accompagnement' },
+      { title: 'Conception d’actions de conservation et de valorisation des ressources naturelles', icon: 'leaf', family: 'etudes' },
+      { title: 'Implication des communautés locales dans la gestion des sites', icon: 'users', family: 'accompagnement' },
+      { title: 'Sensibilisation des acteurs', icon: 'megaphone', family: 'accompagnement' },
     ],
     // Le protocole ne détaille pas de méthode propre à ce domaine : démarche générale du cabinet (5 étapes)
     steps: ['Comprendre le besoin', 'Diagnostiquer', 'Concevoir', 'Accompagner', 'Évaluer et capitaliser'],
@@ -257,11 +264,11 @@ export const domainPages: DomainPage[] = [
       'La participation des parties prenantes, y compris des femmes et des groupes souvent peu entendus, est une condition de réussite des projets.',
     ],
     prestations: [
-      { title: 'Élaboration de stratégies de sensibilisation', icon: 'megaphone' },
-      { title: "Conception et animation d'ateliers et de sessions de formation", icon: 'presentation' },
-      { title: 'Facilitation de consultations et de concertations', icon: 'messages-square' },
-      { title: 'Production de supports de communication et de vulgarisation', icon: 'book-open' },
-      { title: "Évaluation de l'appropriation par les bénéficiaires", icon: 'clipboard-check' },
+      { title: 'Élaboration de stratégies de sensibilisation', icon: 'megaphone', family: 'accompagnement' },
+      { title: "Conception et animation d'ateliers et de sessions de formation", icon: 'presentation', family: 'accompagnement' },
+      { title: 'Facilitation de consultations et de concertations', icon: 'messages-square', family: 'accompagnement' },
+      { title: 'Production de supports de communication et de vulgarisation', icon: 'book-open', family: 'accompagnement' },
+      { title: "Évaluation de l'appropriation par les bénéficiaires", icon: 'clipboard-check', family: 'etudes' },
     ],
     steps: ['Ingénierie pédagogique', 'Alternance de théorie et de pratique', 'Évaluation avant et après formation', 'Animation participative', 'Supports adaptés aux publics'],
     experts: ['HOUEDOU', 'EFIO', 'ATTOSSI'],
