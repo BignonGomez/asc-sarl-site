@@ -1,14 +1,13 @@
 ---
 /**
- * Héro de l'accueil : composition claire et aérée.
- * Texte à gauche (étiquette, titre mot par mot, filet soleil, introduction, deux actions),
- * photo de terrain à droite dans un cadre arrondi, sans voile sombre.
- * Les chiffres clés sont présentés juste après, dans le bandeau défilant.
- * Image : emplacement 'accueil.hero' de src/config/images.ts
+ * Héro de l'accueil : illustration en arrière-plan sur toute la surface (cover, centrée),
+ * voile vert sombre à gauche pour la lisibilité du texte (sur toute la surface sur mobile).
+ * Texte à gauche (étiquette, titre mot par mot, filet soleil, introduction, deux actions, chiffres clés).
+ * Image propre à l'accueil : public/images/hero-accueil.svg (les autres pages gardent leur en-tête, PageHeader).
  */
-import SiteImage from '../ui/SiteImage.astro';
 import Button from '../ui/Button.astro';
 import { site } from '../../config/site';
+import { url } from '../../lib/url';
 
 // Titre découpé en mots pour l'animation (les mots « accent » sont en vert feuille)
 const segments = [
@@ -24,50 +23,47 @@ const facts = [
 let wi = 0;
 const words = segments.flatMap((s) => s.text.split(' ').map((w) => ({ w, accent: s.accent, i: wi++ })));
 ---
-<section aria-labelledby="hero-title" class="hero relative isolate overflow-clip">
-  <!-- Fond : blanc avec une lueur vert très pâle en haut à gauche et une touche soleil discrète -->
-  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_70%_at_0%_0%,var(--color-mineral),transparent_70%),radial-gradient(ellipse_35%_40%_at_100%_100%,rgb(252_209_42/0.08),transparent_70%)]"></div>
+<section aria-labelledby="hero-title" class="hero relative isolate overflow-clip bg-forest-night text-white">
+  <!-- Arrière-plan : illustration sur toute la surface du héro (décorative) -->
+  <img src={url('/images/hero-accueil.svg')} alt="" width="1600" height="900" fetchpriority="high" decoding="async" class="absolute inset-0 -z-20 h-full w-full object-cover object-center" />
+  <!-- Voile sombre à gauche : lisibilité du texte -->
+  <div aria-hidden="true" class="hero-veil absolute inset-0 -z-10"></div>
 
   <div class="container-site grid items-center gap-12 pb-16 pt-32 sm:pt-36 lg:grid-cols-12 lg:gap-10 lg:pb-20 lg:pt-36">
     <div class="lg:col-span-6 xl:col-span-6">
-      <p class="hero-rise inline-flex items-center gap-2.5 rounded-full bg-forest-soft px-4 py-2 text-eyebrow uppercase text-brand" style="--d:50ms">
+      <p class="hero-rise inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-eyebrow uppercase text-white backdrop-blur-sm" style="--d:50ms">
         <span aria-hidden="true" class="hero-pulse"></span>
         Cabinet d'études et de conseil · Cotonou, Bénin
       </p>
 
-      <h1 id="hero-title" class="mt-7 max-w-[34rem] text-display text-forest">
+      <h1 id="hero-title" class="mt-7 max-w-[34rem] text-display text-white [text-shadow:0_2px_20px_rgb(15_38_24/0.35)]">
         {words.map(({ w, accent, i }) => (
           <>
-            <span class="w"><span class:list={['wi', accent && 'text-leaf-strong']} style={`--wi:${i}`}>{w}</span></span>{' '}
+            <span class="w"><span class:list={['wi', accent && 'text-leaf-light']} style={`--wi:${i}`}>{w}</span></span>{' '}
           </>
         ))}
       </h1>
 
       <span aria-hidden="true" class="hero-rise mt-8 block h-[3px] w-10 rounded-full bg-sun" style="--d:460ms"></span>
 
-      <p class="hero-rise mt-7 max-w-[34rem] text-lead text-ink/80" style="--d:520ms">
-        <strong class="font-semibold text-ink">{site.name}</strong> accompagne les institutions publiques, les collectivités, les organisations et les entreprises face aux enjeux environnementaux, climatiques et territoriaux : du diagnostic des besoins aux solutions techniques adaptées, jusqu'à l'accompagnement de vos projets.
+      <p class="hero-rise mt-7 max-w-[34rem] text-lead text-white/90" style="--d:520ms">
+        <strong class="font-semibold text-white">{site.name}</strong> accompagne les institutions publiques, les collectivités, les organisations et les entreprises face aux enjeux environnementaux, climatiques et territoriaux : du diagnostic des besoins aux solutions techniques adaptées, jusqu'à l'accompagnement de vos projets.
       </p>
       <div class="hero-rise mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4" style="--d:640ms">
         <Button href={site.cta.href} size="lg" arrow>{site.cta.label}</Button>
-        <Button href="/expertises" variant="secondary" size="lg">Découvrir nos expertises</Button>
+        <Button href="/expertises" variant="light" size="lg">Découvrir nos expertises</Button>
       </div>
 
-      <dl class="hero-rise mt-10 grid max-w-xl grid-cols-3 gap-4 border-t border-line pt-7 sm:gap-6" style="--d:760ms">
+      <dl class="hero-rise mt-10 grid max-w-xl grid-cols-3 gap-4 border-t border-white/20 pt-7 sm:gap-6" style="--d:760ms">
         {facts.map((f) => (
           <div class="flex flex-col">
-            <dt class="order-2 mt-1 text-[0.8125rem] leading-snug text-muted sm:text-small">{f.label}</dt>
-            <dd class="order-1 font-display text-[1.375rem] font-bold leading-tight text-forest sm:text-[1.75rem]">{f.value}</dd>
+            <dt class="order-2 mt-1 text-[0.8125rem] leading-snug text-white/75 sm:text-small">{f.label}</dt>
+            <dd class="order-1 font-display text-[1.375rem] font-bold leading-tight text-white sm:text-[1.75rem]">{f.value}</dd>
           </div>
         ))}
       </dl>
     </div>
 
-    <div class="hero-photo lg:col-span-6 lg:pl-4 xl:col-span-6 xl:pl-8">
-      <div class="hero-photo__frame">
-        <SiteImage id="accueil.hero" sizes="(min-width: 64rem) 50vw, 100vw" priority />
-      </div>
-    </div>
   </div>
 </section>
 
@@ -100,33 +96,15 @@ const words = segments.flatMap((s) => s.text.split(' ').map((w) => ({ w, accent:
   }
   @keyframes word-up { from { transform: translateY(108%); } to { transform: none; } }
 
-  /* ---------- Photo ---------- */
-  .hero-photo { position: relative; animation: photo-in 1.2s var(--ease-out-soft) 250ms both; }
-  /* Aplat vert très pâle décalé derrière la photo : profondeur sans surcharge */
-  .hero-photo::before {
-    content: '';
-    position: absolute;
-    inset: 1.5rem -1rem -1rem 1.5rem;
-    z-index: -1;
-    border-radius: 2.5rem 2.5rem 2.5rem 8rem;
-    background: var(--color-forest-soft);
-  }
-  .hero-photo__frame {
-    overflow: hidden;
-    aspect-ratio: 4 / 3;
-    border-radius: 2rem 2rem 2rem 7rem;
-    box-shadow: var(--shadow-lift);
-  }
+  /* ---------- Voile de lisibilité ---------- */
+  /* Mobile et tablette : le texte occupe toute la largeur, le voile couvre toute l'image */
+  .hero-veil { background: linear-gradient(180deg, rgb(15 38 24 / 0.82) 0%, rgb(15 38 24 / 0.72) 55%, rgb(15 38 24 / 0.8) 100%); }
+  /* Grand écran : voile à gauche, qui s'efface vers la droite (soleil et palmiers visibles) */
   @media (width >= 64rem) {
-    .hero-photo__frame { aspect-ratio: 1 / 1; border-radius: 2.5rem 2.5rem 2.5rem 11rem; }
-    .hero-photo::before { inset: 2rem -1.5rem -1.5rem 2rem; border-radius: 2.5rem 2.5rem 2.5rem 12rem; }
-  }
-  @keyframes photo-in {
-    from { opacity: 0; transform: translateY(24px) scale(0.98); }
-    to { opacity: 1; transform: none; }
+    .hero-veil { background: linear-gradient(90deg, rgb(15 38 24 / 0.9) 0%, rgb(15 38 24 / 0.78) 32%, rgb(15 38 24 / 0.4) 55%, rgb(15 38 24 / 0) 75%); }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-rise, .wi, .hero-photo, .hero-pulse::after { animation: none !important; }
+    .hero-rise, .wi, .hero-pulse::after { animation: none !important; }
   }
 </style>

@@ -52,6 +52,9 @@ export type ImageSlot = {
 
 export const images = {
   // ---------------- Accueil ----------------
+  // Arrière-plan du héro de l'accueil : illustration vectorielle public/images/hero-accueil.svg
+  // (fournie par le cabinet le 15/11/2026 sous le nom hero-asc-exemple.svg), utilisée directement par Hero.astro.
+  // L'emplacement ci-dessous n'est plus affiché depuis ce changement ; conservé pour un éventuel retour à la photo.
   'accueil.hero': {
     src: terrainPlantation,
     alt: 'Femmes et hommes travaillant une parcelle lors d’une activité de terrain',
