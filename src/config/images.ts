@@ -216,6 +216,8 @@ export const images = {
   },
 
   // ---------------- Rubrique Actualités ----------------
+  // En-tête de la rubrique Actualités (liste et pages suivantes) : illustration public/images/hero-actualites.svg
+  // (fournie par le cabinet le 15/11/2026 sous le nom hero-asc-actualites.svg). L'emplacement ci-dessous n'est plus affiché.
   'actualites.hero': {
     src: terrainPlantation,
     alt: '',
