@@ -27,7 +27,7 @@ const words = segments.flatMap((s) => s.text.split(' ').map((w) => ({ w, accent:
   <!-- Arrière-plan : illustration sur toute la surface du héro (décorative) -->
   <img src={url('/images/hero-accueil.svg')} alt="" width="1600" height="900" fetchpriority="high" decoding="async" class="absolute inset-0 -z-20 h-full w-full object-cover object-center" />
   <!-- Voile sombre à gauche : lisibilité du texte -->
-  <div aria-hidden="true" class="hero-veil absolute inset-0 -z-10"></div>
+  <div aria-hidden="true" class="veil-left absolute inset-0 -z-10"></div>
 
   <div class="container-site grid items-center gap-12 pb-16 pt-32 sm:pt-36 lg:grid-cols-12 lg:gap-10 lg:pb-20 lg:pt-36">
     <div class="lg:col-span-6 xl:col-span-6">
@@ -95,14 +95,6 @@ const words = segments.flatMap((s) => s.text.split(' ').map((w) => ({ w, accent:
     animation-delay: calc(150ms + var(--wi) * 55ms);
   }
   @keyframes word-up { from { transform: translateY(108%); } to { transform: none; } }
-
-  /* ---------- Voile de lisibilité ---------- */
-  /* Mobile et tablette : le texte occupe toute la largeur, le voile couvre toute l'image */
-  .hero-veil { background: linear-gradient(180deg, rgb(15 38 24 / 0.82) 0%, rgb(15 38 24 / 0.72) 55%, rgb(15 38 24 / 0.8) 100%); }
-  /* Grand écran : voile à gauche, qui s'efface vers la droite (soleil et palmiers visibles) */
-  @media (width >= 64rem) {
-    .hero-veil { background: linear-gradient(90deg, rgb(15 38 24 / 0.9) 0%, rgb(15 38 24 / 0.78) 32%, rgb(15 38 24 / 0.4) 55%, rgb(15 38 24 / 0) 75%); }
-  }
 
   @media (prefers-reduced-motion: reduce) {
     .hero-rise, .wi, .hero-pulse::after { animation: none !important; }

@@ -225,6 +225,8 @@ export const images = {
   },
 
   // ---------------- Rubrique Ressources ----------------
+  // En-tête de la page Recrutement : illustration public/images/hero-recrutement.svg (fournie par le cabinet le 15/11/2026
+  // sous le nom hero-asc-recrutement.svg), en arrière-plan complet. L'emplacement ci-dessous n'est plus affiché.
   'recrutement.hero': {
     src: formationSalle1,
     alt: '',
