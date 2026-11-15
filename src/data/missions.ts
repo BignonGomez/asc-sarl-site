@@ -20,6 +20,11 @@ export type Mission = {
   team: { lastName: string; role?: string }[];
   volets: { title: string; public: string; items: string[]; extra?: string }[];
   images: ImageId[];
+  /**
+   * Résultats obtenus : UNIQUEMENT pour une mission achevée, sur la base de l'attestation de bonne exécution.
+   * Laisser vide pour une mission en cours (règle du protocole : aucun résultat annoncé avant l'achèvement).
+   */
+  results?: string[];
 };
 
 export const missions: Mission[] = [

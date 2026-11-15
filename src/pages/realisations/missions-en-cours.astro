@@ -45,7 +45,7 @@ const enCours = missions.filter((m) => m.status === 'en-cours');
               <RefreshCw size={15} aria-hidden="true" /><span>Fiche mise à jour le <time datetime={m.updated}>{formatDate(m.updated)}</time></span>
             </span>
           </div>
-          <h2 id={`mission-${m.slug}`} class="mt-6 max-w-4xl text-h2 text-forest" data-reveal>{m.title}</h2>
+          <h2 id={`mission-${m.slug}`} class="mt-6 max-w-4xl scroll-mt-28 text-h2 text-forest" data-reveal>{m.title}</h2>
           <p class="mt-5 inline-flex items-start gap-2 text-lead text-muted" data-reveal>
             <MapPin size={20} aria-hidden="true" class="mt-1 shrink-0 text-brand" /> {m.place}
           </p>
