@@ -13,6 +13,7 @@ import ExpertiseIcon from '../../components/ui/ExpertiseIcon.astro';
 import { missions, formatDate } from '../../data/missions';
 import { expertises } from '../../data/expertises';
 import { team } from '../../data/equipe';
+import DurationBadge from '../../components/ui/DurationBadge.astro';
 import { site } from '../../config/site';
 import { url } from '../../lib/url';
 
@@ -41,6 +42,7 @@ const enCours = missions.filter((m) => m.status === 'en-cours');
             <span class="inline-flex items-center gap-2 rounded-full bg-status-ongoing-bg px-3.5 py-1.5 font-semibold text-status-ongoing">
               <span aria-hidden="true" class="statut-pulse"></span> En cours d'exécution
             </span>
+            {m.duration && <DurationBadge duration={m.duration} />}
             <span class="inline-flex items-center gap-2 text-muted">
               <RefreshCw size={15} aria-hidden="true" /><span>Fiche mise à jour le <time datetime={m.updated}>{formatDate(m.updated)}</time></span>
             </span>

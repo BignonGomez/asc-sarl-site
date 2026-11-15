@@ -1,6 +1,7 @@
 ---
 import SectionHeading from '../ui/SectionHeading.astro';
 import ArrowLink from '../ui/ArrowLink.astro';
+import Button from '../ui/Button.astro';
 import StepIcon from '../ui/StepIcon.astro';
 import { steps } from '../../data/approche';
 ---
@@ -27,7 +28,9 @@ import { steps } from '../../data/approche';
       ))}
     </ol>
 
-    <div class="mt-14" data-reveal>
+    <!-- Suite logique (recommandation R7) : approfondir la démarche ou transmettre une demande -->
+    <div class="mt-14 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-8" data-reveal>
+      <Button href="/contact#formulaire" variant="secondary" arrow class="!whitespace-normal py-3 text-center">Nous transmettre vos termes de référence</Button>
       <ArrowLink href="/cabinet/approche">Découvrir notre démarche</ArrowLink>
     </div>
   </div>

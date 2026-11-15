@@ -1,0 +1,57 @@
+---
+/**
+ * Bouton de retour en haut de page (recommandation R7) : apparaît après un défilement d'environ un écran,
+ * en bas à droite. Défilement doux, sauf si « réduire les animations » est activé. Ramène le focus en haut de page.
+ */
+import { ArrowUp } from '@lucide/astro';
+---
+<button type="button" class="back-to-top" aria-label="Revenir en haut de la page" data-back-to-top hidden>
+  <ArrowUp size={20} aria-hidden="true" />
+</button>
+
+<style>
+  .back-to-top {
+    position: fixed;
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    z-index: 90;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+    color: #fff;
+    background: var(--color-forest);
+    box-shadow: 0 10px 24px -10px rgb(15 38 24 / 0.6), inset 0 0 0 1px rgb(255 255 255 / 0.12);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.3s, transform 0.3s var(--ease-out-soft), background-color 0.2s;
+  }
+  .back-to-top.is-shown { opacity: 1; transform: none; }
+  .back-to-top:hover { background: var(--color-forest-hover); }
+  .back-to-top:focus-visible { outline: 3px solid var(--color-sun); outline-offset: 3px; }
+  @media (width >= 64rem) { .back-to-top { right: 1.75rem; bottom: 1.75rem; } }
+  @media (prefers-reduced-motion: reduce) { .back-to-top { transition: none; } }
+</style>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-back-to-top]');
+  if (btn) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let shown = false;
+    const update = () => {
+      const show = window.scrollY > window.innerHeight * 0.9;
+      if (show === shown) return;
+      shown = show;
+      if (show) { btn.hidden = false; requestAnimationFrame(() => btn.classList.add('is-shown')); }
+      else { btn.classList.remove('is-shown'); setTimeout(() => { if (!shown) btn.hidden = true; }, 300); }
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+    btn.addEventListener('click', (e) => {
+      window.scrollTo({ top: 0, behavior: reduce.matches ? 'auto' : 'smooth' });
+      // Clavier uniquement (detail = 0) : focus ramené au début de la page, sur le lien d'évitement
+      if (e.detail === 0) document.querySelector<HTMLElement>('a[href="#contenu"]')?.focus({ preventScroll: true });
+    });
+  }
+</script>

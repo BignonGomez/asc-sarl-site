@@ -17,6 +17,8 @@ export type Mission = {
   place: string;
   client: string; // publication du nom soumise à l'autorisation de la commune
   period: string[];
+  /** Durée contractuelle, en court, pour le badge des fiches (ex. « 2 mois »). Uniquement si elle figure au contrat. */
+  duration?: string;
   team: { lastName: string; role?: string }[];
   volets: { title: string; public: string; items: string[]; extra?: string }[];
   images: ImageId[];
@@ -40,6 +42,7 @@ export const missions: Mission[] = [
     place: "Commune de Za-Kpota, site aménagé d'Allahé (département du Zou), Bénin",
     client: 'Commune de Za-Kpota',
     period: ['Contrat notifié le 23 juillet 2026', "Délai d'exécution contractuel de deux mois"],
+    duration: '2 mois',
     team: [{ lastName: 'MENSAH', role: 'Chef de mission' }, { lastName: 'DAYOU' }, { lastName: 'DAHODO' }],
     volets: [
       {

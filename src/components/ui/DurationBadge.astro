@@ -1,0 +1,10 @@
+---
+/** Badge de durée contractuelle d'une mission (recommandation R6) : « 2 mois ». */
+import { Hourglass } from '@lucide/astro';
+interface Props { duration: string; class?: string }
+const { duration, class: extra = '' } = Astro.props;
+---
+<span class:list={['inline-flex items-center gap-1.5 rounded-full bg-forest-soft px-3 py-1 text-small font-semibold text-forest ring-1 ring-forest/10', extra]}>
+  <Hourglass size={14} aria-hidden="true" class="text-brand" />
+  <span class="sr-only">Durée contractuelle : </span>{duration}
+</span>
