@@ -1,0 +1,110 @@
+---
+/**
+ * Politique de confidentialité — protocole complet, chapitre 10 (textes « À VALIDER », validation juridique requise).
+ * Cadre : livre V du Code du numérique (loi n° 2017-20 du 20 avril 2018, modifiée par la loi n° 2020-35 du 6 janvier 2021), sous le contrôle de l'APDP.
+ * Décrit le fonctionnement réel du site : formulaire transmis par courriel sans enregistrement sur le serveur
+ * (public/contact-envoi.php), aucun cookie, aucun outil de mesure d'audience, aucun contenu tiers chargé.
+ * Restent à compléter : durées de conservation, transferts hors du Bénin, journaux techniques de l'hébergeur, formalités APDP.
+ * À METTRE À JOUR si un outil de mesure d'audience ou un contenu tiers (carte, vidéo) est ajouté.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/page/PageHeader.astro';
+import LegalDocument, { type LegalSection } from '../components/page/LegalDocument.astro';
+import { site } from '../config/site';
+import { pieceJointe } from '../data/contact';
+import { url } from '../lib/url';
+
+const todo = (t: string) => `<span class="a-completer">${t}</span>`;
+const mail = `<a href="mailto:${site.email}">${site.email}</a>`;
+
+const sections: LegalSection[] = [
+  {
+    id: 'cadre',
+    title: 'Objet et cadre',
+    html: `<p>La présente politique explique comment ${site.name} traite les données personnelles que vous lui transmettez par l'intermédiaire du site ${site.domain}. Elle s'inscrit dans le cadre du livre V du Code du numérique de la République du Bénin (loi n° 2017-20 du 20 avril 2018, modifiée par la loi n° 2020-35 du 6 janvier 2021), dont l'application est contrôlée par l'Autorité de protection des données à caractère personnel (APDP).</p>`,
+  },
+  {
+    id: 'responsable',
+    title: 'Responsable du traitement',
+    html: `<p><strong>${site.legalName}</strong>, société à responsabilité limitée dont le siège est situé ${site.address.oneLine}, Bénin.</p><p>Contact : ${mail}.</p>`,
+  },
+  {
+    id: 'donnees',
+    title: 'Données collectées',
+    html: `<p>Nous ne collectons que les informations que vous choisissez de nous transmettre :</p>
+      <ul>
+        <li><strong>par le formulaire de contact</strong> : nom et prénom, organisation, fonction, adresse électronique, téléphone, nature de la demande, domaine concerné, message et, le cas échéant, la pièce jointe que vous ajoutez (document PDF ou Word de ${pieceJointe.maxMo} Mo au plus) ;</li>
+        <li><strong>par courrier électronique</strong> : les informations et documents contenus dans vos messages, notamment les candidatures (CV et lettre de motivation).</li>
+      </ul>
+      <p>Le site n'utilise aucun outil de mesure d'audience. Données techniques de connexion éventuellement enregistrées par l'hébergeur : ${todo('à préciser selon l’hébergeur retenu')}.</p>`,
+  },
+  {
+    id: 'finalites',
+    title: 'Finalités',
+    html: `<p>Vos données sont utilisées uniquement pour :</p>
+      <ul>
+        <li>répondre à votre demande et assurer le suivi de nos échanges ;</li>
+        <li>vous adresser un accusé de réception de votre message ;</li>
+        <li>étudier votre candidature, si vous nous écrivez à ce titre.</li>
+      </ul>`,
+  },
+  {
+    id: 'fondement',
+    title: 'Fondement du traitement',
+    html: `<p>Votre consentement, exprimé en cochant la case prévue à cet effet avant l'envoi du formulaire, ou par l'envoi volontaire de votre message ou de votre candidature.</p>`,
+  },
+  {
+    id: 'destinataires',
+    title: 'Destinataires',
+    html: `<p>Le personnel habilité de ${site.name} et nos prestataires techniques (hébergeur du site, service de messagerie électronique), dans la limite de leurs missions.</p>`,
+  },
+  {
+    id: 'conservation',
+    title: 'Durée de conservation',
+    html: `<p>Les messages envoyés par le formulaire ne sont pas enregistrés dans une base de données du site : ils sont transmis au cabinet par courrier électronique.</p>
+      <ul>
+        <li>Durée de conservation des demandes et des échanges : ${todo('à fixer par la direction, sur avis juridique')}.</li>
+        <li>Durée de conservation des candidatures non retenues : ${todo('à fixer par la direction, sur avis juridique')}.</li>
+      </ul>`,
+  },
+  {
+    id: 'transferts',
+    title: 'Transfert hors du Bénin',
+    html: `<p>${todo('à compléter selon la localisation de l’hébergeur et du service de messagerie retenus')}.</p>`,
+  },
+  {
+    id: 'droits',
+    title: 'Vos droits',
+    html: `<p>Vous disposez d'un droit d'accès, de rectification, d'opposition et de suppression de vos données. Pour les exercer, écrivez à ${mail}.</p><p>Vous pouvez également saisir l'Autorité de protection des données à caractère personnel (APDP).</p>`,
+  },
+  {
+    id: 'securite',
+    title: 'Sécurité',
+    html: `<p>${site.name} met en œuvre des mesures techniques et organisationnelles adaptées pour protéger vos données contre la perte, l'accès non autorisé ou la divulgation. En particulier :</p>
+      <ul>
+        <li>le site est accessible en connexion chiffrée (HTTPS) ;</li>
+        <li>les informations du formulaire sont vérifiées par le serveur avant leur transmission, et seules les pièces jointes au format PDF ou Word sont acceptées ;</li>
+        <li>les messages ne sont pas conservés sur le serveur du site.</li>
+      </ul>`,
+  },
+  {
+    id: 'cookies',
+    title: 'Cookies et services tiers',
+    html: `<p>Le site ne dépose aucun cookie, qu'il s'agisse de mesure d'audience, de publicité ou de réseaux sociaux. Il ne charge aucun contenu provenant de services tiers : les polices de caractères et les images sont hébergées sur le site lui-même.</p><p>Les boutons de partage des actualités sont de simples liens : le réseau social concerné n'est contacté que si vous cliquez sur l'un d'eux.</p>`,
+  },
+  {
+    id: 'modifications',
+    title: 'Modification de la politique',
+    html: `<p>La présente politique peut être mise à jour, notamment en cas d'évolution du site ou de la réglementation. La date de dernière mise à jour figure en bas de cette page. Pour toute question, consultez aussi la <a href="${url('/ressources/faq')}">foire aux questions</a> ou écrivez-nous.</p>`,
+  },
+];
+---
+<BaseLayout title="Politique de confidentialité" description={`Comment ${site.name} traite les données personnelles transmises par le site ${site.domain} : données collectées, finalités, conservation, droits et cookies.`}>
+  <PageHeader
+    eyebrow="Informations légales"
+    title="Politique de confidentialité"
+    intro="Comment nous traitons les informations que vous nous transmettez, et comment exercer vos droits."
+    crumbs={[{ label: 'Politique de confidentialité' }]}
+  />
+  <LegalDocument sections={sections} updated="2026-11-15" provisional />
+</BaseLayout>

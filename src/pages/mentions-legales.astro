@@ -1,0 +1,81 @@
+---
+/**
+ * Mentions légales — protocole complet, chapitre 9 (textes « À VALIDER », relecture juridique requise).
+ * Sources : annexe A du protocole (fiche signalétique : MCV, RCCM, contrat).
+ * Restent à compléter avant la mise en ligne définitive : téléphone, hébergeur, conception, crédits photographiques,
+ * juridiction compétente ; décision de publier ou non le numéro IFU (non affiché tant qu'elle n'est pas prise).
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/page/PageHeader.astro';
+import LegalDocument, { type LegalSection } from '../components/page/LegalDocument.astro';
+import { site } from '../config/site';
+import { url } from '../lib/url';
+
+const todo = (t: string) => `<span class="a-completer">${t}</span>`;
+const phone = site.phone.href ? site.phone.display : todo('à compléter');
+
+const sections: LegalSection[] = [
+  {
+    id: 'editeur',
+    title: 'Éditeur du site',
+    html: `<p>Le site ${site.domain} est édité par <strong>${site.legalName}</strong> (ci-après « ${site.name} »).</p>
+      <dl>
+        <dt>Forme juridique</dt><dd>Société à responsabilité limitée (SARL)</dd>
+        <dt>Capital social</dt><dd>5 000 000 FCFA</dd>
+        <dt>Immatriculation</dt><dd>Registre du commerce et du crédit mobilier de Cotonou, n° ${site.rccm}, en date du 16 juin 2025</dd>
+        <dt>Siège social</dt><dd>${site.address.oneLine}, Bénin</dd>
+        <dt>Téléphone</dt><dd>${phone}</dd>
+        <dt>Courriel</dt><dd><a href="mailto:${site.email}">${site.email}</a></dd>
+      </dl>`,
+  },
+  {
+    id: 'directeur-publication',
+    title: 'Directeur de la publication',
+    html: `<p>Monsieur Médard DAHODO, Directeur Général.</p>`,
+  },
+  {
+    id: 'hebergement',
+    title: 'Hébergement',
+    html: `<p>Dénomination, adresse et coordonnées de l'hébergeur : ${todo('à compléter lors de la souscription de l’hébergement')}.</p>`,
+  },
+  {
+    id: 'conception',
+    title: 'Conception et réalisation',
+    html: `<p>${todo('à compléter')}</p>`,
+  },
+  {
+    id: 'propriete-intellectuelle',
+    title: 'Propriété intellectuelle',
+    html: `<p>L'ensemble des contenus du site (textes, logo, photographies, illustrations, documents) est la propriété de ${site.name} ou est utilisé avec l'autorisation de leurs auteurs. Toute reproduction, représentation ou diffusion, totale ou partielle, sans autorisation écrite préalable de ${site.name} est interdite.</p>`,
+  },
+  {
+    id: 'credits-photographiques',
+    title: 'Crédits photographiques',
+    html: `<p>${todo('à compléter pour chaque photographie utilisée')}</p>`,
+  },
+  {
+    id: 'responsabilite',
+    title: 'Responsabilité',
+    html: `<p>${site.name} s'efforce d'assurer l'exactitude et la mise à jour des informations publiées sur ce site, sans pouvoir garantir l'absence d'erreur ou d'omission. ${site.name} ne saurait être tenue responsable du contenu des sites tiers vers lesquels renvoient des liens, ni des interruptions temporaires du site.</p>`,
+  },
+  {
+    id: 'donnees-personnelles',
+    title: 'Données personnelles',
+    html: `<p>Le traitement des informations transmises par le formulaire de contact ou par courrier électronique est décrit dans la <a href="${url('/politique-de-confidentialite')}">politique de confidentialité</a>.</p>`,
+  },
+  {
+    id: 'droit-applicable',
+    title: 'Droit applicable',
+    html: `<p>Le présent site et les présentes mentions légales sont soumis au droit béninois. Juridiction compétente : ${todo('à préciser après avis juridique')}.</p>`,
+  },
+];
+---
+<BaseLayout title="Mentions légales" description={`Mentions légales du site ${site.domain} : éditeur, directeur de la publication, hébergement, propriété intellectuelle et droit applicable.`}>
+  <PageHeader
+    eyebrow="Informations légales"
+    title="Mentions légales"
+    intro={`Informations relatives à l'éditeur du site ${site.domain} et aux conditions de son utilisation.`}
+    crumbs={[{ label: 'Mentions légales' }]}
+  />
+  <LegalDocument sections={sections} updated="2026-11-15" provisional />
+</BaseLayout>

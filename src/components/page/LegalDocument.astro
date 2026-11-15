@@ -1,0 +1,78 @@
+---
+/**
+ * Corps des pages légales (mentions légales, politique de confidentialité) : rubriques numérotées,
+ * sommaire collant sur grand écran, date de mise à jour, avertissement « version provisoire ».
+ * Les informations manquantes sont balisées <span class="a-completer">…</span> pour être repérées facilement
+ * (elles doivent toutes être renseignées avant la mise en ligne définitive).
+ */
+import { Info } from '@lucide/astro';
+import { formatDateFr } from '../../lib/actualites';
+
+export interface LegalSection { id: string; title: string; html: string }
+interface Props { sections: LegalSection[]; updated: string; provisional?: boolean }
+const { sections, updated, provisional = false } = Astro.props;
+const date = new Date(updated);
+---
+<section class="section-y bg-white !pt-6 lg:!pt-10">
+  <div class="container-site grid gap-10 lg:grid-cols-12 lg:gap-16">
+    <nav aria-label="Sommaire" class="hidden lg:col-span-4 lg:block">
+      <div class="sticky top-28">
+        <p class="text-eyebrow uppercase text-muted">Sommaire</p>
+        <ol class="mt-4 grid gap-1">
+          {sections.map((s, i) => (
+            <li><a href={`#${s.id}`} class="toc-link"><span class="toc-link__n">{String(i + 1).padStart(2, '0')}</span>{s.title}</a></li>
+          ))}
+        </ol>
+      </div>
+    </nav>
+
+    <div class="min-w-0 lg:col-span-8">
+      {provisional && (
+        <p class="notice">
+          <Info size={18} aria-hidden="true" class="mt-0.5 shrink-0 text-brand" />
+          <span>Version provisoire en cours de validation par la direction et de relecture juridique. Les mentions signalées <span class="a-completer">à compléter</span> seront renseignées avant la mise en ligne définitive du site.</span>
+        </p>
+      )}
+
+      <div class="legal">
+        {sections.map((s, i) => (
+          <section id={s.id} aria-labelledby={`${s.id}-titre`} class="legal__section">
+            <h2 id={`${s.id}-titre`} class="legal__title"><span class="legal__n">{i + 1}.</span> {s.title}</h2>
+            <div class="legal__body" set:html={s.html} />
+          </section>
+        ))}
+      </div>
+
+      <p class="mt-12 border-t border-line pt-6 text-small text-muted">
+        Dernière mise à jour : <time datetime={updated}>{formatDateFr(date)}</time>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .toc-link { display: flex; gap: 0.75rem; padding: 0.45rem 0.75rem; border-radius: 0.6rem; font-size: 0.9375rem; color: var(--color-ink); transition: background-color 0.2s, color 0.2s; }
+  .toc-link:hover { color: var(--color-forest); background: var(--color-mineral); }
+  .toc-link__n { flex-shrink: 0; font-family: var(--font-display); font-weight: 700; color: var(--color-brand); }
+
+  .notice { display: flex; gap: 0.75rem; margin-bottom: 2.5rem; padding: 1rem 1.25rem; border-radius: 1rem; font-size: 0.9375rem; color: var(--color-muted); background: var(--color-mineral); box-shadow: inset 0 0 0 1px rgb(31 77 46 / 0.08); }
+
+  .legal__section { scroll-margin-top: 7rem; padding-block: 1.75rem; border-bottom: 1px solid var(--color-line); }
+  .legal__section:first-child { padding-top: 0; }
+  .legal__section:last-child { border-bottom: 0; }
+  .legal__title { font-size: var(--text-h4); font-weight: 600; line-height: 1.35; color: var(--color-forest); }
+  .legal__n { color: var(--color-brand); }
+  .legal__body { margin-top: 0.85rem; font-size: 1rem; line-height: 1.75; color: rgb(28 42 33 / 0.88); }
+  .legal__body :global(p + p), .legal__body :global(p + ul), .legal__body :global(ul + p) { margin-top: 0.8em; }
+  .legal__body :global(ul) { padding-left: 1.25rem; list-style: disc; }
+  .legal__body :global(li + li) { margin-top: 0.35em; }
+  .legal__body :global(li::marker) { color: var(--color-brand); }
+  .legal__body :global(strong) { font-weight: 600; color: var(--color-forest); }
+  .legal__body :global(a) { font-weight: 600; color: var(--color-forest); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--color-sun); }
+  .legal__body :global(dl) { display: grid; gap: 0.5rem 1.5rem; margin-top: 0.5rem; }
+  @media (width >= 40rem) { .legal__body :global(dl) { grid-template-columns: 12rem 1fr; } }
+  .legal__body :global(dt) { font-weight: 600; color: var(--color-forest); }
+  .legal__body :global(dd) { margin: 0; }
+  /* Information manquante : repère visuel discret */
+  :global(.a-completer) { padding: 0.05em 0.45em; border-radius: 0.35em; font-size: 0.92em; font-weight: 600; font-style: normal; color: var(--color-status-ongoing); background: var(--color-sun-soft); box-shadow: inset 0 0 0 1px rgb(224 168 0 / 0.35); }
+</style>

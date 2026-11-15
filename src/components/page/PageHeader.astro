@@ -11,8 +11,9 @@ import { url } from '../../lib/url';
 import { site } from '../../config/site';
 
 interface Crumb { label: string; href?: string }
-/** image : identifiant de la photo d'en-tête dans src/config/images.ts (ex. 'cabinet.hero'). */
-interface Props { title: string; eyebrow?: string; intro?: string; crumbs: Crumb[]; image: ImageId }
+/** image : identifiant de la photo d'en-tête dans src/config/images.ts (ex. 'cabinet.hero').
+ *  Facultative : sans image (pages sobres, ex. pages légales), le texte occupe toute la largeur et l'en-tête est plus compact. */
+interface Props { title: string; eyebrow?: string; intro?: string; crumbs: Crumb[]; image?: ImageId }
 const { title, eyebrow, intro, crumbs, image } = Astro.props;
 const trail: Crumb[] = [{ label: 'Accueil', href: '/' }, ...crumbs];
 
@@ -31,8 +32,8 @@ const jsonLd = {
   <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,var(--color-mist),#fff_85%)]"></div>
   <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_55%_80%_at_0%_0%,var(--color-mineral),transparent_70%)]"></div>
 
-  <div class="container-site grid items-center gap-10 pb-14 pt-28 sm:pt-32 lg:grid-cols-12 lg:gap-12 lg:pb-20 lg:pt-40">
-    <div class="lg:col-span-7">
+  <div class:list={['container-site grid items-center gap-10 pt-28 sm:pt-32 lg:grid-cols-12 lg:gap-12', image ? 'pb-14 lg:pb-20 lg:pt-40' : 'pb-12 lg:pb-14 lg:pt-36']}>
+    <div class:list={[image ? 'lg:col-span-7' : 'lg:col-span-10']}>
       <nav aria-label="Fil d'Ariane" class="page-in">
         <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-small text-muted">
           {trail.map((c, i) => (
@@ -55,9 +56,11 @@ const jsonLd = {
       <slot />
     </div>
 
-    <div class="page-photo page-in lg:col-span-5" style="--d:200ms">
-      <div class="page-photo__frame"><SiteImage id={image} sizes="(min-width: 64rem) 40vw, 100vw" priority alt="" /></div>
-    </div>
+    {image && (
+      <div class="page-photo page-in lg:col-span-5" style="--d:200ms">
+        <div class="page-photo__frame"><SiteImage id={image} sizes="(min-width: 64rem) 40vw, 100vw" priority alt="" /></div>
+      </div>
+    )}
   </div>
 </section>
 
