@@ -3,16 +3,23 @@
  * Accueil, section 3 : prestations en tableau (domaine | livrables types).
  * Livrables : propositions dérivées des prestations publiées (src/data/livrables.ts, À VALIDER).
  * Tableau réel (lecteurs d'écran) ; sur mobile, chaque ligne devient un bloc empilé.
+ * Photos des domaines (registre images.json, src/data/photos.ts), décoratives :
+ *   - mobile et tablette : vignette 320 px dans chaque ligne, chargement différé ;
+ *   - ordinateur (pointeur fin) : aperçu dans une colonne réservée à droite, qui suit le pointeur verticalement ;
+ *     les 8 images ne sont chargées qu'au premier survol du tableau. Sans animation si « réduire les animations ».
  */
 import { ArrowUpRight } from '@lucide/astro';
 import SectionHead from '../ui/SectionHead.astro';
 import ArrowLink from '../ui/ArrowLink.astro';
 import { expertises } from '../../data/expertises';
 import { livrablesParDomaine } from '../../data/livrables';
+import { photoParDomaine } from '../../data/photos';
 import { url } from '../../lib/url';
 
 interface Props { index?: string; link?: boolean; id?: string }
 const { index = '01', link = true, id = 'prestations' } = Astro.props;
+const photoUrl = (name: string, w: number, fmt: string) => url(`/images/photos/${name}-${w}.${fmt}`);
+const srcset = (name: string, fmt: string, widths: number[]) => widths.map((w) => `${photoUrl(name, w, fmt)} ${w}w`).join(', ');
 ---
 <section id={id} aria-labelledby="prestations-title" class="section-y scroll-mt-28">
   <div class="container-site">
@@ -25,7 +32,8 @@ const { index = '01', link = true, id = 'prestations' } = Astro.props;
       intro="Pour chaque domaine, les documents que nous produisons. Le détail des prestations figure sur la page de chaque domaine."
     />
 
-    <table class="presta mt-12 lg:mt-16" data-reveal>
+    <div class="presta-wrap mt-12 lg:mt-16" data-presta>
+    <table class="presta" data-reveal>
       <caption class="sr-only">Domaines d'expertise et livrables types</caption>
       <thead>
         <tr>
@@ -37,7 +45,7 @@ const { index = '01', link = true, id = 'prestations' } = Astro.props;
       </thead>
       <tbody>
         {expertises.map((e, i) => (
-          <tr class="presta__row">
+          <tr class="presta__row" data-index={i}>
             <td class="presta__n">{String(i + 1).padStart(2, '0')}</td>
             <th scope="row" class="presta__domain">
               <a href={url(`/expertises/${e.slug}`)} class="presta__link">{e.title}</a>
@@ -47,11 +55,28 @@ const { index = '01', link = true, id = 'prestations' } = Astro.props;
                 {(livrablesParDomaine[e.slug] ?? []).map((l) => <li>{l}</li>)}
               </ul>
             </td>
+            <td class="presta__thumb" aria-hidden="true">
+              <picture>
+                <source type="image/avif" srcset={srcset(photoParDomaine[e.slug], 'avif', [320, 640])} sizes="5.5rem" />
+                <img src={photoUrl(photoParDomaine[e.slug], 320, 'webp')} srcset={srcset(photoParDomaine[e.slug], 'webp', [320, 640])} sizes="5.5rem" alt="" width="320" height="213" loading="lazy" decoding="async" />
+              </picture>
+            </td>
             <td class="presta__go" aria-hidden="true"><ArrowUpRight size={18} /></td>
           </tr>
         ))}
       </tbody>
     </table>
+
+    <!-- Aperçu photo (ordinateur) : images chargées au premier survol -->
+    <div class="presta-preview" aria-hidden="true" data-preview>
+      {expertises.map((e, i) => (
+        <picture data-preview-img={i}>
+          <source type="image/avif" data-srcset={srcset(photoParDomaine[e.slug], 'avif', [640, 1280])} sizes="18rem" />
+          <img data-srcset={srcset(photoParDomaine[e.slug], 'webp', [640, 1280])} sizes="18rem" alt="" width="640" height="427" decoding="async" />
+        </picture>
+      ))}
+    </div>
+    </div>
 
     {link && (
       <div class="mt-10" data-reveal>
@@ -77,7 +102,16 @@ const { index = '01', link = true, id = 'prestations' } = Astro.props;
   .presta__livrables li::before { content: ''; position: absolute; left: 0; top: 0.7em; width: 0.4rem; height: 1px; background: var(--color-line-strong); }
   .presta__go { display: none; }
 
+  /* Vignette (mobile, tablette) */
+  .presta__row { grid-template-columns: 2.5rem 1fr 5.5rem; column-gap: 0; }
+  .presta__thumb { grid-column: 3; grid-row: 1 / span 2; align-self: start; padding-left: 1rem; }
+  .presta__thumb img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-ui); background: var(--color-sunken); }
+  .presta-preview { display: none; }
+
   @media (width >= 64rem) {
+    .presta-wrap { position: relative; --preview-w: 18rem; }
+    .presta__thumb { display: none; }
+    .presta tbody tr > td:nth-child(3) { padding-right: calc(var(--preview-w) + 3rem); }
     .presta thead { display: table-header-group; }
     .presta__row { display: table-row; padding: 0; }
     .presta th[scope='col'] { padding: 0 1rem 1rem 0; font-family: var(--font-mono); font-size: var(--text-eyebrow); font-weight: 500; letter-spacing: var(--text-eyebrow--letter-spacing); text-transform: uppercase; color: var(--color-muted); }
@@ -92,4 +126,58 @@ const { index = '01', link = true, id = 'prestations' } = Astro.props;
     .presta__row:hover .presta__domain { color: var(--color-accent-text); }
     .presta__row:hover .presta__go { color: var(--color-accent); }
   }
+
+  /* Aperçu au survol (ordinateur, pointeur fin) : colonne réservée à droite, suit le pointeur verticalement */
+  @media (width >= 64rem) and (hover: hover) and (pointer: fine) {
+    .presta-preview {
+      display: block; position: absolute; top: 0; right: 3rem; z-index: 2;
+      width: var(--preview-w); aspect-ratio: 3 / 2; overflow: hidden; pointer-events: none;
+      border-radius: var(--radius-card); background: var(--color-sunken);
+      opacity: 0; transform: translate3d(0, var(--y, 0px), 0) scale(0.96);
+      transition: opacity 0.35s var(--ease-out-soft), transform 0.5s var(--ease-out-soft);
+    }
+    .presta-preview.is-on { opacity: 1; transform: translate3d(0, var(--y, 0px), 0) scale(1); }
+    .presta-preview picture { position: absolute; inset: 0; opacity: 0; transform: scale(1.06); transition: opacity 0.4s var(--ease-out-soft), transform 0.9s var(--ease-out-soft); }
+    .presta-preview picture.is-active { opacity: 1; transform: none; }
+    .presta-preview img { width: 100%; height: 100%; object-fit: cover; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .presta-preview, .presta-preview picture { transition: opacity 0.2s !important; transform: none !important; }
+  }
 </style>
+
+<script>
+  // Aperçu photo au survol des lignes du tableau des domaines (ordinateur uniquement)
+  const fine = window.matchMedia('(min-width: 64rem) and (hover: hover) and (pointer: fine)');
+  document.querySelectorAll<HTMLElement>('[data-presta]').forEach((wrap) => {
+    const preview = wrap.querySelector<HTMLElement>('[data-preview]');
+    if (!preview) return;
+    const pics = [...preview.querySelectorAll<HTMLElement>('[data-preview-img]')];
+    let loaded = false;
+    const load = () => {
+      if (loaded) return;
+      loaded = true;
+      preview.querySelectorAll<HTMLElement>('[data-srcset]').forEach((el) => el.setAttribute('srcset', el.dataset.srcset!));
+    };
+    const place = (row: HTMLElement) => {
+      const y = row.offsetTop + row.offsetHeight / 2 - preview.offsetHeight / 2;
+      const max = wrap.offsetHeight - preview.offsetHeight;
+      preview.style.setProperty('--y', `${Math.max(0, Math.min(max, y))}px`);
+    };
+    const show = (row: HTMLElement) => {
+      if (!fine.matches) return;
+      load();
+      const i = Number(row.dataset.index);
+      pics.forEach((p, k) => p.classList.toggle('is-active', k === i));
+      place(row);
+      preview.classList.add('is-on');
+    };
+    wrap.addEventListener('pointerenter', () => { if (fine.matches) load(); });
+    wrap.querySelectorAll<HTMLElement>('[data-index]').forEach((row) => {
+      row.addEventListener('pointerenter', () => show(row));
+      row.addEventListener('focusin', () => show(row));
+    });
+    wrap.addEventListener('pointerleave', () => preview.classList.remove('is-on'));
+    wrap.addEventListener('focusout', (e) => { if (!wrap.contains(e.relatedTarget as Node)) preview.classList.remove('is-on'); });
+  });
+</script>

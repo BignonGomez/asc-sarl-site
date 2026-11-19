@@ -2,10 +2,12 @@
   {
     "fichier": "expertise-etudes-environnementales",
     "variantes": [
+      "/images/photos/expertise-etudes-environnementales-320.{avif,webp}",
       "/images/photos/expertise-etudes-environnementales-640.{avif,webp}",
       "/images/photos/expertise-etudes-environnementales-1280.{avif,webp}"
     ],
     "largeurs": [
+      320,
       640,
       1280
     ],
@@ -20,10 +22,12 @@
   {
     "fichier": "expertise-changements-climatiques",
     "variantes": [
+      "/images/photos/expertise-changements-climatiques-320.{avif,webp}",
       "/images/photos/expertise-changements-climatiques-640.{avif,webp}",
       "/images/photos/expertise-changements-climatiques-1280.{avif,webp}"
     ],
     "largeurs": [
+      320,
       640,
       1280
     ],
@@ -38,10 +42,12 @@
   {
     "fichier": "expertise-hydraulique",
     "variantes": [
+      "/images/photos/expertise-hydraulique-320.{avif,webp}",
       "/images/photos/expertise-hydraulique-640.{avif,webp}",
       "/images/photos/expertise-hydraulique-1280.{avif,webp}"
     ],
     "largeurs": [
+      320,
       640,
       1280
     ],
@@ -56,10 +62,12 @@
   {
     "fichier": "expertise-amenagement",
     "variantes": [
+      "/images/photos/expertise-amenagement-320.{avif,webp}",
       "/images/photos/expertise-amenagement-640.{avif,webp}",
       "/images/photos/expertise-amenagement-1280.{avif,webp}"
     ],
     "largeurs": [
+      320,
       640,
       1280
     ],
@@ -74,10 +82,12 @@
   {
     "fichier": "expertise-agriculture",
     "variantes": [
+      "/images/photos/expertise-agriculture-320.{avif,webp}",
       "/images/photos/expertise-agriculture-640.{avif,webp}",
       "/images/photos/expertise-agriculture-1280.{avif,webp}"
     ],
     "largeurs": [
+      320,
       640,
       1280
     ],
@@ -92,10 +102,12 @@
   {
     "fichier": "expertise-economie-locale",
     "variantes": [
+      "/images/photos/expertise-economie-locale-320.{avif,webp}",
       "/images/photos/expertise-economie-locale-640.{avif,webp}",
       "/images/photos/expertise-economie-locale-1280.{avif,webp}"
     ],
     "largeurs": [
+      320,
       640,
       1280
     ],
@@ -110,10 +122,12 @@
   {
     "fichier": "expertise-tourisme-conservation",
     "variantes": [
+      "/images/photos/expertise-tourisme-conservation-320.{avif,webp}",
       "/images/photos/expertise-tourisme-conservation-640.{avif,webp}",
       "/images/photos/expertise-tourisme-conservation-1280.{avif,webp}"
     ],
     "largeurs": [
+      320,
       640,
       1280
     ],
@@ -128,10 +142,12 @@
   {
     "fichier": "expertise-formation",
     "variantes": [
+      "/images/photos/expertise-formation-320.{avif,webp}",
       "/images/photos/expertise-formation-640.{avif,webp}",
       "/images/photos/expertise-formation-1280.{avif,webp}"
     ],
     "largeurs": [
+      320,
       640,
       1280
     ],

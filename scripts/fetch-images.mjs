@@ -11,7 +11,7 @@
  *   node scripts/fetch-images.mjs sheet "<mots-clés>" --out <fichier.jpg> [--n 9] [--min 1920] [--orientation …]
  *       → planche-contact : les n meilleurs aperçus réunis dans une image, chacun avec son identifiant (pour choisir vite).
  *   node scripts/fetch-images.mjs get <id> --name <nom-fichier> --page "<page d'usage>" --alt "<texte alternatif>" [--min 1920]
- *       → télécharge l'image, la convertit en AVIF et WebP (640, 1280, 1920 px max selon l'original)
+ *       → télécharge l'image, la convertit en AVIF et WebP (320, 640, 1280, 1920 px max selon l'original)
  *         dans public/images/photos/, et l'inscrit dans le registre images.json (racine du site).
  *
  * Règles (CLAUDE.md, section 9) : mots-clés anglais précis ; jamais de mention « libre de droit » sur le site ;
@@ -25,7 +25,7 @@ import sharp from 'sharp';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT_DIR = join(ROOT, 'public', 'images', 'photos');
 const REGISTRY = join(ROOT, 'images.json');
-const WIDTHS = [640, 1280, 1920];
+const WIDTHS = [320, 640, 1280, 1920];
 
 // ---------- Lecture de la clé (sans jamais l'afficher) ----------
 function readKey(name) {

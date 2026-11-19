@@ -14,6 +14,7 @@ import Photo from '../../components/ui/Photo.astro';
 import { expertises } from '../../data/expertises';
 import { domainPages, publics, prestationFamilies, type DomainPage, type Prestation } from '../../data/expertises-pages';
 import { livrablesParDomaine } from '../../data/livrables';
+import { photoParDomaine } from '../../data/photos';
 import { team } from '../../data/equipe';
 import { missions } from '../../data/missions';
 import { url } from '../../lib/url';
@@ -26,17 +27,8 @@ const domain = expertises.find((e) => e.slug === page.slug)!;
 const index = expertises.indexOf(domain);
 const pad = (n: number) => String(n).padStart(2, '0');
 
-// Photo de l'en-tête (registre images.json)
-const photos: Record<string, string> = {
-  'etudes-environnementales-sociales': 'expertise-etudes-environnementales',
-  'changements-climatiques': 'expertise-changements-climatiques',
-  'hydraulique-gire': 'expertise-hydraulique',
-  'amenagement-territoire': 'expertise-amenagement',
-  'agriculture-developpement-rural': 'expertise-agriculture',
-  'economie-locale': 'expertise-economie-locale',
-  'tourisme-conservation': 'expertise-tourisme-conservation',
-  'formation-sensibilisation': 'expertise-formation',
-};
+// Photo de l'en-tête (registre images.json) : src/data/photos.ts
+const photos = photoParDomaine;
 
 // Prestations : liste simple, ou groupes par public (économie locale)
 const groups: { title?: string; items: Prestation[] }[] = page.prestationGroups?.length
