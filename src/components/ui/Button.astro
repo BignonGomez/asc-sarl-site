@@ -27,8 +27,9 @@ const sizes = { md: 'min-h-12 px-5 text-[0.9375rem]', lg: 'min-h-13 px-6 text-ba
 ---
 <a
   href={url(href)}
+  data-magnetic={variant === 'primary' ? '' : undefined}
   class:list={[
-    'group/btn inline-flex items-center justify-center gap-2.5 rounded-ui font-medium whitespace-nowrap transition-[background-color,color,border-color] duration-200',
+    'group/btn inline-flex items-center justify-center gap-2.5 rounded-ui font-medium whitespace-nowrap transition-[background-color,color,border-color,transform] duration-200 ease-[var(--ease-out-soft)]',
     variants[variant],
     sizes[size],
     extra,

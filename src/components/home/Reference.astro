@@ -87,7 +87,10 @@ const notifie = m.period[0]; // « Contrat notifié le 23 juillet 2026 »
   .fiche__list { display: grid; gap: 0.6rem; }
   .fiche__list strong { font-weight: 600; color: var(--color-ink); }
   .fiche__map { margin: 0; align-self: start; max-width: 26rem; }
-  .fiche__map-svg :global(svg) { display: block; width: 100%; height: auto; }
+  .fiche__map-svg { overflow: hidden; }
+  .fiche__map-svg :global(svg) { display: block; width: 100%; height: auto; transition: transform 1.2s var(--ease-out-soft); }
+  .fiche:hover .fiche__map-svg :global(svg) { transform: scale(1.04); }
+  @media (prefers-reduced-motion: reduce) { .fiche:hover .fiche__map-svg :global(svg) { transform: none; } }
   .fiche__map figcaption { margin-top: 0.75rem; color: var(--color-muted); }
 
   .fiche__map :global(.cb-grid) { fill: none; stroke: var(--color-map-grid); stroke-width: 0.75; }

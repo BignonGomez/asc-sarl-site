@@ -129,3 +129,26 @@
   /* L'espacement des lettres ajoute un blanc après la dernière lettre : on le compense pour une symétrie exacte */
   .eyebrow-framed::after { margin-inline-start: calc(-1 * var(--text-eyebrow--letter-spacing, 0em)); }
 }
+
+/* ---------- Transitions de page (navigation entre documents, sans JavaScript) ----------
+   Fondu court de la page ; le menu en capsule reste en place. Navigateurs non compatibles : navigation normale. */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vt-out 0.22s var(--ease-out-soft) both; }
+::view-transition-new(root) { animation: vt-in 0.42s var(--ease-out-soft) both; }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(12px); } }
+.site-header { view-transition-name: site-header; }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+
+/* ---------- Curseur discret (ordinateur) : anneau qui suit le pointeur, agrandi sur les liens ---------- */
+.cursor-ring {
+  position: fixed; left: 0; top: 0; z-index: 200;
+  width: 28px; height: 28px; margin: -14px 0 0 -14px;
+  border-radius: 999px; border: 1px solid var(--color-accent);
+  pointer-events: none; opacity: 0;
+  transition: opacity 0.3s, width 0.3s var(--ease-out-soft), height 0.3s var(--ease-out-soft), margin 0.3s var(--ease-out-soft), background-color 0.3s;
+}
+.cursor-ring.is-active { opacity: 0.5; }
+.cursor-ring.is-link { width: 44px; height: 44px; margin: -22px 0 0 -22px; opacity: 0.35; background: color-mix(in srgb, var(--color-accent) 10%, transparent); }

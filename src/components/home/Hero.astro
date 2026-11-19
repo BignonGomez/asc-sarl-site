@@ -18,7 +18,7 @@ const words = title.split(' ');
 <section aria-labelledby="hero-title" class="hero relative isolate overflow-clip">
   <!-- Visuel : carte technique (décor informatif, décrit par son titre SVG) -->
   <figure class="hero-map">
-    <div class="hero-map__svg" set:html={mapSvg} />
+    <div class="hero-map__svg" data-parallax="0.12" set:html={mapSvg} />
     <figcaption class="hero-map__caption text-eyebrow uppercase">
       <span class="text-ink">Fig. 01</span> Bassin versant type · schéma illustratif
     </figcaption>
