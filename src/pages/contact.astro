@@ -6,7 +6,7 @@
  * Les boutons « Appeler » et « WhatsApp » s'affichent dès que les numéros officiels sont renseignés
  * (src/config/site.ts : phone.href, social WhatsApp).
  */
-import { MapPin, Phone, Mail, Building, PhoneCall, Send, Paperclip, CircleCheck, CircleExclamationPoint, LoaderCircle, ArrowRight, MessageCircleQuestionMark, PenLine } from '@lucide/astro';
+import { Mail, PhoneCall, Send, Paperclip, CircleCheck, CircleExclamationPoint, LoaderCircle, ArrowRight, PenLine } from '@lucide/astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/page/PageHeader.astro';
 import SocialIcon from '../components/ui/SocialIcon.astro';
@@ -29,14 +29,14 @@ const actions = [
 >
   <PageHeader
     eyebrow="Contact"
-    title="Parlons de votre projet"
+    title="Transmettre votre demande"
     intro="Demande d'information, demande d'accompagnement, transmission de termes de référence ou proposition de partenariat : écrivez-nous ou appelez-nous. Nous étudierons votre demande avec attention."
     crumbs={[{ label: 'Contact' }]}
   />
 
   <!-- Boutons d'action (prioritaires sur mobile) -->
-  <nav aria-label="Nous contacter rapidement" class="border-b border-line bg-white">
-    <ul class="container-site grid grid-cols-2 gap-3 py-5 sm:flex sm:flex-wrap sm:justify-center">
+  <nav aria-label="Nous contacter rapidement">
+    <ul class="container-site grid grid-cols-2 gap-3 pb-2 sm:flex sm:flex-wrap">
       {actions.map((a) => (
         <li>
           <a href={a.href} class="action" target={a.icon === 'whatsapp' ? '_blank' : undefined} rel={a.icon === 'whatsapp' ? 'noopener noreferrer' : undefined}>
@@ -55,51 +55,36 @@ const actions = [
     <div class="container-site grid gap-10 lg:grid-cols-12 lg:gap-12">
       <!-- Coordonnées officielles -->
       <aside class="grid content-start gap-6 lg:col-span-5" aria-labelledby="coord-title">
-        <div class="coord" data-reveal>
-          <h2 id="coord-title" class="font-display text-h3 text-forest">Coordonnées</h2>
-          <dl class="mt-7 grid gap-6">
-            <div class="coord__row">
-              <dt class="coord__icon"><Building size={18} aria-hidden="true" /><span class="sr-only">Dénomination</span></dt>
-              <dd><span class="block font-display font-semibold text-forest">{site.name}</span><span class="text-small text-muted">Société à responsabilité limitée</span></dd>
-            </div>
-            <div class="coord__row">
-              <dt class="coord__icon"><MapPin size={18} aria-hidden="true" /><span class="sr-only">Adresse du siège</span></dt>
-              <dd><address class="not-italic leading-relaxed text-ink">{site.address.lines.map((l) => <span class="block">{l}</span>)}</address></dd>
-            </div>
-            <div class="coord__row">
-              <dt class="coord__icon"><Phone size={18} aria-hidden="true" /><span class="sr-only">Téléphone</span></dt>
-              <dd class="text-ink">{site.phone.href ? <a href={site.phone.href} class="hover:underline">{site.phone.display}</a> : site.phone.display}</dd>
-            </div>
-            <div class="coord__row">
-              <dt class="coord__icon"><Mail size={18} aria-hidden="true" /><span class="sr-only">Courriel</span></dt>
-              <dd><a href={`mailto:${site.email}`} class="font-semibold text-forest underline-offset-4 hover:underline">{site.email}</a></dd>
-            </div>
+        <div data-reveal>
+          <h2 id="coord-title" class="text-h3 text-ink">Coordonnées</h2>
+          <dl class="kv kv--stack mt-6">
+            <div><dt>Dénomination</dt><dd>{site.name}<span class="block text-small text-muted">Société à responsabilité limitée</span></dd></div>
+            <div><dt>Siège</dt><dd><address class="not-italic">{site.address.lines.map((l) => <span class="block">{l}</span>)}</address></dd></div>
+            <div><dt>Téléphone</dt><dd>{site.phone.href ? <a href={site.phone.href} class="hover:underline">{site.phone.display}</a> : site.phone.display}</dd></div>
+            <div><dt>E-mail</dt><dd><a href={`mailto:${site.email}`} class="text-accent-text underline-offset-4 hover:underline">{site.email}</a></dd></div>
           </dl>
         </div>
 
         <div class="motifs" data-reveal style="--reveal-delay:80ms">
-          <p class="text-eyebrow uppercase text-brand">Vous pouvez nous écrire pour</p>
-          <ul class="mt-4 grid gap-2">
+          <p class="label-mono">Vous pouvez nous écrire pour</p>
+          <ul class="rows mt-4">
             {natures.filter((n) => n !== 'Autre').map((n) => (
-              <li class="flex items-center gap-2.5 text-ink"><CircleCheck size={17} aria-hidden="true" class="shrink-0 text-forest" /> {n === 'Information' ? "Une demande d'information" : n === "Demande d'accompagnement" ? "Une demande d'accompagnement" : n === 'Transmission de termes de référence' ? 'Transmettre des termes de référence' : 'Proposer un partenariat'}</li>
+              <li class="text-ink">{n === 'Information' ? "Une demande d'information" : n === "Demande d'accompagnement" ? "Une demande d'accompagnement" : n === 'Transmission de termes de référence' ? 'Transmettre des termes de référence' : 'Proposer un partenariat'}</li>
             ))}
           </ul>
         </div>
 
-        <a href={url('/ressources/faq')} class="faq-link group" data-reveal style="--reveal-delay:120ms">
-          <span class="faq-link__icon"><MessageCircleQuestionMark size={20} aria-hidden="true" /></span>
-          <span class="flex-1">
-            <span class="block font-display font-semibold text-forest">Questions fréquentes</span>
-            <span class="block text-small text-muted">Termes de référence, déroulement d'une mission, livrables…</span>
-          </span>
-          <ArrowRight size={18} aria-hidden="true" class="text-brand transition-transform group-hover:translate-x-1" />
+        <a href={url('/ressources/faq')} class="faq-row group" data-reveal>
+          <span class="faq-row__title">Questions fréquentes</span>
+          <span class="faq-row__text">Termes de référence, déroulement d'une mission, livrables…</span>
+          <ArrowRight size={18} aria-hidden="true" class="faq-row__go" />
         </a>
       </aside>
 
       <!-- Formulaire -->
       <div id="formulaire" class="scroll-mt-28 lg:col-span-7">
         <div class="form-card" data-reveal>
-          <h2 class="text-h3 text-forest">Écrivez-nous</h2>
+          <h2 class="text-h3 text-ink">Écrivez-nous</h2>
           <p class="mt-2 text-small text-muted">Les champs marqués d'un astérisque (<span aria-hidden="true" class="text-danger">*</span>) sont obligatoires.</p>
 
           <div class="form-errors" role="alert" tabindex="-1" hidden data-errors>
@@ -163,7 +148,7 @@ const actions = [
             <div class="field sm:col-span-2">
               <label for="piece">Pièce jointe (termes de référence, document de présentation…)</label>
               <label for="piece" class="file">
-                <Paperclip size={18} aria-hidden="true" class="shrink-0 text-forest" />
+                <Paperclip size={18} aria-hidden="true" class="shrink-0 text-accent-text" />
                 <span data-file-name>Choisir un fichier PDF ou Word (au plus {pieceJointe.maxMo} Mo)</span>
               </label>
               <input id="piece" name="piece" type="file" class="sr-only" accept={pieceJointe.extensions.join(',')} aria-describedby="piece-err" data-max={pieceJointe.maxMo * 1024 * 1024} />
@@ -182,14 +167,14 @@ const actions = [
               <label class="consent" for="consentement">
                 <input id="consentement" name="consentement" type="checkbox" value="oui" required aria-describedby="consentement-err" />
                 <span>
-                  J'accepte que les informations saisies soient utilisées par {site.name} pour répondre à ma demande, conformément à la <a href={url('/politique-de-confidentialite')} class="font-semibold text-brand underline underline-offset-4">politique de confidentialité</a>. <span class="req" aria-hidden="true">*</span>
+                  J'accepte que les informations saisies soient utilisées par {site.name} pour répondre à ma demande, conformément à la <a href={url('/politique-de-confidentialite')} class="font-medium text-accent-text underline underline-offset-4">politique de confidentialité</a>. <span class="req" aria-hidden="true">*</span>
                 </span>
               </label>
               <p id="consentement-err" class="err" data-err></p>
             </div>
 
             <div class="sm:col-span-2">
-              <button type="submit" class="submit btn-sheen" data-submit>
+              <button type="submit" class="submit" data-submit>
                 <Send size={18} aria-hidden="true" class="i-send" />
                 <LoaderCircle size={18} aria-hidden="true" class="i-load hidden animate-spin" />
                 <span data-submit-label>Envoyer votre message</span>
@@ -200,7 +185,7 @@ const actions = [
           <!-- Confirmation -->
           <div class="form-ok" role="status" tabindex="-1" hidden data-ok>
             <span class="form-ok__icon"><CircleCheck size={30} aria-hidden="true" /></span>
-            <p class="mt-5 font-display text-h3 text-forest" data-ok-title>Merci, votre message a bien été envoyé.</p>
+            <p class="mt-5 text-h3 text-ink" data-ok-title>Merci, votre message a bien été envoyé.</p>
             <p class="mt-3 text-muted" data-ok-text>Un accusé de réception vous a été adressé par courrier électronique.</p>
           </div>
         </div>
@@ -210,101 +195,47 @@ const actions = [
 </BaseLayout>
 
 <style>
-  .action {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    min-height: 3rem;
-    padding: 0 1.2rem;
-    border-radius: 999px;
-    font-weight: 600;
-    color: var(--color-forest);
-    background: var(--color-mineral);
-    box-shadow: inset 0 0 0 1px var(--color-line);
-    transition: background-color 0.2s, color 0.2s, transform 0.3s var(--ease-out-soft);
-  }
-  .action:hover { color: #fff; background: var(--color-forest); transform: translateY(-2px); }
-
-  .coord {
-    padding: 2rem;
-    border-radius: 1.5rem;
-    background: radial-gradient(ellipse 70% 60% at 100% 0%, rgb(246 244 240 / 0), transparent 70%), var(--color-mineral);
-    box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.08);
-  }
-  .coord__row { display: flex; gap: 1rem; }
-  .coord__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.5rem; height: 2.5rem; border-radius: 0.8rem; color: var(--color-forest-deep); background: var(--color-sun); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5); }
-  .motifs { padding: 1.5rem 1.75rem; border-radius: 1.5rem; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line); }
-  .faq-link { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; border-radius: 1.5rem; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line); transition: box-shadow 0.3s; }
-  .faq-link:hover { box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.3), var(--shadow-lift); }
-  .faq-link__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.75rem; height: 2.75rem; border-radius: 0.9rem; color: #fff; background: var(--color-brand); }
+  .action { display: flex; align-items: center; justify-content: center; gap: 0.6rem; min-height: 3rem; padding: 0 1.1rem; border-radius: var(--radius-ui); font-weight: 500; color: var(--color-ink); box-shadow: inset 0 0 0 1px var(--color-line-strong); transition: background-color 0.2s, color 0.2s, box-shadow 0.2s; }
+  .action:hover { color: #fff; background: var(--color-accent); box-shadow: none; }
+  .kv--stack > div { grid-template-columns: 1fr !important; gap: 0.25rem !important; }
+  .faq-row { display: grid; grid-template-columns: 1fr auto; gap: 0.25rem 1rem; padding-block: 1.25rem; border-top: 1px solid var(--color-ink); border-bottom: 1px solid var(--color-line); }
+  .faq-row__title { font-size: 1.0625rem; font-weight: 500; color: var(--color-ink); transition: color 0.2s; }
+  .faq-row__text { grid-row: 2; font-size: 0.9375rem; color: var(--color-muted); }
+  :global(.faq-row__go) { grid-column: 2; grid-row: 1 / 3; align-self: center; color: var(--color-line-strong); transition: color 0.2s, transform 0.3s var(--ease-out-soft); }
+  .faq-row:hover .faq-row__title { color: var(--color-accent-text); }
+  .faq-row:hover :global(.faq-row__go) { color: var(--color-accent); transform: translateX(3px); }
 
   /* Formulaire */
-  .form-card { padding: clamp(1.5rem, 4vw, 2.5rem); border-radius: 1.5rem; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lift); }
+  .form-card { padding: clamp(1.5rem, 4vw, 2.5rem); border-radius: var(--radius-card); background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-line); }
   .field { display: flex; flex-direction: column; gap: 0.4rem; }
-  .field > label:first-child { font-size: 0.9375rem; font-weight: 600; color: var(--color-ink); }
+  .field > label:first-child { font-size: 0.9375rem; font-weight: 500; color: var(--color-ink); }
   .req { color: var(--color-danger); }
   .field input:not([type='checkbox']):not([type='file']), .field select, .field textarea {
-    width: 100%;
-    min-height: 3rem;
-    padding: 0.7rem 0.95rem;
-    border-radius: 0.75rem;
-    font: inherit;
-    color: var(--color-ink);
-    background: var(--color-mineral);
-    border: 1.5px solid transparent;
-    box-shadow: inset 0 0 0 1px var(--color-line);
-    transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+    width: 100%; min-height: 3rem; padding: 0.7rem 0.9rem; border-radius: var(--radius-ui); font: inherit; color: var(--color-ink);
+    background: var(--color-paper); border: 1px solid var(--color-line-strong); transition: border-color 0.2s, box-shadow 0.2s;
   }
   .field textarea { resize: vertical; min-height: 9rem; }
-  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--color-forest); background: #fff; box-shadow: 0 0 0 4px rgb(20 24 28 / 0.12); }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 22%, transparent); }
   .field [aria-invalid='true'] { border-color: var(--color-danger) !important; background: var(--color-danger-soft) !important; }
   .aide { font-size: 0.8125rem; color: var(--color-muted); }
   .err { font-size: 0.8125rem; font-weight: 600; color: var(--color-danger); }
   .err:empty { display: none; }
-  .file {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    min-height: 3.25rem;
-    padding: 0.7rem 1rem;
-    border-radius: 0.75rem;
-    font-size: 0.9375rem;
-    color: var(--color-muted);
-    background: var(--color-mineral);
-    border: 1.5px dashed rgb(20 24 28 / 0.3);
-    cursor: pointer;
-    overflow-wrap: anywhere;
-  }
-  .file:hover { border-color: var(--color-forest); }
-  #piece:focus-visible + .err, .file:has(+ #piece:focus-visible) { outline: 2px solid var(--color-brand); outline-offset: 3px; }
-  .consent { display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; padding: 0.75rem 0.9rem; border-radius: 0.9rem; background: var(--color-mineral); font-size: 0.9375rem; line-height: 1.55; color: var(--color-ink); }
-  .consent input { flex-shrink: 0; width: 1.25rem; height: 1.25rem; margin-top: 0.15rem; accent-color: var(--color-forest); }
+  .file { display: flex; align-items: center; gap: 0.75rem; min-height: 3.25rem; padding: 0.7rem 1rem; border-radius: var(--radius-ui); font-size: 0.9375rem; color: var(--color-muted); background: var(--color-paper); border: 1px dashed var(--color-line-strong); cursor: pointer; overflow-wrap: anywhere; }
+  .file:hover { border-color: var(--color-accent); }
+  .file:has(+ #piece:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+  .consent { display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; padding: 0.75rem 0; font-size: 0.9375rem; line-height: 1.55; color: var(--color-ink); }
+  .consent input { flex-shrink: 0; width: 1.25rem; height: 1.25rem; margin-top: 0.15rem; accent-color: var(--color-accent); }
   .piege { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
-  .submit {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    width: 100%;
-    min-height: 3.5rem;
-    padding: 0 2rem;
-    border-radius: var(--radius-ui);
-    font-weight: 600;
-    color: #fff;
-    background: var(--color-accent);
-    transition: transform 0.25s var(--ease-out-soft), box-shadow 0.25s;
-  }
+  .submit { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; width: 100%; min-height: 3.25rem; padding: 0 1.75rem; border-radius: var(--radius-ui); font-weight: 500; color: #fff; background: var(--color-accent); transition: background-color 0.2s; }
   @media (width >= 40rem) { .submit { width: auto; } }
   .submit:hover { background: var(--color-accent-hover); }
-  .submit[disabled] { opacity: 0.7; cursor: progress; transform: none; }
-  .form-errors { margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: 1rem; font-size: 0.9375rem; color: var(--color-danger); background: var(--color-danger-soft); box-shadow: inset 0 0 0 1px rgb(180 35 24 / 0.25); }
+  .submit[disabled] { opacity: 0.7; cursor: progress; }
+  .form-errors { margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: var(--radius-ui); font-size: 0.9375rem; color: var(--color-danger); background: var(--color-danger-soft); box-shadow: inset 0 0 0 1px rgb(180 35 24 / 0.25); }
   .form-errors a { text-decoration: underline; }
-  .form-ok { padding: 2.5rem 1rem; text-align: center; }
-  .form-ok__icon { display: inline-grid; place-items: center; width: 4.5rem; height: 4.5rem; border-radius: 999px; color: #fff; background: var(--color-forest); box-shadow: 0 0 0 10px var(--color-forest-soft); }
+  .form-ok { padding: 2.5rem 0; }
+  .form-ok__icon { display: inline-grid; place-items: center; width: 3.5rem; height: 3.5rem; border-radius: var(--radius-ui); color: #fff; background: var(--color-accent); }
 
   @media (prefers-reduced-motion: reduce) {
-    .action:hover, .submit:hover { transform: none; }
     :global(.animate-spin) { animation: none; }
   }
 </style>

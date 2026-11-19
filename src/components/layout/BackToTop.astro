@@ -21,15 +21,15 @@ import { ArrowUp } from '@lucide/astro';
     height: 3rem;
     border-radius: 999px;
     color: #fff;
-    background: var(--color-forest);
+    background: var(--color-ink);
     box-shadow: 0 10px 24px -10px rgb(20 24 28 / 0.6), inset 0 0 0 1px rgb(255 255 255 / 0.12);
     opacity: 0;
     transform: translateY(12px);
     transition: opacity 0.3s, transform 0.3s var(--ease-out-soft), background-color 0.2s;
   }
   .back-to-top.is-shown { opacity: 1; transform: none; }
-  .back-to-top:hover { background: var(--color-forest-hover); }
-  .back-to-top:focus-visible { outline: 3px solid var(--color-sun); outline-offset: 3px; }
+  .back-to-top:hover { background: var(--color-ink-soft); }
+  .back-to-top:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 3px; }
   @media (width >= 64rem) { .back-to-top { right: 1.75rem; bottom: 1.75rem; } }
   @media (prefers-reduced-motion: reduce) { .back-to-top { transition: none; } }
 </style>

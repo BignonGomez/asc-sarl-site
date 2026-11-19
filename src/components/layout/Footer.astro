@@ -1,13 +1,13 @@
 ---
 /**
- * Pied de page : carte d'appel à l'action claire sur fond blanc, puis bloc vert forêt :
+ * Pied de page : section d'appel à l'action (Contact, termes de référence), puis bloc sombre :
  * 5 colonnes (présentation, navigation, expertises, siège social, informations légales),
  * grand mot en contour « ALKEBULAN » animé au défilement, barre du bas.
- * Fond du bloc : dégradé vert forêt sobre et léger grain.
+ * Fond du bloc : nuit #111417 et léger grain, atteint par un dégradé depuis le fond continu.
  */
-import { MapPin, Phone, Mail, ArrowUpRight, Paperclip, MessageCircle } from '@lucide/astro';
+import { MapPin, Phone, Mail, ArrowUpRight } from '@lucide/astro';
 import SocialIcon from '../ui/SocialIcon.astro';
-import Button from '../ui/Button.astro';
+import ContactTdr from '../home/ContactTdr.astro';
 import logoWhite from '../../assets/logo/logo-full-white.svg';
 import { site, footerLinks, legalLinks } from '../../config/site';
 import { expertises } from '../../data/expertises';
@@ -17,19 +17,8 @@ import { url } from '../../lib/url';
 interface Props { cta?: { title?: string; text?: string } | false }
 const { cta = {} } = Astro.props;
 const showCta = cta !== false;
-const ctaTitle = (cta || {}).title ?? 'Un projet, une étude, des termes de référence à partager ?';
-const ctaText = (cta || {}).text ?? `${site.name} étudie avec vous vos besoins et vos problématiques, que vous soyez une institution publique, une collectivité territoriale, une organisation ou une entreprise. Transmettez-nous votre demande ou vos termes de référence.`;
-
-// Réseaux sociaux : seules les icônes dont le lien est renseigné sont affichées ; l'e-mail est toujours présent
-// Moyens de contact affichés sous les boutons de la carte d'appel.
-// Téléphone et WhatsApp apparaissent automatiquement dès que leur lien est renseigné dans src/config/site.ts.
-const whatsapp = site.social.find((s) => s.icon === 'whatsapp')?.href ?? null;
-const channels = [
-  { icon: 'form', label: 'Formulaire en ligne', text: 'Termes de référence en pièce jointe (PDF ou Word)', href: url('/contact#formulaire') },
-  ...(site.phone.href ? [{ icon: 'phone', label: 'Téléphone', text: site.phone.display, href: site.phone.href }] : []),
-  ...(whatsapp ? [{ icon: 'whatsapp', label: 'WhatsApp', text: 'Écrire au cabinet', href: whatsapp }] : []),
-  { icon: 'place', label: 'Siège', text: 'Cotonou, quartier Cadjéhoun Aupiais', href: url('/contact') },
-];
+const ctaTitle = (cta || {}).title ?? 'Transmettez vos termes de référence';
+const ctaText = (cta || {}).text ?? 'Joignez vos termes de référence ou votre cahier des charges au formulaire : nous étudions votre demande et revenons vers vous.';
 
 const socials = [
   ...site.social.filter((s) => s.href).map((s) => ({ name: s.name, icon: s.icon, href: s.href as string, external: true })),
@@ -37,44 +26,8 @@ const socials = [
 ];
 ---
 <footer class="site-footer">
-  <!-- Carte d'appel à l'action, sur fond blanc (masquée sur la page Contact) -->
-  {showCta && (
-  <section aria-labelledby="footer-cta-title" class="pb-20 pt-4 sm:pb-24 lg:pb-28">
-    <div class="container-site">
-      <div class="sf-cta" data-reveal>
-        <p class="eyebrow-framed text-eyebrow uppercase text-brand">Parlons de votre projet</p>
-        <h2 id="footer-cta-title" class="mx-auto mt-5 max-w-[22ch] text-h2 text-forest">{ctaTitle}</h2>
-        <p class="mx-auto mt-5 max-w-2xl text-lead text-ink/75">
-          {ctaText}
-        </p>
-        <div class="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
-          <Button href={site.cta.href} size="lg" arrow>{site.cta.label}</Button>
-          <a href={`mailto:${site.email}`} class="sf-mail-btn">
-            <Mail size={18} aria-hidden="true" /> {site.email}
-          </a>
-        </div>
-        <ul class="sf-channels" aria-label="Autres moyens de nous contacter">
-          {channels.map((c) => (
-            <li>
-              <a href={c.href} class="sf-channel">
-                <span class="sf-channel__icon">
-                  {c.icon === 'form' && <Paperclip size={17} aria-hidden="true" />}
-                  {c.icon === 'phone' && <Phone size={17} aria-hidden="true" />}
-                  {c.icon === 'whatsapp' && <MessageCircle size={17} aria-hidden="true" />}
-                  {c.icon === 'place' && <MapPin size={17} aria-hidden="true" />}
-                </span>
-                <span class="text-left">
-                  <span class="block text-small font-bold text-forest">{c.label}</span>
-                  <span class="block text-[0.8125rem] leading-snug text-muted">{c.text}</span>
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  </section>
-  )}
+  <!-- Appel à l'action (masqué sur l'accueil, qui a sa propre section, et sur la page Contact) -->
+  {showCta && <ContactTdr title={ctaTitle} intro={ctaText} id="footer-cta-title" />}
 
   <!-- Bloc vert forêt : informations structurantes -->
   <!-- Transition en dégradé du fond continu vers le pied de page (seule zone sombre) -->
@@ -185,58 +138,6 @@ const socials = [
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  /* ---------- Carte d'appel à l'action (claire) ---------- */
-  .sf-cta {
-    position: relative;
-    overflow: hidden;
-    padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 5vw, 5rem);
-    border-radius: var(--radius-card);
-    text-align: center;
-    background:
-      radial-gradient(ellipse 45% 70% at 100% 0%, rgb(246 244 240 / 0), transparent 70%),
-      radial-gradient(ellipse 50% 80% at 0% 100%, rgb(246 244 240 / 0), transparent 70%),
-      var(--color-surface);
-    box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.08);
-  }
-  .sf-mail-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.625rem;
-    min-height: 3.5rem;
-    padding: 0 1.75rem;
-    border-radius: 999px;
-    font-weight: 600;
-    color: var(--color-forest);
-    background: #fff;
-    box-shadow: inset 0 0 0 1.5px rgb(20 24 28 / 0.22);
-    transition: box-shadow 0.3s, transform 0.3s var(--ease-out-soft);
-  }
-  /* Moyens de contact sous les boutons */
-  .sf-channels {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.75rem;
-    margin-top: 2.25rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgb(20 24 28 / 0.1);
-  }
-  .sf-channel {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.7rem 1.1rem 0.7rem 0.75rem;
-    border-radius: 1rem;
-    background: rgb(255 255 255 / 0.7);
-    box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.08);
-    transition: background-color 0.2s, box-shadow 0.2s;
-  }
-  .sf-channel:hover { background: #fff; box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.25); }
-  .sf-channel__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 0.7rem; color: var(--color-forest-deep); background: var(--color-sun); }
-  @media (width < 40rem) { .sf-channels li, .sf-channel { width: 100%; } }
-  .sf-mail-btn:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1.5px var(--color-forest), 0 12px 26px -16px rgb(20 24 28 / 0.4); }
-
   /* ---------- Colonnes ---------- */
   .sf-main {
     display: grid;
@@ -261,7 +162,7 @@ const socials = [
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--color-leaf-light);
+    color: var(--color-accent-on-dark);
   }
   .sf-col li + li { margin-top: 0.625rem; }
   .sf-link {
@@ -269,7 +170,7 @@ const socials = [
     color: rgb(255 255 255 / 0.85);
     transition: color 0.2s;
   }
-  .sf-link:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--color-sun); }
+  .sf-link:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--color-accent); }
   .sf-contact li { display: flex; gap: 0.75rem; font-size: 0.9375rem; line-height: 1.55; color: rgb(255 255 255 / 0.88); }
   .sf-contact li + li { margin-top: 0.875rem; }
   .sf-icon {
@@ -279,7 +180,7 @@ const socials = [
     width: 2rem;
     height: 2rem;
     border-radius: 0.625rem;
-    color: var(--color-leaf-light);
+    color: var(--color-accent-on-dark);
     background: rgb(255 255 255 / 0.1);
     box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16);
   }
@@ -295,7 +196,7 @@ const socials = [
     transition: color 0.2s, background-color 0.2s, box-shadow 0.2s, transform 0.3s var(--ease-out-soft);
   }
   .sf-social:hover {
-    color: var(--color-forest-deep);
+    color: var(--color-ink);
     background: #fff;
     transform: translateY(-3px);
     box-shadow: 0 10px 22px -10px rgb(0 0 0 / 0.6);

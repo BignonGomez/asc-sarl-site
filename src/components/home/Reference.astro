@@ -13,7 +13,7 @@ import SectionHead from '../ui/SectionHead.astro';
 import { missions } from '../../data/missions';
 import { expertises } from '../../data/expertises';
 import { publication } from '../../config/site';
-import carte from '../../assets/carte-benin.svg?raw';
+import CarteBenin from '../ui/CarteBenin.astro';
 
 const clientPublie = publication.commanditaire;
 const m = missions[0];
@@ -65,7 +65,7 @@ const notifie = m.period[0]; // « Contrat notifié le 23 juillet 2026 »
       </div>
 
       <figure class="fiche__map">
-        <div class="fiche__map-svg" set:html={carte} />
+        <div class="fiche__map-svg"><CarteBenin /></div>
         <figcaption class="text-eyebrow uppercase">Localisation · Natural Earth</figcaption>
       </figure>
     </article>
@@ -93,16 +93,6 @@ const notifie = m.period[0]; // « Contrat notifié le 23 juillet 2026 »
   @media (prefers-reduced-motion: reduce) { .fiche:hover .fiche__map-svg :global(svg) { transform: none; } }
   .fiche__map figcaption { margin-top: 0.75rem; color: var(--color-muted); }
 
-  .fiche__map :global(.cb-grid) { fill: none; stroke: var(--color-map-grid); stroke-width: 0.75; }
-  .fiche__map :global(.cb-neighbors) { fill: none; stroke: var(--color-line-strong); stroke-width: 0.75; }
-  .fiche__map :global(.cb-country) { fill: var(--color-surface); stroke: var(--color-ink); stroke-width: 1.2; stroke-linejoin: round; }
-  .fiche__map :global(text) { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; fill: var(--color-muted); }
-  .fiche__map :global(.cb-sea) { font-style: italic; fill: var(--color-map-water); }
-  .fiche__map :global(.cb-pt--siege circle) { fill: var(--color-ink); }
-  .fiche__map :global(.cb-pt--siege text) { fill: var(--color-ink); }
-  .fiche__map :global(.cb-pt--mission rect) { fill: var(--color-accent); }
-  .fiche__map :global(.cb-pt--mission text) { fill: var(--color-accent-text); font-weight: 500; }
-  .fiche__map :global(.cb-ring) { fill: none; stroke: var(--color-accent); stroke-width: 1; opacity: 0.45; }
 
   @media (width >= 48rem) {
     .fiche__meta { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2rem; }

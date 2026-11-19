@@ -6,7 +6,6 @@
  *
  * `layout` fait varier la mise en page d'une page à l'autre (voir src/pages/expertises/[slug].astro).
  */
-import type { ImageId } from '../config/images';
 
 /** family : famille de prestation pour la vue d'ensemble de la page « Nos expertises » (recommandation R4). */
 export type PrestationFamily = 'etudes' | 'accompagnement';
@@ -31,8 +30,9 @@ export type DomainPage = {
   experts: string[]; // noms de famille (src/data/equipe.ts)
   complementary: string[]; // slugs
   mission?: boolean; // mission en cours liée (Za-Kpota)
-  heroImage: ImageId;
-  sideImage: ImageId;
+  /** Anciennes photos (plus affichées depuis la refonte) */
+  heroImage?: string;
+  sideImage?: string;
   layout: {
     presentation: 'split-right' | 'split-left' | 'quote';
     prestations: 'cards' | 'list' | 'bento';

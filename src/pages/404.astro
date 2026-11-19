@@ -1,6 +1,6 @@
 ---
 /** Page introuvable (404). Servie par Hostinger via ErrorDocument (.htaccess) et par GitHub Pages. Page non indexée. */
-import { ArrowLeft, Compass } from '@lucide/astro';
+import { ArrowLeft } from '@lucide/astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { url } from '../lib/url';
 
@@ -13,18 +13,17 @@ const liens = [
 ];
 ---
 <BaseLayout title="Page introuvable" description="La page demandée n'existe pas ou a été déplacée." cta={false} robots="noindex, nofollow">
-  <section class="bg-mineral pb-24 pt-36 sm:pt-44">
-    <div class="container-site max-w-2xl text-center">
-      <span class="inline-grid size-20 place-items-center rounded-full bg-forest text-white shadow-[0_0_0_12px_var(--color-forest-soft)]"><Compass size={34} aria-hidden="true" /></span>
-      <p class="mt-8 text-eyebrow uppercase text-brand">Erreur 404</p>
-      <h1 class="mt-3 text-h2 text-forest">Cette page est introuvable.</h1>
+  <section class="pb-24 pt-36 sm:pt-44">
+    <div class="container-site max-w-3xl">
+            <p class="text-eyebrow uppercase text-accent-text">Erreur 404</p>
+      <h1 class="mt-4 text-h1 text-ink">Cette page est introuvable.</h1>
       <p class="mt-4 text-lead text-muted">L'adresse saisie est peut-être incomplète, ou la page a été déplacée. Ces rubriques peuvent vous aider :</p>
-      <ul class="mt-8 flex flex-wrap justify-center gap-3">
+      <ul class="mt-10 border-t border-line">
         {liens.map((l) => (
-          <li><a href={url(l.href)} class="inline-flex rounded-full border border-forest/15 bg-white px-4 py-2 text-small font-semibold text-forest transition-colors hover:border-forest hover:bg-forest hover:text-white">{l.label}</a></li>
+          <li><a href={url(l.href)} class="flex border-b border-line py-4 font-medium text-ink transition-colors hover:text-accent-text">{l.label}</a></li>
         ))}
       </ul>
-      <a href={url('/')} class="mt-10 inline-flex items-center gap-2 font-semibold text-forest hover:text-brand"><ArrowLeft size={18} aria-hidden="true" /> Retour à l'accueil</a>
+      <a href={url('/')} class="mt-10 inline-flex items-center gap-2 font-medium text-ink hover:text-accent-text"><ArrowLeft size={18} aria-hidden="true" /> Retour à l'accueil</a>
     </div>
   </section>
 </BaseLayout>

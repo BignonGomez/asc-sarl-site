@@ -1,23 +1,24 @@
 ---
 /**
- * 5.3 Missions en cours — protocole complet, chapitre 5.
- * Fiche courte : titre, domaines, lieu, période prévue, nature des activités, client (si autorisé),
- * mention « En cours » et date de dernière mise à jour. Aucun résultat, montant ni information de marché.
- * Données : src/data/missions.ts
+ * 5.3 Missions en cours — protocole complet, chapitre 5 (refonte, étape 6).
+ * Fiche : titre, statut, maître d'ouvrage (si autorisé), lieu, période, domaines, résumé, nature des activités,
+ * date de dernière mise à jour. Aucun résultat, montant ni information de marché. Données : src/data/missions.ts
+ * Pas de galerie photo : les photos de terrain montrent des groupes de personnes identifiables (règle « pas de photos
+ * de groupe » et droit à l'image) ; à la place, carte de localisation. Équipe nominative : seulement si publication.equipe.
  */
-import { MapPin, CalendarDays, RefreshCw, Building, Users, LayoutGrid, Check, ArrowUpRight } from '@lucide/astro';
+import { ArrowUpRight } from '@lucide/astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/page/PageHeader.astro';
-import SiteImage from '../../components/ui/SiteImage.astro';
-import ExpertiseIcon from '../../components/ui/ExpertiseIcon.astro';
+import SectionHead from '../../components/ui/SectionHead.astro';
+import CarteBenin from '../../components/ui/CarteBenin.astro';
 import { missions, formatDate } from '../../data/missions';
 import { expertises } from '../../data/expertises';
 import { team } from '../../data/equipe';
-import DurationBadge from '../../components/ui/DurationBadge.astro';
 import { site } from '../../config/site';
 import { url } from '../../lib/url';
 
 const enCours = missions.filter((m) => m.status === 'en-cours');
+const pad = (n: number) => String(n).padStart(2, '0');
 ---
 <BaseLayout
   title="Missions en cours"
@@ -30,176 +31,106 @@ const enCours = missions.filter((m) => m.status === 'en-cours');
     crumbs={[{ label: 'Réalisations' }, { label: 'Missions en cours' }]}
   />
 
-  {enCours.map((m) => {
+  {enCours.map((m, k) => {
     const domains = m.domains.map((s) => expertises.find((e) => e.slug === s)!).filter(Boolean);
     const members = m.team.map((t) => ({ ...t, member: team.find((p) => p.lastName === t.lastName)! })).filter((t) => t.member);
     return (
       <article aria-labelledby={`mission-${m.slug}`} class="section-y">
         <div class="container-site">
-          <!-- En-tête de la fiche -->
-          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-small" data-reveal>
-            <span class="inline-flex items-center gap-2 rounded-full bg-status-ongoing-bg px-3.5 py-1.5 font-semibold text-status-ongoing">
-              <span aria-hidden="true" class="statut-pulse"></span> En cours d'exécution
-            </span>
-            {m.duration && <DurationBadge duration={m.duration} />}
-            <span class="inline-flex items-center gap-2 text-muted">
-              <RefreshCw size={15} aria-hidden="true" /><span>Fiche mise à jour le <time datetime={m.updated}>{formatDate(m.updated)}</time></span>
-            </span>
-          </div>
-          <h2 id={`mission-${m.slug}`} class="mt-6 max-w-4xl scroll-mt-28 text-h2 text-forest" data-reveal>{m.title}</h2>
-          <p class="mt-5 inline-flex items-start gap-2 text-lead text-muted" data-reveal>
-            <MapPin size={20} aria-hidden="true" class="mt-1 shrink-0 text-brand" /> {m.place}
+          {k > 0 && <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>}
+          <p class="fiche-tag" data-reveal>
+            <span>Fiche {pad(k + 1)}</span>
+            <span class="fiche-tag__status"><span aria-hidden="true" class="fiche-tag__dot"></span>En cours d'exécution</span>
+            <span>Mise à jour le <time datetime={m.updated}>{formatDate(m.updated)}</time></span>
           </p>
+          <h2 id={`mission-${m.slug}`} class="mt-6 max-w-4xl scroll-mt-28 text-h2 text-ink" data-reveal>{m.title}</h2>
 
-          <div class="mt-12 grid gap-10 lg:grid-cols-12 lg:gap-12">
-            <!-- Galerie -->
-            <div class="lg:col-span-7" data-reveal>
-              <div class="galerie">
-                {m.images.map((img, i) => (
-                  <figure class:list={['galerie__item', i === 0 && 'galerie__item--main']}>
-                    <SiteImage id={img} sizes={i === 0 ? '(min-width: 64rem) 42rem, 100vw' : '(min-width: 64rem) 14rem, 33vw'} class="transition-transform duration-700 hover:scale-[1.04]" />
-                  </figure>
-                ))}
-              </div>
-              <p class="mt-6 text-lead text-ink/90">{m.summary}</p>
+          <div class="grid-site mt-12 gap-y-12 lg:mt-16">
+            <div class="col-span-full lg:col-span-8">
+              <dl class="kv" data-reveal>
+                <div><dt>Maître d'ouvrage</dt><dd>{m.client}</dd></div>
+                <div><dt>Lieu</dt><dd>{m.place}</dd></div>
+                <div><dt>Calendrier</dt><dd>{m.period.map((p) => <span class="block">{p}</span>)}</dd></div>
+                <div>
+                  <dt>Domaines</dt>
+                  <dd class="flex flex-wrap gap-x-5 gap-y-1">
+                    {domains.map((d) => <a href={url(`/expertises/${d.slug}`)} class="text-accent-text underline decoration-line-strong underline-offset-4 hover:decoration-accent">{d.title}</a>)}
+                  </dd>
+                </div>
+                {members.length > 0 && (
+                  <div>
+                    <dt>Équipe mobilisée</dt>
+                    <dd>{members.map((t) => <span class="block">{t.member.firstName} {t.member.lastName} · {t.role ?? t.member.role}</span>)}</dd>
+                  </div>
+                )}
+              </dl>
+              <div class="prose-site mt-10" data-reveal><p>{m.summary}</p></div>
             </div>
-
-            <!-- Fiche signalétique -->
-            <aside aria-label="Fiche de la mission" class="lg:col-span-5">
-              <div class="fiche lg:sticky lg:top-28" data-reveal style="--reveal-delay:120ms">
-                <dl class="grid gap-6">
-                  <div class="fiche__row">
-                    <dt class="fiche__label"><Building size={16} aria-hidden="true" /> Client</dt>
-                    <dd class="fiche__value">{m.client}</dd>
-                  </div>
-                  <div class="fiche__row">
-                    <dt class="fiche__label"><MapPin size={16} aria-hidden="true" /> Lieu</dt>
-                    <dd class="fiche__value">{m.place}</dd>
-                  </div>
-                  <div class="fiche__row">
-                    <dt class="fiche__label"><CalendarDays size={16} aria-hidden="true" /> Période prévue</dt>
-                    <dd class="fiche__value">{m.period.map((p) => <span class="block">{p}</span>)}</dd>
-                  </div>
-                  <div class="fiche__row">
-                    <dt class="fiche__label"><LayoutGrid size={16} aria-hidden="true" /> Domaines</dt>
-                    <dd class="mt-1 flex flex-wrap gap-2">
-                      {domains.map((d) => (
-                        <a href={url(`/expertises/${d.slug}`)} class="fiche__chip"><ExpertiseIcon name={d.icon} size={14} /> {d.title}</a>
-                      ))}
-                    </dd>
-                  </div>
-                  {members.length > 0 && (
-                  <div class="fiche__row">
-                    <dt class="fiche__label"><Users size={16} aria-hidden="true" /> Équipe mobilisée</dt>
-                    <dd class="mt-1 grid gap-2">
-                      {members.map((t) => (
-                        <a href={url(`/cabinet/equipe#membre-${t.lastName.toLowerCase()}`)} class="fiche__member group">
-                          <span aria-hidden="true" class="fiche__avatar">{(t.member.firstName[0] + t.member.lastName[0]).toUpperCase()}</span>
-                          <span class="flex-1">
-                            <span class="block font-semibold text-forest">{t.member.firstName} {t.member.lastName}</span>
-                            <span class="block text-xs text-muted">{t.role ?? t.member.role}</span>
-                          </span>
-                          <ArrowUpRight size={16} aria-hidden="true" class="text-forest/50 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                        </a>
-                      ))}
-                    </dd>
-                  </div>
-                  )}
-                </dl>
-              </div>
-            </aside>
+            <figure class="col-span-full mx-auto w-full max-w-[22rem] lg:col-span-4 lg:mr-0" data-reveal>
+              <CarteBenin />
+              <figcaption class="label-mono mt-3">Localisation · Natural Earth</figcaption>
+            </figure>
           </div>
 
           <!-- Nature des activités -->
           <div class="mt-16 lg:mt-20">
-            <h3 class="text-h3 text-forest" data-reveal>Nature des activités</h3>
-            <div class="mt-8 grid gap-6 lg:grid-cols-2">
+            <h3 class="label-mono" data-reveal>Nature des activités</h3>
+            <div class="volets mt-6">
               {m.volets.map((v, i) => (
-                <section aria-label={v.title} class:list={['volet', i === 1 && 'volet--dark']} data-reveal style={`--reveal-delay:${i * 100}ms`}>
-                  <span aria-hidden="true" class="volet__num">{String(i + 1).padStart(2, '0')}</span>
-                  <h4 class="volet__title">{v.title}</h4>
+                <section aria-labelledby={`volet-${k}-${i}`} class="volet" data-reveal style={`--reveal-delay:${i * 100}ms`}>
+                  <p class="num num--accent">Volet {pad(i + 1)}</p>
+                  <h4 id={`volet-${k}-${i}`} class="volet__title">{v.title}</h4>
                   <p class="volet__public">{v.public}</p>
-                  <ul class="mt-6 grid gap-2.5 sm:grid-cols-2">
-                    {v.items.map((it) => (
-                      <li class="volet__item"><span class="volet__check"><Check size={14} stroke-width={2.5} aria-hidden="true" /></span>{it}</li>
-                    ))}
+                  <ul class="rows mt-6">
+                    {v.items.map((it) => <li class="text-[0.9375rem] text-ink">{it}</li>)}
                   </ul>
-                  {v.extra && <p class="volet__extra">{v.extra}</p>}
+                  {v.extra && <p class="mt-5 text-[0.9375rem] text-muted">{v.extra}</p>}
                 </section>
               ))}
             </div>
           </div>
+
+          <p class="mt-12 max-w-3xl text-[0.9375rem] text-muted" data-reveal>
+            Mission en cours : aucun résultat n'est publié avant son achèvement et la délivrance de l'attestation de bonne exécution.
+          </p>
         </div>
       </article>
     );
   })}
+
+  <section aria-labelledby="suite-title" class="section-y">
+    <div class="container-site">
+      <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>
+      <SectionHead id="suite-title" label="Poursuivre" title="Nos domaines d'intervention" />
+      <ul class="link-rows mt-12 lg:mt-16" data-reveal>
+        <li>
+          <a href={url('/expertises')} class="link-row">
+            <span class="num">01</span>
+            <span class="link-row__title">Nos expertises</span>
+            <span class="link-row__text">Huit domaines, leurs prestations et leurs livrables types.</span>
+            <ArrowUpRight size={18} aria-hidden="true" class="link-row__go" />
+          </a>
+        </li>
+        <li>
+          <a href={url('/cabinet/approche')} class="link-row">
+            <span class="num">02</span>
+            <span class="link-row__title">Notre approche méthodologique</span>
+            <span class="link-row__text">Une démarche en cinq étapes, un livrable à chacune.</span>
+            <ArrowUpRight size={18} aria-hidden="true" class="link-row__go" />
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
-  .statut-pulse { position: relative; width: 8px; height: 8px; border-radius: 999px; background: var(--color-sun-strong); }
-  .statut-pulse::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: var(--color-sun-strong); animation: statut-pulse 2.4s var(--ease-out-soft) infinite; }
-  @keyframes statut-pulse { to { transform: scale(2.8); opacity: 0; } }
-
-  /* Galerie : une grande image et trois vignettes */
-  .galerie { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
-  .galerie__item { position: relative; margin: 0; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 1rem; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.05); }
-  .galerie__item--main { grid-column: 1 / -1; aspect-ratio: 16 / 10; border-radius: 1.5rem; box-shadow: var(--shadow-lift); }
-
-  /* Fiche signalétique */
-  .fiche {
-    padding: 2rem;
-    border-radius: 1.5rem;
-    color: var(--color-ink);
-    background: #fff;
-    border-top: 4px solid var(--color-sun);
-    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lift);
-  }
-  .fiche__row + .fiche__row { padding-top: 1.5rem; border-top: 1px solid var(--color-line); }
-  .fiche__label { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-brand); }
-  .fiche__value { margin-top: 0.4rem; font-family: var(--font-display); font-size: 1.0625rem; font-weight: 600; line-height: 1.4; }
-  .fiche__chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 999px;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--color-forest);
-    background: var(--color-forest-soft);
-    box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.1);
-    transition: background-color 0.2s, color 0.2s;
-  }
-  .fiche__chip:hover { color: #fff; background: var(--color-forest); }
-  .fiche__member {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.6rem 0.75rem;
-    border-radius: 0.9rem;
-    background: var(--color-mineral);
-    box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.06);
-    transition: background-color 0.2s;
-  }
-  .fiche__member:hover { background: var(--color-forest-soft); }
-  .fiche__avatar { display: grid; place-items: center; flex-shrink: 0; width: 2.5rem; height: 2.5rem; border-radius: 999px; font-family: var(--font-display); font-size: 0.875rem; font-weight: 700; color: var(--color-forest-deep); background: var(--color-sun); }
-
-  /* Volets d'activités */
-  .volet {
-    position: relative;
-    overflow: hidden;
-    padding: 2rem;
-    border-radius: 1.5rem;
-    background: var(--color-mineral);
-    box-shadow: inset 0 0 0 1px var(--color-line);
-  }
-  .volet--dark { background: #fff; box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lift); }
-  .volet__num { position: absolute; top: 0.5rem; right: 1.25rem; font-family: var(--font-display); font-size: 4rem; font-weight: 700; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px rgb(20 24 28 / 0.12); }
-  .volet__title { padding-right: 4.5rem; font-family: var(--font-display); font-size: var(--text-h3); font-weight: 600; color: var(--color-forest); }
-  .volet__public { margin-top: 0.5rem; max-width: 30rem; color: var(--color-muted); }
-  .volet__item { display: flex; align-items: center; gap: 0.6rem; padding: 0.7rem 0.85rem; border-radius: 0.8rem; font-weight: 600; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line); color: var(--color-ink); }
-  .volet__check { display: grid; place-items: center; flex-shrink: 0; width: 1.4rem; height: 1.4rem; border-radius: 999px; color: #fff; background: var(--color-brand); }
-  .volet__extra { margin-top: 1.25rem; font-size: 0.9375rem; color: var(--color-muted); }
-
-  @media (prefers-reduced-motion: reduce) { .statut-pulse::after { animation: none; } }
+  .fiche-tag { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.5rem; font-family: var(--font-mono); font-size: var(--text-eyebrow); letter-spacing: var(--text-eyebrow--letter-spacing); text-transform: uppercase; color: var(--color-muted); }
+  .fiche-tag__status { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--color-accent-text); }
+  .fiche-tag__dot { width: 0.5rem; height: 0.5rem; border-radius: 999px; background: var(--color-accent); }
+  .volets { display: grid; gap: 2.5rem; }
+  .volet { padding-top: 1.25rem; border-top: 1px solid var(--color-ink); }
+  .volet__title { margin-top: 0.6rem; font-size: var(--text-h3); line-height: var(--text-h3--line-height); font-weight: 500; letter-spacing: -0.015em; color: var(--color-ink); }
+  .volet__public { margin-top: 0.4rem; color: var(--color-muted); }
+  @media (width >= 64rem) { .volets { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 3rem; } }
 </style>

@@ -152,3 +152,37 @@
 }
 .cursor-ring.is-active { opacity: 0.5; }
 .cursor-ring.is-link { width: 44px; height: 44px; margin: -22px 0 0 -22px; opacity: 0.35; background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+
+/* ---------- Motifs communs des pages (refonte) : listes à filets, lignes clé/valeur, lignes-liens ---------- */
+@layer components {
+  /* Liste à filets : .rows > li (ou div) */
+  .rows { border-top: 1px solid var(--color-line); }
+  .rows > * { padding-block: 1.1rem; border-bottom: 1px solid var(--color-line); }
+  .rows--strong { border-top-color: var(--color-ink); }
+  /* Numéro technique en IBM Plex Mono */
+  .num { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 400; color: var(--color-muted); }
+  .num--accent { color: var(--color-accent-text); }
+  /* Étiquette technique (dt, intitulés) */
+  .label-mono { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); }
+  /* Lignes clé / valeur : <dl class="kv"><div><dt/><dd/></div></dl> */
+  .kv { border-top: 1px solid var(--color-line); }
+  .kv > div { display: grid; gap: 0.25rem; padding-block: 0.95rem; border-bottom: 1px solid var(--color-line); }
+  .kv dt { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); }
+  .kv dd { color: var(--color-ink); }
+  @media (width >= 48rem) { .kv > div { grid-template-columns: 14rem 1fr; gap: 2rem; align-items: baseline; } }
+  /* Lignes-liens : <ul class="link-rows"><li><a class="link-row">…</a></li></ul> */
+  .link-rows { border-top: 1px solid var(--color-line); }
+  .link-row { position: relative; display: grid; grid-template-columns: 2.5rem 1fr auto; gap: 0.25rem 0; align-items: baseline; padding-block: 1.35rem; border-bottom: 1px solid var(--color-line); }
+  .link-row__title { font-size: 1.125rem; font-weight: 500; color: var(--color-ink); transition: color 0.2s; }
+  .link-row__text { grid-column: 2; font-size: 0.9375rem; color: var(--color-muted); }
+  .link-row__go { grid-column: 3; grid-row: 1; color: var(--color-line-strong); transition: color 0.2s, transform 0.3s var(--ease-out-soft); }
+  .link-row:hover .link-row__title { color: var(--color-accent-text); }
+  .link-row:hover .link-row__go { color: var(--color-accent); transform: translate(2px, -2px); }
+  @media (width >= 64rem) {
+    .link-row { grid-template-columns: 4rem 5fr 6fr auto; }
+    .link-row__text { grid-column: 3; grid-row: 1; }
+    .link-row__go { grid-column: 4; }
+  }
+  /* Texte courant d'une section (colonne de lecture) */
+  .prose-site { max-width: 46rem; display: grid; gap: 1.1rem; font-size: var(--text-lead); line-height: var(--text-lead--line-height); color: var(--color-ink-soft); }
+}
