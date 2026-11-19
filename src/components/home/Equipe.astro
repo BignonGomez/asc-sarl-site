@@ -4,13 +4,14 @@
  * Les fiches individuelles (titre, diplôme, domaine technique) attendent l'accord écrit de chaque personne :
  * au 19/11/2026 cet accord n'est pas obtenu, la section présente donc uniquement les familles de compétences
  * déjà publiées (src/data/equipe.ts, recommandation R5), sans nom ni diplôme.
- * Pour afficher les fiches : passer `accordsObtenus` à true (titre, diplôme et spécialité lus dans equipe.ts).
+ * Pour afficher les fiches : passer publication.equipe à true (src/config/site.ts).
  */
 import SectionHead from '../ui/SectionHead.astro';
 import ArrowLink from '../ui/ArrowLink.astro';
 import { competences, team } from '../../data/equipe';
+import { publication } from '../../config/site';
 
-const accordsObtenus = false;
+const accordsObtenus = publication.equipe;
 // Profils techniques d'abord (recommandation validée de l'audit)
 const ordre = ['Environnement et changements climatiques', 'Agronomie et développement rural', 'Accompagnement des collectivités', 'Communication et sociologie du développement'];
 const familles = [...competences].sort((a, b) => ordre.indexOf(a.label) - ordre.indexOf(b.label));

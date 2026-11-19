@@ -20,6 +20,7 @@ import ArrowLink from '../../components/ui/ArrowLink.astro';
 import { expertises } from '../../data/expertises';
 import { domainPages, publics, type DomainPage } from '../../data/expertises-pages';
 import { team } from '../../data/equipe';
+import { missions } from '../../data/missions';
 import { url } from '../../lib/url';
 
 export function getStaticPaths() {
@@ -298,7 +299,7 @@ const split = L.presentation !== 'quote';
                 Formation de jeunes à la production piscicole et maraîchère intégrée et renforcement des capacités des responsables de filières agricoles
               </a>
             </h3>
-            <p class="mt-5 inline-flex items-center gap-2 text-body text-muted"><MapPin size={18} aria-hidden="true" class="shrink-0 text-forest" /> Commune de Za-Kpota, département du Zou</p>
+            <p class="mt-5 inline-flex items-center gap-2 text-body text-muted"><MapPin size={18} aria-hidden="true" class="shrink-0 text-forest" /> {missions[0].place}</p>
             <span aria-hidden="true" class="mt-7 inline-flex items-center gap-2 font-semibold text-brand">Voir la mission <ArrowRight size={18} class="transition-transform group-hover:translate-x-1" /></span>
           </div>
         </article>

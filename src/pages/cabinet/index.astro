@@ -9,7 +9,7 @@ import SiteImage from '../../components/ui/SiteImage.astro';
 import ExpertiseIcon from '../../components/ui/ExpertiseIcon.astro';
 import ArrowLink from '../../components/ui/ArrowLink.astro';
 import { expertises } from '../../data/expertises';
-import { site } from '../../config/site';
+import { site, publication } from '../../config/site';
 import { url } from '../../lib/url';
 
 // Fiche signalétique (sources : [MCV], [DOSS], [CONTRAT]). Le numéro IFU n'est pas publié (décision en attente).
@@ -21,7 +21,7 @@ const identity = [
   { label: 'Capital social', value: '5 000 000 FCFA' },
   { label: 'Numéro RCCM', value: site.rccm },
   { label: 'Siège social', value: site.address.oneLine },
-  { label: 'Direction', value: 'Médard DAHODO, Directeur Général' },
+  ...(publication.equipe ? [{ label: 'Direction', value: 'Médard DAHODO, Directeur Général' }] : []),
 ];
 
 const publics = [

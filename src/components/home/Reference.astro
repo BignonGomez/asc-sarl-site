@@ -7,14 +7,15 @@
  * - noms des membres de l'équipe MASQUÉS (accords écrits non obtenus) ;
  * - aucun livrable ni résultat annoncé tant que la mission est en cours ;
  * - pas de photo de groupe : carte de localisation (Natural Earth, src/assets/carte-benin.svg).
- * Pour publier le nom quand l'autorisation sera obtenue : passer `clientPublie` à true.
+ * Pour publier le nom quand l'autorisation sera obtenue : passer publication.commanditaire à true (src/config/site.ts).
  */
 import SectionHead from '../ui/SectionHead.astro';
 import { missions } from '../../data/missions';
 import { expertises } from '../../data/expertises';
+import { publication } from '../../config/site';
 import carte from '../../assets/carte-benin.svg?raw';
 
-const clientPublie = false;
+const clientPublie = publication.commanditaire;
 const m = missions[0];
 const domaines = m.domains.map((s) => expertises.find((e) => e.slug === s)?.title).filter(Boolean);
 const commanditaire = clientPublie ? m.client : 'Collectivité territoriale béninoise';

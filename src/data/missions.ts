@@ -5,6 +5,7 @@
  * Une mission achevée passera dans « Projets et références » sur présentation de l'attestation de bonne exécution.
  */
 import type { ImageId } from '../config/images';
+import { publication } from '../config/site';
 
 export type Mission = {
   slug: string;
@@ -29,7 +30,7 @@ export type Mission = {
   results?: string[];
 };
 
-export const missions: Mission[] = [
+const missionsSource: Mission[] = [
   {
     slug: 'za-kpota-formation-pisciculture-maraichage',
     status: 'en-cours',
@@ -60,6 +61,26 @@ export const missions: Mission[] = [
     images: ['accueil.realisation-zakpota', 'mission.zakpota.2', 'mission.zakpota.3', 'mission.zakpota.4'],
   },
 ];
+
+/** Remplacements appliqués tant que la publication du nom de la collectivité n'est pas autorisée. */
+const anonymisation: [RegExp, string][] = [
+  [/la Commune de Za-Kpota/g, 'une collectivité territoriale béninoise'],
+  [/Commune de Za-Kpota, site aménagé d'Allahé \(département du Zou\), Bénin/g, 'Département du Zou, Bénin'],
+  [/Commune de Za-Kpota/g, 'Collectivité territoriale béninoise'],
+  [/le site aménagé d'Allahé/g, 'un site aménagé'],
+  [/de la commune/g, 'de la collectivité'],
+];
+const anonymiser = (v: unknown): unknown =>
+  typeof v === 'string' ? anonymisation.reduce((s, [re, by]) => s.replace(re, by), v)
+  : Array.isArray(v) ? v.map(anonymiser)
+  : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, anonymiser(x)]))
+  : v;
+
+/** Missions telles que publiées : anonymisées et sans équipe nominative tant que les autorisations manquent. */
+export const missions: Mission[] = missionsSource.map((m) => {
+  const pub = publication.commanditaire ? m : (anonymiser(m) as Mission);
+  return publication.equipe ? pub : { ...pub, team: [] };
+});
 
 export const formatDate = (iso: string) =>
   new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(iso));
