@@ -1,0 +1,37 @@
+# Configuration du serveur — version finale sur Hostinger (asc-sarl.com).
+# Ignoré par GitHub Pages (version de test).
+
+Options -Indexes
+DirectoryIndex index.html index.php
+ErrorDocument 404 /404.html
+
+# Adresse unique : https://asc-sarl.com (redirige http:// et www. de façon permanente)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^ https://asc-sarl.com%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# En-têtes de sécurité
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  # Pages HTML : toujours revalidées, pour que chaque mise à jour soit visible immédiatement
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+# Durées de cache des fichiers statiques non versionnés (illustrations, icônes)
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/svg+xml "access plus 7 days"
+  ExpiresByType image/png "access plus 7 days"
+  ExpiresByType image/jpeg "access plus 7 days"
+  ExpiresByType image/webp "access plus 7 days"
+  ExpiresByType image/avif "access plus 7 days"
+  ExpiresByType image/x-icon "access plus 30 days"
+</IfModule>

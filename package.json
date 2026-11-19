@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:hostinger": "node scripts/build-hostinger.mjs",
     "preview": "astro preview",
     "shots": "node scripts/screenshots.mjs"
   },
