@@ -12,7 +12,7 @@ export const site = {
   domain: 'asc-sarl.com',
   url: 'https://asc-sarl.com', // domaine officiel : URL canoniques et balises SEO
   description:
-    "Cabinet béninois d'études et de conseil en environnement, changements climatiques, gestion des ressources en eau, aménagement du territoire et développement local.",
+    "Cabinet d'études et de conseil à Cotonou : études environnementales, climat, ressources en eau, aménagement du territoire et développement local.",
   address: {
     lines: ['Cotonou, 12e arrondissement', 'quartier Cadjéhoun Aupiais', 'îlot 621 F, Maison MR International'],
     oneLine: 'Cotonou, 12e arrondissement, quartier Cadjéhoun Aupiais, îlot 621 F, Maison MR International',

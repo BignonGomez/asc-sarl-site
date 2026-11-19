@@ -55,7 +55,7 @@ export const domainPages: DomainPage[] = [
     slug: 'etudes-environnementales-sociales',
     seoTitle: 'Études environnementales et sociales',
     seoDescription:
-      "Études d'impact environnemental et social, évaluations environnementales, audits, PGES et consultation des parties prenantes au Bénin : Alkebulan Services et Conseils intègre les enjeux environnementaux et sociaux dès la conception des projets.",
+      "Études d'impact environnemental et social (EIES), évaluations environnementales, audits et PGES au Bénin, dès la conception des projets.",
     accroche: "Prendre en compte, dès la conception, les effets d'un projet sur l'environnement et sur les populations.",
     enjeux: [
       "Au Bénin, les projets d'infrastructures, d'aménagement et d'activités économiques doivent intégrer leurs effets sur le milieu naturel et sur les populations.",
@@ -88,7 +88,7 @@ export const domainPages: DomainPage[] = [
     slug: 'changements-climatiques',
     seoTitle: 'Changements climatiques et adaptation',
     seoDescription:
-      "Diagnostics de vulnérabilité, stratégies et plans locaux d'adaptation, intégration du climat dans la planification : Alkebulan Services et Conseils aide les territoires béninois à anticiper les effets des changements climatiques.",
+      "Diagnostics de vulnérabilité, stratégies et plans locaux d'adaptation, intégration du climat dans la planification des territoires béninois.",
     accroche: 'Comprendre, anticiper et réduire la vulnérabilité des territoires face aux changements climatiques.',
     enjeux: [
       "Les effets des changements climatiques touchent directement les ressources en eau, l'agriculture, les infrastructures et les conditions de vie des populations.",
@@ -113,7 +113,7 @@ export const domainPages: DomainPage[] = [
     slug: 'hydraulique-gire',
     seoTitle: 'Hydraulique, hydrologie et GIRE',
     seoDescription:
-      "Études hydrologiques et hydrauliques, évaluation des ressources en eau, diagnostics d'approvisionnement et gestion intégrée des ressources en eau (GIRE) au Bénin : Alkebulan Services et Conseils éclaire vos décisions.",
+      "Études hydrologiques et hydrauliques, évaluation des ressources en eau, diagnostics d'approvisionnement et gestion intégrée (GIRE) au Bénin.",
     accroche: 'Mieux connaître la ressource en eau pour mieux la partager et la gérer.',
     enjeux: [
       "L'eau est au cœur des enjeux d'approvisionnement des populations, de production agricole et d'adaptation au climat.",
@@ -138,7 +138,7 @@ export const domainPages: DomainPage[] = [
     slug: 'amenagement-territoire',
     seoTitle: 'Aménagement du territoire',
     seoDescription:
-      "Diagnostics territoriaux, planification urbaine et rurale, appui aux documents de planification locale et concertation : Alkebulan Services et Conseils accompagne les collectivités béninoises dans l'organisation de leur territoire.",
+      "Diagnostics territoriaux, planification urbaine et rurale, appui aux documents de planification locale des collectivités béninoises.",
     accroche: "Planifier l'usage de l'espace en intégrant les enjeux environnementaux, climatiques et sociaux.",
     enjeux: [
       "Les collectivités et les acteurs du développement doivent organiser l'usage de l'espace urbain et rural en conciliant l'habitat, les activités économiques, les ressources naturelles et la prévention des risques.",
@@ -164,7 +164,7 @@ export const domainPages: DomainPage[] = [
     slug: 'agriculture-developpement-rural',
     seoTitle: 'Agriculture durable et développement rural',
     seoDescription:
-      'Conseil en agriculture durable, diagnostics de filières, appui aux organisations paysannes, à la transformation et à la commercialisation : Alkebulan Services et Conseils accompagne le développement rural au Bénin.',
+      'Agriculture durable, diagnostics de filières, appui aux organisations paysannes, à la transformation et à la commercialisation au Bénin.',
     accroche: 'Améliorer la productivité et les revenus agricoles tout en préservant les ressources naturelles.',
     enjeux: [
       "L'agriculture fait vivre une grande partie des populations rurales. Les producteurs rencontrent souvent des difficultés d'accès aux techniques modernes, d'organisation des filières et de connaissance des marchés.",
@@ -196,7 +196,7 @@ export const domainPages: DomainPage[] = [
     slug: 'economie-locale',
     seoTitle: 'Économie locale et développement territorial',
     seoDescription:
-      'Diagnostics économiques de territoires, projets de développement local, chaînes de valeur et conseil aux entreprises : Alkebulan Services et Conseils accompagne les collectivités et les porteurs de projets au Bénin.',
+      'Diagnostics économiques de territoires, projets de développement local, analyse de chaînes de valeur et conseil aux entreprises au Bénin.',
     accroche: "Valoriser les ressources des territoires au service d'un développement économique inclusif.",
     enjeux: [
       'Le développement des territoires repose sur la valorisation des ressources locales, le dynamisme des activités génératrices de revenus et la qualité des services publics.',
@@ -231,7 +231,7 @@ export const domainPages: DomainPage[] = [
     slug: 'tourisme-conservation',
     seoTitle: 'Tourisme et conservation',
     seoDescription:
-      "Tourisme durable, aménagement et gestion de sites, conservation et valorisation des ressources naturelles avec les communautés locales : l'approche d'Alkebulan Services et Conseils au Bénin.",
+      "Tourisme durable, aménagement et gestion de sites, conservation et valorisation des ressources naturelles avec les communautés locales.",
     accroche: 'Valoriser les sites naturels et culturels sans dégrader les écosystèmes et les paysages.',
     enjeux: [
       'Les sites naturels et culturels constituent une ressource pour le développement local.',
@@ -257,7 +257,7 @@ export const domainPages: DomainPage[] = [
     slug: 'formation-sensibilisation',
     seoTitle: 'Formation, sensibilisation et participation des acteurs',
     seoDescription:
-      'Stratégies de sensibilisation, ateliers et sessions de formation, facilitation de concertations et supports de vulgarisation : Alkebulan Services et Conseils mobilise les acteurs pour des solutions comprises et appliquées.',
+      "Conception et animation de formations, facilitation de concertations, supports de vulgarisation et évaluation de l'appropriation.",
     accroche: 'Informer, former et mobiliser les acteurs pour que les solutions soient comprises, acceptées et appliquées.',
     enjeux: [
       "Une solution technique ne produit d'effets durables que si elle est comprise et portée par celles et ceux qui la mettent en œuvre.",
