@@ -146,7 +146,7 @@ const panelId = (href: string) => `menu-${href.replace(/\W/g, '') || 'accueil'}`
     inset: 0 0 auto 0;
     z-index: 101;
     height: 3px;
-    background: linear-gradient(90deg, var(--color-forest), var(--color-leaf), var(--color-sun));
+    background: var(--color-accent);
     transform-origin: 0 50%;
     transform: scaleX(var(--progress, 0));
     pointer-events: none;
@@ -224,7 +224,7 @@ const panelId = (href: string) => `menu-${href.replace(/\W/g, '') || 'accueil'}`
     transition: background-color 0.18s, color 0.18s;
   }
   .mnav-trigger:hover,
-  .mnav-item[data-open] .mnav-trigger { background: rgb(31 77 46 / 0.07); color: var(--color-forest); }
+  .mnav-item[data-open] .mnav-trigger { background: rgb(20 24 28 / 0.07); color: var(--color-forest); }
   .mnav-trigger.is-active { color: var(--color-brand); font-weight: 600; }
   .mnav-trigger.is-active::after {
     content: '';
@@ -288,7 +288,7 @@ const panelId = (href: string) => `menu-${href.replace(/\W/g, '') || 'accueil'}`
   }
   .mega__link:hover,
   .mega__link:focus-visible,
-  .mega__link[aria-current='page'] { background: rgb(31 77 46 / 0.06); }
+  .mega__link[aria-current='page'] { background: rgb(20 24 28 / 0.06); }
   .mega__icon {
     display: grid;
     place-items: center;
@@ -298,7 +298,7 @@ const panelId = (href: string) => `menu-${href.replace(/\W/g, '') || 'accueil'}`
     border-radius: 0.6875rem;
     color: var(--color-forest);
     background: var(--color-forest-soft);
-    box-shadow: inset 0 0 0 1px rgb(31 77 46 / 0.1);
+    box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.1);
     transition: color 0.18s, background-color 0.18s;
   }
   .mega__link:hover .mega__icon { color: #fff; background: var(--color-brand); }
@@ -321,7 +321,7 @@ const panelId = (href: string) => `menu-${href.replace(/\W/g, '') || 'accueil'}`
     width: 44px;
     height: 44px;
     border-radius: 999px;
-    background: rgb(31 77 46 / 0.08);
+    background: rgb(20 24 28 / 0.08);
   }
   .burger > span:not(.sr-only) {
     position: absolute;
@@ -350,7 +350,7 @@ const panelId = (href: string) => `menu-${href.replace(/\W/g, '') || 'accueil'}`
     content: '';
     position: absolute;
     inset: 0;
-    background: rgb(15 38 24 / 0.45);
+    background: rgb(20 24 28 / 0.45);
     opacity: 0;
     transition: opacity 0.35s var(--ease-out-soft);
   }

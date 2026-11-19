@@ -11,7 +11,7 @@ import { getActualites } from '../../lib/actualites';
 const latest = (await getActualites()).slice(0, 2);
 ---
 {latest.length > 0 && (
-  <section aria-labelledby="actualites-title" class="section-y bg-white">
+  <section aria-labelledby="actualites-title" class="section-y">
     <div class="container-site grid gap-10 lg:grid-cols-12 lg:gap-14">
       <div class="lg:col-span-4">
         <SectionHeading id="actualites-title" title="Actualités" intro="La vie du cabinet, ses partenariats, ses rencontres et ses nouvelles prestations." />

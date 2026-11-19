@@ -28,7 +28,6 @@ const actions = [
   cta={false}
 >
   <PageHeader
-    background="/images/hero-contact.svg"
     eyebrow="Contact"
     title="Parlons de votre projet"
     intro="Demande d'information, demande d'accompagnement, transmission de termes de référence ou proposition de partenariat : écrivez-nous ou appelez-nous. Nous étudierons votre demande avec attention."
@@ -52,7 +51,7 @@ const actions = [
     </ul>
   </nav>
 
-  <section aria-label="Coordonnées et formulaire" class="section-y bg-white">
+  <section aria-label="Coordonnées et formulaire" class="section-y">
     <div class="container-site grid gap-10 lg:grid-cols-12 lg:gap-12">
       <!-- Coordonnées officielles -->
       <aside class="grid content-start gap-6 lg:col-span-5" aria-labelledby="coord-title">
@@ -230,14 +229,14 @@ const actions = [
   .coord {
     padding: 2rem;
     border-radius: 1.5rem;
-    background: radial-gradient(ellipse 70% 60% at 100% 0%, rgb(252 209 42 / 0.12), transparent 70%), var(--color-mineral);
-    box-shadow: inset 0 0 0 1px rgb(31 77 46 / 0.08);
+    background: radial-gradient(ellipse 70% 60% at 100% 0%, rgb(246 244 240 / 0), transparent 70%), var(--color-mineral);
+    box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.08);
   }
   .coord__row { display: flex; gap: 1rem; }
   .coord__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.5rem; height: 2.5rem; border-radius: 0.8rem; color: var(--color-forest-deep); background: var(--color-sun); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5); }
   .motifs { padding: 1.5rem 1.75rem; border-radius: 1.5rem; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line); }
   .faq-link { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; border-radius: 1.5rem; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line); transition: box-shadow 0.3s; }
-  .faq-link:hover { box-shadow: inset 0 0 0 1px rgb(31 77 46 / 0.3), var(--shadow-lift); }
+  .faq-link:hover { box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.3), var(--shadow-lift); }
   .faq-link__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.75rem; height: 2.75rem; border-radius: 0.9rem; color: #fff; background: var(--color-brand); }
 
   /* Formulaire */
@@ -258,7 +257,7 @@ const actions = [
     transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
   }
   .field textarea { resize: vertical; min-height: 9rem; }
-  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--color-forest); background: #fff; box-shadow: 0 0 0 4px rgb(31 77 46 / 0.12); }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--color-forest); background: #fff; box-shadow: 0 0 0 4px rgb(20 24 28 / 0.12); }
   .field [aria-invalid='true'] { border-color: var(--color-danger) !important; background: var(--color-danger-soft) !important; }
   .aide { font-size: 0.8125rem; color: var(--color-muted); }
   .err { font-size: 0.8125rem; font-weight: 600; color: var(--color-danger); }
@@ -273,7 +272,7 @@ const actions = [
     font-size: 0.9375rem;
     color: var(--color-muted);
     background: var(--color-mineral);
-    border: 1.5px dashed rgb(31 77 46 / 0.3);
+    border: 1.5px dashed rgb(20 24 28 / 0.3);
     cursor: pointer;
     overflow-wrap: anywhere;
   }
@@ -290,15 +289,14 @@ const actions = [
     width: 100%;
     min-height: 3.5rem;
     padding: 0 2rem;
-    border-radius: 999px;
+    border-radius: var(--radius-ui);
     font-weight: 600;
-    color: var(--color-forest-deep);
-    background: linear-gradient(180deg, var(--color-sun-light), var(--color-sun));
-    box-shadow: var(--shadow-button);
+    color: #fff;
+    background: var(--color-accent);
     transition: transform 0.25s var(--ease-out-soft), box-shadow 0.25s;
   }
   @media (width >= 40rem) { .submit { width: auto; } }
-  .submit:hover { transform: translateY(-2px); box-shadow: var(--shadow-button-hover); }
+  .submit:hover { background: var(--color-accent-hover); }
   .submit[disabled] { opacity: 0.7; cursor: progress; transform: none; }
   .form-errors { margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: 1rem; font-size: 0.9375rem; color: var(--color-danger); background: var(--color-danger-soft); box-shadow: inset 0 0 0 1px rgb(180 35 24 / 0.25); }
   .form-errors a { text-decoration: underline; }

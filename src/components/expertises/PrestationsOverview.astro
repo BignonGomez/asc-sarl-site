@@ -25,7 +25,7 @@ const families = prestationFamilies.map((f) => {
   return { ...f, groups, count: groups.reduce((n, g) => n + g.titles.length, 0) };
 });
 ---
-<section id="prestations" aria-labelledby="prestations-title" class="section-y scroll-mt-24 bg-white">
+<section id="prestations" aria-labelledby="prestations-title" class="section-y scroll-mt-24">
   <div class="container-site">
     <SectionHeading
       id="prestations-title"

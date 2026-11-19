@@ -39,7 +39,7 @@ const socials = [
 <footer class="site-footer">
   <!-- Carte d'appel à l'action, sur fond blanc (masquée sur la page Contact) -->
   {showCta && (
-  <section aria-labelledby="footer-cta-title" class="bg-white pb-20 pt-4 sm:pb-24 lg:pb-28">
+  <section aria-labelledby="footer-cta-title" class="pb-20 pt-4 sm:pb-24 lg:pb-28">
     <div class="container-site">
       <div class="sf-cta" data-reveal>
         <p class="eyebrow-framed text-eyebrow uppercase text-brand">Parlons de votre projet</p>
@@ -48,7 +48,7 @@ const socials = [
           {ctaText}
         </p>
         <div class="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
-          <Button href={site.cta.href} size="lg" arrow class="!rounded-full">{site.cta.label}</Button>
+          <Button href={site.cta.href} size="lg" arrow>{site.cta.label}</Button>
           <a href={`mailto:${site.email}`} class="sf-mail-btn">
             <Mail size={18} aria-hidden="true" /> {site.email}
           </a>
@@ -77,12 +77,12 @@ const socials = [
   )}
 
   <!-- Bloc vert forêt : informations structurantes -->
+  <!-- Transition en dégradé du fond continu vers le pied de page (seule zone sombre) -->
+  <div aria-hidden="true" class="sf-fade"></div>
   <div class="sf-dark relative isolate overflow-clip text-white">
   <div aria-hidden="true" class="sf-bg absolute inset-0 -z-10">
     <span class="sf-grain"></span>
   </div>
-  <!-- Trait d'accent -->
-  <div aria-hidden="true" class="h-1 bg-linear-to-r from-leaf via-sun to-leaf"></div>
 
   <!-- Colonnes -->
   <div class="container-site">
@@ -169,8 +169,12 @@ const socials = [
 
 <style>
   /* ---------- Fond du bloc vert ---------- */
+  .sf-fade {
+    height: clamp(4rem, 10vw, 8rem);
+    background: linear-gradient(180deg, var(--color-canvas) 0%, color-mix(in srgb, var(--color-night) 18%, var(--color-canvas)) 45%, var(--color-night) 100%);
+  }
   .sf-bg {
-    background: linear-gradient(175deg, #22552f 0%, var(--color-forest) 40%, var(--color-forest-deep) 100%);
+    background: var(--color-night);
     overflow: hidden;
   }
   .sf-grain {
@@ -186,13 +190,13 @@ const socials = [
     position: relative;
     overflow: hidden;
     padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 5vw, 5rem);
-    border-radius: 2rem;
+    border-radius: var(--radius-card);
     text-align: center;
     background:
-      radial-gradient(ellipse 45% 70% at 100% 0%, rgb(252 209 42 / 0.12), transparent 70%),
-      radial-gradient(ellipse 50% 80% at 0% 100%, rgb(168 196 90 / 0.16), transparent 70%),
-      var(--color-mineral);
-    box-shadow: inset 0 0 0 1px rgb(31 77 46 / 0.08);
+      radial-gradient(ellipse 45% 70% at 100% 0%, rgb(246 244 240 / 0), transparent 70%),
+      radial-gradient(ellipse 50% 80% at 0% 100%, rgb(246 244 240 / 0), transparent 70%),
+      var(--color-surface);
+    box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.08);
   }
   .sf-mail-btn {
     display: inline-flex;
@@ -205,7 +209,7 @@ const socials = [
     font-weight: 600;
     color: var(--color-forest);
     background: #fff;
-    box-shadow: inset 0 0 0 1.5px rgb(31 77 46 / 0.22);
+    box-shadow: inset 0 0 0 1.5px rgb(20 24 28 / 0.22);
     transition: box-shadow 0.3s, transform 0.3s var(--ease-out-soft);
   }
   /* Moyens de contact sous les boutons */
@@ -216,7 +220,7 @@ const socials = [
     gap: 0.75rem;
     margin-top: 2.25rem;
     padding-top: 2rem;
-    border-top: 1px solid rgb(31 77 46 / 0.1);
+    border-top: 1px solid rgb(20 24 28 / 0.1);
   }
   .sf-channel {
     display: flex;
@@ -225,13 +229,13 @@ const socials = [
     padding: 0.7rem 1.1rem 0.7rem 0.75rem;
     border-radius: 1rem;
     background: rgb(255 255 255 / 0.7);
-    box-shadow: inset 0 0 0 1px rgb(31 77 46 / 0.08);
+    box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.08);
     transition: background-color 0.2s, box-shadow 0.2s;
   }
-  .sf-channel:hover { background: #fff; box-shadow: inset 0 0 0 1px rgb(31 77 46 / 0.25); }
+  .sf-channel:hover { background: #fff; box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.25); }
   .sf-channel__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 0.7rem; color: var(--color-forest-deep); background: var(--color-sun); }
   @media (width < 40rem) { .sf-channels li, .sf-channel { width: 100%; } }
-  .sf-mail-btn:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1.5px var(--color-forest), 0 12px 26px -16px rgb(15 38 24 / 0.4); }
+  .sf-mail-btn:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1.5px var(--color-forest), 0 12px 26px -16px rgb(20 24 28 / 0.4); }
 
   /* ---------- Colonnes ---------- */
   .sf-main {
@@ -309,7 +313,7 @@ const socials = [
     white-space: nowrap;
     color: transparent;
     -webkit-text-stroke: 1px rgb(255 255 255 / 0.14);
-    background: linear-gradient(180deg, rgb(252 209 42 / 0.14), rgb(168 196 90 / 0.03) 70%, transparent);
+    background: linear-gradient(180deg, rgb(246 244 240 / 0), rgb(246 244 240 / 0) 70%, transparent);
     -webkit-background-clip: text;
     background-clip: text;
     user-select: none;

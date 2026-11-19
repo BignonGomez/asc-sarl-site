@@ -43,7 +43,6 @@ const etapes = [
   description="Rejoindre Alkebulan Services et Conseils, cabinet béninois d'études et de conseil : environnement, climat, eau, aménagement du territoire, agriculture et développement local. Offres en cours et candidature spontanée."
 >
   <PageHeader
-    background="/images/hero-recrutement.svg"
     eyebrow="Ressources"
     title="Recrutement"
     intro={`Vous partagez nos domaines d'intervention ? Découvrez comment rejoindre ${site.name} ou nous proposer votre candidature.`}
@@ -51,7 +50,7 @@ const etapes = [
   />
 
   <!-- Présentation -->
-  <section aria-labelledby="rejoindre-title" class="section-y bg-white">
+  <section aria-labelledby="rejoindre-title" class="section-y">
     <div class="container-site grid gap-12 lg:grid-cols-12 lg:gap-16">
       <div class="lg:col-span-6">
         <SectionHeading id="rejoindre-title" title="Rejoindre le cabinet" />
@@ -83,7 +82,7 @@ const etapes = [
   </section>
 
   <!-- Offres en cours : bloc « Aucune offre en cours » tant que la liste est vide -->
-  <section id="offres" aria-labelledby="offres-title" class="section-y scroll-mt-24 bg-mineral">
+  <section id="offres" aria-labelledby="offres-title" class="section-y scroll-mt-24">
     <div class="container-site">
       <SectionHeading id="offres-title" title="Offres en cours" />
 
@@ -124,7 +123,7 @@ const etapes = [
   </section>
 
   <!-- Candidature spontanée -->
-  <section id="candidature" aria-labelledby="spontanee-title" class="section-y scroll-mt-24 bg-white">
+  <section id="candidature" aria-labelledby="spontanee-title" class="section-y scroll-mt-24">
     <div class="container-site grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
       <div class="lg:col-span-6">
         <SectionHeading id="spontanee-title" title="Candidature spontanée" />
@@ -150,7 +149,7 @@ const etapes = [
   </section>
 
   <!-- Déroulement du recrutement -->
-  <section aria-labelledby="deroulement-title" class="section-y bg-mineral">
+  <section aria-labelledby="deroulement-title" class="section-y">
     <div class="container-site">
       <SectionHeading id="deroulement-title" title="Comment se déroule le recrutement" />
       <ol class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -180,8 +179,8 @@ const etapes = [
   .profils {
     padding: 2rem;
     border-radius: 1.5rem;
-    background: radial-gradient(ellipse 70% 70% at 100% 0%, rgb(252 209 42 / 0.12), transparent 70%), var(--color-mineral);
-    box-shadow: inset 0 0 0 1px rgb(31 77 46 / 0.08);
+    background: radial-gradient(ellipse 70% 70% at 100% 0%, rgb(246 244 240 / 0), transparent 70%), var(--color-mineral);
+    box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.08);
   }
   @media (width >= 40rem) { .profils { padding: 2.5rem; } }
   .profil {
@@ -216,7 +215,7 @@ const etapes = [
     z-index: -1;
     height: 80%;
     filter: blur(30px);
-    background: radial-gradient(closest-side, rgb(74 115 32 / 0.14), rgb(252 209 42 / 0.05) 60%, transparent);
+    background: radial-gradient(closest-side, rgb(20 24 28 / 0.12), rgb(246 244 240 / 0) 60%, transparent);
   }
   .aucune__icon {
     display: inline-grid;
@@ -226,7 +225,7 @@ const etapes = [
     border-radius: 1.25rem;
     color: var(--color-forest);
     background: var(--color-forest-soft);
-    box-shadow: inset 0 0 0 1px rgb(31 77 46 / 0.12);
+    box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.12);
   }
 
   /* Bouton e-mail (relief, comme les boutons principaux) */
@@ -238,14 +237,13 @@ const etapes = [
     gap: 0.6rem;
     min-height: 3.25rem;
     padding: 0 1.6rem;
-    border-radius: 999px;
+    border-radius: var(--radius-ui);
     font-weight: 600;
-    color: var(--color-forest-deep);
-    background: linear-gradient(180deg, var(--color-sun-light), var(--color-sun));
-    box-shadow: var(--shadow-button);
+    color: #fff;
+    background: var(--color-accent);
     transition: transform 0.25s var(--ease-out-soft), box-shadow 0.25s;
   }
-  .btn-mail:hover { transform: translateY(-2px); box-shadow: var(--shadow-button-hover); }
+  .btn-mail:hover { background: var(--color-accent-hover); }
   .btn-mail--sm { min-height: 2.75rem; padding: 0 1.2rem; font-size: 0.9375rem; }
 
   /* Offres (affichées dès que le tableau n'est pas vide) */
@@ -260,7 +258,7 @@ const etapes = [
 
   /* Étapes */
   .etape { position: relative; overflow: hidden; padding: 1.5rem; border-radius: 1.25rem; background: #fff; box-shadow: inset 0 0 0 1px var(--color-line); }
-  .etape__num { position: absolute; top: -0.5rem; right: 0.75rem; font-family: var(--font-display); font-size: 4.5rem; font-weight: 700; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px rgb(74 115 32 / 0.26); }
+  .etape__num { position: absolute; top: -0.5rem; right: 0.75rem; font-family: var(--font-display); font-size: 4.5rem; font-weight: 700; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px rgb(20 24 28 / 0.12); }
   .etape__icon { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 0.875rem; color: #fff; background: linear-gradient(135deg, var(--color-forest), var(--color-forest-night)); }
 
   .donnees { display: flex; gap: 0.9rem; padding: 1.25rem 1.4rem; border-radius: 1.25rem; font-size: 0.9375rem; color: var(--color-ink); background: #fff; box-shadow: inset 0 0 0 1px var(--color-line); }

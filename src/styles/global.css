@@ -9,7 +9,8 @@
     scroll-padding-top: 6.5rem;
   }
   body {
-    @apply bg-paper font-sans text-body text-ink antialiased;
+    @apply bg-canvas font-sans text-body text-ink antialiased;
+    font-feature-settings: "kern", "liga";
     text-rendering: optimizeLegibility;
   }
   h1, h2, h3, h4 {
@@ -17,10 +18,12 @@
     hyphens: manual;
   }
   p { text-wrap: pretty; }
-  ::selection { background: var(--color-sun); color: var(--color-forest-deep); }
+  ::selection { background: var(--color-accent); color: #fff; }
+  /* Chiffres alignés dans les tableaux et données */
+  table, .tabular { font-variant-numeric: tabular-nums; }
 
   :focus-visible {
-    outline: 2px solid var(--color-brand);
+    outline: 2px solid var(--color-accent);
     outline-offset: 3px;
     border-radius: 4px;
   }
@@ -49,37 +52,52 @@
   }
 }
 
+/* Chaque section porte la moitié de l'écart : deux sections voisines sont séparées de 80 px (mobile),
+   96 px (tablette) et 140 px (bureau). */
 @utility section-y {
   padding-block: var(--spacing-section);
+  @media (width >= 48rem) {
+    padding-block: var(--spacing-section-md);
+  }
   @media (width >= 64rem) {
     padding-block: var(--spacing-section-lg);
   }
 }
 
-/* ---------- Reflet glissant des boutons principaux ---------- */
-@layer components {
-  .btn-sheen { position: relative; isolation: isolate; overflow: hidden; }
-  .btn-sheen::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.45) 50%, transparent 65%) 130% 0 / 250% 100% no-repeat;
-    transition: background-position 0.9s var(--ease-out-soft);
-    pointer-events: none;
+/* Grille stricte de 12 colonnes (bureau), 4 colonnes sur mobile, 8 sur tablette */
+@utility grid-site {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 1rem;
+  @media (width >= 48rem) {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    column-gap: 1.5rem;
   }
-  .btn-sheen:hover::after { background-position: -30% 0; }
+  @media (width >= 64rem) {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 2rem;
+  }
+}
+
+/* Filet de séparation 1 px entre sections (dans le conteneur) */
+@utility rule-top {
+  border-top: 1px solid var(--color-line);
+}
+
+/* ---------- Surtitres et repères techniques : IBM Plex Mono ---------- */
+@layer components {
+  .text-eyebrow { font-family: var(--font-mono); }
+  .btn-sheen { position: relative; }
 }
 
 /* ---------- Apparition discrète au défilement ---------- */
 @layer components {
   .js [data-reveal] {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(24px);
     transition:
-      opacity 0.7s var(--ease-out-soft),
-      transform 0.7s var(--ease-out-soft);
+      opacity var(--duration-reveal) var(--ease-out-soft),
+      transform var(--duration-reveal) var(--ease-out-soft);
     transition-delay: var(--reveal-delay, 0ms);
   }
   .js [data-reveal].is-visible {
@@ -110,14 +128,4 @@
   }
   /* L'espacement des lettres ajoute un blanc après la dernière lettre : on le compense pour une symétrie exacte */
   .eyebrow-framed::after { margin-inline-start: calc(-1 * var(--text-eyebrow--letter-spacing, 0em)); }
-}
-
-/* Voile de lisibilité des en-têtes à image d'arrière-plan (accueil, recrutement) :
-   sur mobile et tablette il couvre toute l'image (le texte occupe toute la largeur) ;
-   sur grand écran il est sombre à gauche et s'efface vers la droite. */
-@layer components {
-  .veil-left { background: linear-gradient(180deg, rgb(15 38 24 / 0.82) 0%, rgb(15 38 24 / 0.72) 55%, rgb(15 38 24 / 0.8) 100%); }
-  @media (width >= 64rem) {
-    .veil-left { background: linear-gradient(90deg, rgb(15 38 24 / 0.9) 0%, rgb(15 38 24 / 0.78) 32%, rgb(15 38 24 / 0.4) 55%, rgb(15 38 24 / 0) 75%); }
-  }
 }
