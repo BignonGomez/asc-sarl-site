@@ -1,0 +1,91 @@
+---
+/**
+ * Accueil, section 3 : prestations en tableau (domaine | livrables types).
+ * Livrables : propositions dérivées des prestations publiées (src/data/livrables.ts, À VALIDER).
+ * Tableau réel (lecteurs d'écran) ; sur mobile, chaque ligne devient un bloc empilé.
+ */
+import { ArrowUpRight } from '@lucide/astro';
+import SectionHead from '../ui/SectionHead.astro';
+import ArrowLink from '../ui/ArrowLink.astro';
+import { expertises } from '../../data/expertises';
+import { livrablesParDomaine } from '../../data/livrables';
+import { url } from '../../lib/url';
+---
+<section id="prestations" aria-labelledby="prestations-title" class="section-y">
+  <div class="container-site">
+    <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>
+    <SectionHead
+      id="prestations-title"
+      index="01"
+      label="Prestations"
+      title="Huit domaines, des livrables précis"
+      intro="Pour chaque domaine, les documents que nous produisons. Le détail des prestations figure sur la page de chaque domaine."
+    />
+
+    <table class="presta mt-12 lg:mt-16" data-reveal>
+      <caption class="sr-only">Domaines d'expertise et livrables types</caption>
+      <thead>
+        <tr>
+          <th scope="col" class="presta__n">N°</th>
+          <th scope="col">Domaine</th>
+          <th scope="col">Livrables types</th>
+          <th scope="col"><span class="sr-only">Lien</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {expertises.map((e, i) => (
+          <tr class="presta__row">
+            <td class="presta__n">{String(i + 1).padStart(2, '0')}</td>
+            <th scope="row" class="presta__domain">
+              <a href={url(`/expertises/${e.slug}`)} class="presta__link">{e.title}</a>
+            </th>
+            <td>
+              <ul class="presta__livrables">
+                {(livrablesParDomaine[e.slug] ?? []).map((l) => <li>{l}</li>)}
+              </ul>
+            </td>
+            <td class="presta__go" aria-hidden="true"><ArrowUpRight size={18} /></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <div class="mt-10" data-reveal>
+      <ArrowLink href="/expertises#prestations">Toutes les prestations, par famille</ArrowLink>
+    </div>
+  </div>
+</section>
+
+<style>
+  .presta { width: 100%; border-collapse: collapse; }
+  .presta thead { display: none; }
+  .presta__row { position: relative; display: grid; grid-template-columns: 2.5rem 1fr; gap: 0.25rem 0; padding: 1.5rem 0; border-top: 1px solid var(--color-line); }
+  .presta__row:last-child { border-bottom: 1px solid var(--color-line); }
+  .presta td, .presta th { text-align: left; font-weight: inherit; }
+  .presta__n { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--color-muted); padding-top: 0.2rem; }
+  .presta__row > :nth-child(3) { grid-column: 2; }
+  .presta__domain { font-size: 1.125rem; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; color: var(--color-ink); }
+  .presta__link::after { content: ''; position: absolute; inset: 0; }
+  .presta__link:focus-visible { outline: none; }
+  .presta__row:has(.presta__link:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  .presta__livrables { margin-top: 0.5rem; display: grid; gap: 0.3rem; font-size: 0.9375rem; color: var(--color-muted); }
+  .presta__livrables li { position: relative; padding-left: 1rem; }
+  .presta__livrables li::before { content: ''; position: absolute; left: 0; top: 0.7em; width: 0.4rem; height: 1px; background: var(--color-line-strong); }
+  .presta__go { display: none; }
+
+  @media (width >= 64rem) {
+    .presta thead { display: table-header-group; }
+    .presta__row { display: table-row; padding: 0; }
+    .presta th[scope='col'] { padding: 0 1rem 1rem 0; font-family: var(--font-mono); font-size: var(--text-eyebrow); font-weight: 500; letter-spacing: var(--text-eyebrow--letter-spacing); text-transform: uppercase; color: var(--color-muted); }
+    .presta td, .presta tbody th { padding: 1.6rem 1.5rem 1.6rem 0; vertical-align: top; border-top: 1px solid var(--color-line); }
+    .presta tbody tr:last-child > * { border-bottom: 1px solid var(--color-line); }
+    .presta__n { width: 4rem; }
+    .presta__domain { width: 38%; font-size: 1.25rem; }
+    .presta__livrables { margin-top: 0; }
+    .presta__go { display: table-cell; width: 2rem; padding-right: 0 !important; color: var(--color-line-strong); transition: color 0.2s, transform 0.3s var(--ease-out-soft); }
+    .presta__row { transition: background-color 0.25s; }
+    .presta__row:hover { background: var(--color-surface); }
+    .presta__row:hover .presta__domain { color: var(--color-accent-text); }
+    .presta__row:hover .presta__go { color: var(--color-accent); }
+  }
+</style>

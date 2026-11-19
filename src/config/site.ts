@@ -38,15 +38,6 @@ export const site = {
  */
 export const noindex = import.meta.env.PUBLIC_NOINDEX !== 'false';
 
-/**
- * Sections de l'accueil soumises à condition (annexe E du protocole).
- * Visibles pendant la phase de démonstration ; à masquer au lancement si les conditions ne sont pas réunies.
- */
-export const features = {
-  homeNews: true,      // Section 6 : seulement si la rubrique Actualités est lancée
-  homePartners: true,  // Section 7 : seulement avec l'accord écrit de la Commune de Za-Kpota
-};
-
 export type NavChild = { label: string; href: string; desc?: string; icon?: string };
 /** hideAll : masque le lien « Découvrir … » du sous-menu quand la rubrique n'a pas de page d'accueil propre */
 export type NavItem = { label: string; href: string; children?: NavChild[]; hideAll?: boolean };

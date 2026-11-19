@@ -1,0 +1,18 @@
+---
+/**
+ * En-tête de section (refonte) : repère technique en IBM Plex Mono à gauche (numéro + intitulé),
+ * titre H2 et introduction facultative à droite, sur la grille de 12 colonnes.
+ */
+interface Props { index: string; label: string; title: string; intro?: string; id: string }
+const { index, label, title, intro, id } = Astro.props;
+---
+<div class="grid-site gap-y-5" data-reveal>
+  <p class="col-span-full text-eyebrow uppercase text-muted lg:col-span-3 lg:pt-3">
+    <span class="text-accent-text">{index}</span><span aria-hidden="true" class="mx-2 text-line-strong">/</span>{label}
+  </p>
+  <div class="col-span-full lg:col-span-9">
+    <h2 id={id} class="max-w-[22ch] text-h2 text-ink">{title}</h2>
+    {intro && <p class="mt-5 max-w-2xl text-lead text-muted">{intro}</p>}
+    <slot />
+  </div>
+</div>

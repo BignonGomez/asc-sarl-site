@@ -1,0 +1,56 @@
+---
+/**
+ * Accueil, section 7 : contact orienté termes de référence.
+ * Faits repris de la configuration (formats et taille de la pièce jointe, e-mail, siège) ; aucun délai de réponse promis.
+ * Remplace, sur l'accueil seulement, la carte d'appel du pied de page (BaseLayout cta={false}).
+ */
+import { Mail } from '@lucide/astro';
+import SectionHead from '../ui/SectionHead.astro';
+import Button from '../ui/Button.astro';
+import { site } from '../../config/site';
+import { pieceJointe } from '../../data/contact';
+
+const formats = pieceJointe.extensions.filter((e) => e !== '.doc').map((e) => (e === '.pdf' ? 'PDF' : 'Word')).join(' ou ');
+const rows = [
+  { k: 'Pièce jointe', v: `${formats}, ${pieceJointe.maxMo} Mo maximum` },
+  { k: 'E-mail', v: site.email, href: `mailto:${site.email}` },
+  { k: 'Siège', v: 'Cotonou, quartier Cadjéhoun Aupiais' },
+];
+---
+<section aria-labelledby="contact-title" class="section-y">
+  <div class="container-site">
+    <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>
+    <SectionHead
+      id="contact-title"
+      index="05"
+      label="Contact"
+      title="Transmettez vos termes de référence"
+      intro="Joignez vos termes de référence ou votre cahier des charges au formulaire : nous étudions votre demande et revenons vers vous."
+    >
+      <div class="mt-9 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:gap-6">
+        <Button href={site.cta.href} size="lg" arrow>{site.cta.label}</Button>
+        <a href={`mailto:${site.email}`} class="inline-flex min-h-12 items-center justify-center gap-2 font-medium text-ink hover:text-accent-text">
+          <Mail size={17} aria-hidden="true" /> Écrire un e-mail
+        </a>
+      </div>
+      <dl class="tdr mt-12" data-reveal>
+        {rows.map((r) => (
+          <div>
+            <dt>{r.k}</dt>
+            <dd>{r.href ? <a href={r.href} class="hover:text-accent-text">{r.v}</a> : r.v}</dd>
+          </div>
+        ))}
+      </dl>
+    </SectionHead>
+  </div>
+</section>
+
+<style>
+  .tdr { display: grid; border-top: 1px solid var(--color-line); }
+  .tdr > div { display: grid; gap: 0.25rem; padding: 0.9rem 0; border-bottom: 1px solid var(--color-line); }
+  .tdr dt { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); }
+  .tdr dd { font-size: 0.9375rem; color: var(--color-ink); overflow-wrap: anywhere; }
+  @media (width >= 48rem) {
+    .tdr { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 2rem; }
+  }
+</style>

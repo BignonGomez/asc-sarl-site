@@ -1,0 +1,45 @@
+---
+/**
+ * Accueil, section 2 : chiffres clés en tableau de bord.
+ * Uniquement des faits vérifiables (8 domaines, création 2025, SARL immatriculée au RCCM).
+ * Les chiffres non validés (prestations, experts, années d'expérience) ne sont pas affichés.
+ * data-count : valeur animée à l'entrée dans l'écran (étape 4 de la refonte).
+ */
+import { site } from '../../config/site';
+import { expertises } from '../../data/expertises';
+
+const facts = [
+  { value: String(expertises.length), count: expertises.length, unit: "domaines d'expertise", note: 'Environnement, climat, eau, territoire' },
+  { value: '2025', unit: 'année de création', note: 'Siège à Cotonou, Bénin' },
+  { value: 'SARL', unit: 'de droit béninois', note: `RCCM ${site.rccm}` },
+];
+---
+<section aria-labelledby="chiffres-title" class="pb-[var(--spacing-section)] md:pb-[var(--spacing-section-md)] lg:pb-[var(--spacing-section-lg)]">
+  <div class="container-site">
+    <h2 id="chiffres-title" class="sr-only">Le cabinet en chiffres</h2>
+    <dl class="chiffres" data-reveal>
+      {facts.map((f) => (
+        <div class="chiffre">
+          <dt class="chiffre__unit">{f.unit}</dt>
+          <dd class="chiffre__value tabular" data-count={f.count}>{f.value}</dd>
+          <dd class="chiffre__note text-eyebrow uppercase">{f.note}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .chiffres { display: grid; border-top: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line); }
+  .chiffre { display: grid; grid-template-areas: 'value' 'unit' 'note'; align-content: start; padding: 1.75rem 0; }
+  .chiffre + .chiffre { border-top: 1px solid var(--color-line); }
+  .chiffre__value { grid-area: value; font-size: var(--text-figure); line-height: var(--text-figure--line-height); letter-spacing: var(--text-figure--letter-spacing); font-weight: 400; color: var(--color-ink); }
+  .chiffre__unit { grid-area: unit; margin-top: 0.75rem; font-size: 1rem; font-weight: 500; color: var(--color-ink); }
+  .chiffre__note { grid-area: note; margin-top: 0.4rem; color: var(--color-muted); }
+  @media (width >= 48rem) {
+    .chiffres { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .chiffre { padding: 2.5rem 2rem 2.25rem; }
+    .chiffre:first-child { padding-left: 0; }
+    .chiffre + .chiffre { border-top: 0; border-left: 1px solid var(--color-line); }
+  }
+</style>

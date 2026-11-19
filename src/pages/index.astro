@@ -1,22 +1,24 @@
 ---
+/**
+ * Accueil (refonte) : héro, chiffres clés, prestations en tableau, méthode, référence, équipe, contact TdR.
+ * Actualités et partenaires ne figurent plus sur l'accueil (rubriques accessibles par le menu).
+ * La carte d'appel du pied de page est remplacée ici par la section Contact (cta={false}).
+ */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/home/Hero.astro';
-import Bandeau from '../components/home/Bandeau.astro';
-import CabinetIntro from '../components/home/CabinetIntro.astro';
-import ExpertisesGrid from '../components/home/ExpertisesGrid.astro';
-import Realisations from '../components/home/Realisations.astro';
-import Approche from '../components/home/Approche.astro';
-import Actualites from '../components/home/Actualites.astro';
-import Partenaires from '../components/home/Partenaires.astro';
-import { features } from '../config/site';
+import Chiffres from '../components/home/Chiffres.astro';
+import Prestations from '../components/home/Prestations.astro';
+import Methode from '../components/home/Methode.astro';
+import Reference from '../components/home/Reference.astro';
+import Equipe from '../components/home/Equipe.astro';
+import ContactTdr from '../components/home/ContactTdr.astro';
 ---
-<BaseLayout>
+<BaseLayout cta={false}>
   <Hero />
-  <Bandeau />
-  <CabinetIntro />
-  <ExpertisesGrid />
-  <Realisations />
-  <Approche />
-  {features.homeNews && <Actualites />}
-  {features.homePartners && <Partenaires />}
+  <Chiffres />
+  <Prestations />
+  <Methode />
+  <Reference />
+  <Equipe />
+  <ContactTdr />
 </BaseLayout>

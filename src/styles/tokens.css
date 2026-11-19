@@ -6,10 +6,8 @@
  * chaque couleur a une raison (hiérarchie, donnée, repère). Les couleurs multiples sont
  * réservées aux cartes et graphiques techniques (jetons --color-map-*).
  *
- * L'accent est défini plus bas (:root) et peut basculer entre deux versions à l'étude :
- *   latérite  #B4532A (sol béninois)          → html[data-accent="laterite"] (par défaut)
- *   pétrole   #0F5C66 (eau, hydrologie)       → html[data-accent="petrole"]
- * Une fois l'accent choisi, ne garder que sa version.
+ * Accent unique : bleu pétrole #0F5C66 (défini plus bas dans :root), réservé aux boutons, liens et petits repères.
+ * La latérite #B4532A reste une couche cartographique (sols), jamais un accent d'interface.
  */
 @theme {
   /* ---------- Base neutre ---------- */
@@ -25,7 +23,7 @@
   --color-night-soft: #1b2025;
   --color-paper: #ffffff;
 
-  /* ---------- Accent unique (valeurs réelles dans :root, selon data-accent) ---------- */
+  /* ---------- Accent unique (valeurs dans :root) ---------- */
   --color-accent: var(--accent);             /* Boutons, liens, petits repères */
   --color-accent-hover: var(--accent-hover);
   --color-accent-text: var(--accent-text);   /* Accent en texte de petite taille (≥ 4,5:1 garanti) */
@@ -157,19 +155,11 @@
   --duration-reveal: 700ms;
 }
 
-/* ---------- Accent : deux versions à l'étude ---------- */
-:root,
-:root[data-accent="laterite"] {
-  --accent: #b4532a;          /* Boutons (texte blanc 5,0:1) */
-  --accent-hover: #963f1d;
-  --accent-text: #a04822;     /* Liens et petits textes (5,5:1 sur le fond) */
-  --accent-soft: #f1e2d8;
-  --accent-on-dark: #e8a17f;  /* Sur le pied de page (8,7:1) */
-}
-:root[data-accent="petrole"] {
-  --accent: #0f5c66;          /* Boutons (texte blanc 7,6:1) */
+/* ---------- Accent : bleu pétrole (eau, hydrologie), choisi le 19/11/2026 ---------- */
+:root {
+  --accent: #0f5c66;          /* Boutons (texte blanc 7,7:1) */
   --accent-hover: #0a454d;
-  --accent-text: #0f5c66;     /* 7,0:1 sur le fond */
+  --accent-text: #0f5c66;     /* Liens et petits textes (7,0:1 sur le fond) */
   --accent-soft: #dbe7e7;
   --accent-on-dark: #7fc4cc;  /* Sur le pied de page (9,4:1) */
 }

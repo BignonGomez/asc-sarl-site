@@ -1,0 +1,65 @@
+---
+/**
+ * Accueil, section 4 : méthode en 5 étapes, schéma horizontal (bureau) ou vertical (mobile),
+ * avec le livrable de chaque étape (src/data/livrables.ts, À VALIDER).
+ * Le trait de progression et l'allumage des étapes au défilement arrivent à l'étape 4 (animations) :
+ * crochets data-methode, data-step, .methode__line.
+ */
+import SectionHead from '../ui/SectionHead.astro';
+import ArrowLink from '../ui/ArrowLink.astro';
+import { steps } from '../../data/approche';
+import { livrablesParEtape } from '../../data/livrables';
+---
+<section aria-labelledby="methode-title" class="section-y">
+  <div class="container-site">
+    <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>
+    <SectionHead
+      id="methode-title"
+      index="02"
+      label="Méthode"
+      title="Cinq étapes, un livrable à chacune"
+      intro="De la lecture des termes de référence à l'évaluation : chaque étape se conclut par un document remis au maître d'ouvrage."
+    />
+
+    <div class="methode mt-14 lg:mt-20" data-methode>
+      <span aria-hidden="true" class="methode__track"><span class="methode__line"></span></span>
+      <ol class="methode__list">
+      {steps.map((s, i) => (
+        <li class="etape" data-step data-reveal style={`--reveal-delay:${i * 90}ms`}>
+          <span class="etape__dot" aria-hidden="true"></span>
+          <p class="etape__n">Étape {String(i + 1).padStart(2, '0')}</p>
+          <h3 class="etape__title">{s.short}</h3>
+          <p class="etape__text">{s.summary}</p>
+          <p class="etape__livrable"><span class="etape__label">Livrable</span>{livrablesParEtape[i]}</p>
+        </li>
+      ))}
+      </ol>
+    </div>
+
+    <div class="mt-12" data-reveal>
+      <ArrowLink href="/cabinet/approche">Le détail de notre démarche</ArrowLink>
+    </div>
+  </div>
+</section>
+
+<style>
+  .methode { position: relative; padding-left: 2rem; }
+  .methode__list { display: grid; gap: 2.5rem; }
+  .methode__track { position: absolute; left: 0.3125rem; top: 0.5rem; bottom: 0.5rem; width: 1px; background: var(--color-line); }
+  .methode__line { position: absolute; inset: 0; background: var(--color-accent); transform-origin: top; transform: scaleY(var(--progress, 1)); }
+  .etape { position: relative; }
+  .etape__dot { position: absolute; left: -2rem; top: 0.3rem; width: 0.6875rem; height: 0.6875rem; border-radius: 2px; background: var(--color-canvas); box-shadow: inset 0 0 0 1.5px var(--color-accent); }
+  .etape__n { font-family: var(--font-mono); font-size: var(--text-eyebrow); letter-spacing: var(--text-eyebrow--letter-spacing); text-transform: uppercase; color: var(--color-accent-text); }
+  .etape__title { margin-top: 0.6rem; font-size: 1.25rem; font-weight: 500; letter-spacing: -0.015em; color: var(--color-ink); }
+  .etape__text { margin-top: 0.5rem; font-size: 0.9375rem; line-height: 1.6; color: var(--color-muted); }
+  .etape__livrable { margin-top: 1.1rem; padding-top: 0.9rem; border-top: 1px solid var(--color-line); font-size: 0.9375rem; font-weight: 500; color: var(--color-ink); }
+  .etape__label { display: block; margin-bottom: 0.25rem; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); }
+
+  @media (width >= 64rem) {
+    .methode { padding-left: 0; padding-top: 2.25rem; }
+    .methode__list { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2rem; }
+    .methode__track { left: 0; right: 0; top: 0.3125rem; bottom: auto; width: auto; height: 1px; }
+    .methode__line { transform-origin: left; transform: scaleX(var(--progress, 1)); }
+    .etape__dot { left: 0; top: -2.25rem; }
+  }
+</style>
