@@ -23,6 +23,7 @@ const initials = (m: (typeof team)[number]) =>
     crumbs={[{ label: 'Le Cabinet', href: '/cabinet' }, { label: 'Notre équipe' }]}
   />
 
+  {team.length > 0 && (
   <section aria-labelledby="membres-title" class="section-y bg-mineral">
     <div class="container-site">
       <h2 id="membres-title" class="sr-only">Membres de l'équipe</h2>
@@ -69,6 +70,7 @@ const initials = (m: (typeof team)[number]) =>
       </ul>
     </div>
   </section>
+  )}
 
   <section aria-labelledby="constitution-title" class="section-y bg-white">
     <div class="container-site grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-16">

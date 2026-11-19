@@ -89,6 +89,7 @@ const enCours = missions.filter((m) => m.status === 'en-cours');
                       ))}
                     </dd>
                   </div>
+                  {members.length > 0 && (
                   <div class="fiche__row">
                     <dt class="fiche__label"><Users size={16} aria-hidden="true" /> Équipe mobilisée</dt>
                     <dd class="mt-1 grid gap-2">
@@ -104,6 +105,7 @@ const enCours = missions.filter((m) => m.status === 'en-cours');
                       ))}
                     </dd>
                   </div>
+                  )}
                 </dl>
               </div>
             </aside>

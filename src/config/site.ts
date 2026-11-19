@@ -36,6 +36,17 @@ export const site = {
  * Phase de test (GitHub Pages) : le site ne doit pas être indexé.
  * Mettre PUBLIC_NOINDEX=false uniquement pour la version finale Hostinger.
  */
+/**
+ * Publication des informations nominatives (décision du 19/11/2026 : rien n'est publié sans autorisation écrite).
+ * Passer à true uniquement sur présentation de l'autorisation correspondante.
+ */
+export const publication = {
+  /** Nom de la collectivité commanditaire et de la localité de la mission (autorisation de la commune) */
+  commanditaire: false,
+  /** Noms, diplômes et parcours des membres de l'équipe (accords écrits de chaque personne) */
+  equipe: false,
+};
+
 export const noindex = import.meta.env.PUBLIC_NOINDEX !== 'false';
 
 /**
@@ -44,7 +55,7 @@ export const noindex = import.meta.env.PUBLIC_NOINDEX !== 'false';
  */
 export const features = {
   homeNews: true,      // Section 6 : seulement si la rubrique Actualités est lancée
-  homePartners: true,  // Section 7 : seulement avec l'accord écrit de la Commune de Za-Kpota
+  homePartners: false, // masqué : autorisation de la commune non obtenue (19/11/2026)  // Section 7 : seulement avec l'accord écrit de la Commune de Za-Kpota
 };
 
 export type NavChild = { label: string; href: string; desc?: string; icon?: string };

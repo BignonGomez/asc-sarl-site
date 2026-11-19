@@ -6,6 +6,7 @@
  * src/assets/equipe/ puis l'importer ici (ex. import dahodo from '../assets/equipe/dahodo.jpg').
  */
 import type { ImageMetadata } from 'astro';
+import { publication } from '../config/site';
 
 /**
  * Familles de compétences du cabinet — reprises mot pour mot de l'introduction de la page « Notre équipe »
@@ -30,7 +31,7 @@ export type Member = {
   photo: ImageMetadata | null;
 };
 
-export const team: Member[] = [
+const equipeSource: Member[] = [
   {
     firstName: 'Médard',
     lastName: 'DAHODO',
@@ -91,3 +92,6 @@ export const team: Member[] = [
     photo: null,
   },
 ];
+
+/** Membres publiés : aucun tant que les accords écrits ne sont pas obtenus (publication.equipe). */
+export const team: Member[] = publication.equipe ? equipeSource : [];
