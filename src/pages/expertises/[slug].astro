@@ -1,24 +1,19 @@
 ---
 /**
- * Gabarit des pages de domaine — protocole complet, section 4.2.
- * Blocs : en-tête, sommaire, enjeux et contexte, prestations, démarche (méthodes), publics,
- * experts mobilisables (si identifiés), mission liée (si elle existe), domaines complémentaires.
- * L'appel à l'action final est la carte du pied de page.
- * La mise en page varie d'une page à l'autre selon `layout` (src/data/expertises-pages.ts) :
- *   présentation : split-right | split-left | quote
- *   prestations  : cards | list | bento (+ groupes par public si prestationGroups)
- *   démarche     : timeline | vertical | cards
+ * Gabarit des pages de domaine (refonte, étape 5).
+ * En-tête typographique + photo technique (registre images.json), puis sections numérotées :
+ * 01 Enjeux · 02 Prestations et livrables types · 03 Démarche · 04 Pour qui · (05 Mission en cours) · Domaines complémentaires.
+ * Contenus : src/data/expertises-pages.ts (prestations SOURCÉES, accroches et enjeux À VALIDER),
+ * livrables types : src/data/livrables.ts (À VALIDER). Experts nominatifs : affichés seulement si publication.equipe.
  */
-import { ArrowUpRight, ArrowRight, Info, MapPin, CalendarDays, Quote } from '@lucide/astro';
+import { ArrowUpRight, ArrowRight } from '@lucide/astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/page/PageHeader.astro';
-import SectionHeading from '../../components/ui/SectionHeading.astro';
-import SiteImage from '../../components/ui/SiteImage.astro';
-import ExpertiseIcon from '../../components/ui/ExpertiseIcon.astro';
-import Icon from '../../components/ui/Icon.astro';
-import ArrowLink from '../../components/ui/ArrowLink.astro';
+import SectionHead from '../../components/ui/SectionHead.astro';
+import Photo from '../../components/ui/Photo.astro';
 import { expertises } from '../../data/expertises';
-import { domainPages, publics, type DomainPage } from '../../data/expertises-pages';
+import { domainPages, publics, prestationFamilies, type DomainPage, type Prestation } from '../../data/expertises-pages';
+import { livrablesParDomaine } from '../../data/livrables';
 import { team } from '../../data/equipe';
 import { missions } from '../../data/missions';
 import { url } from '../../lib/url';
@@ -29,684 +24,279 @@ export function getStaticPaths() {
 const { page } = Astro.props as { page: DomainPage };
 const domain = expertises.find((e) => e.slug === page.slug)!;
 const index = expertises.indexOf(domain);
+const pad = (n: number) => String(n).padStart(2, '0');
+
+// Photo de l'en-tête (registre images.json)
+const photos: Record<string, string> = {
+  'etudes-environnementales-sociales': 'expertise-etudes-environnementales',
+  'changements-climatiques': 'expertise-changements-climatiques',
+  'hydraulique-gire': 'expertise-hydraulique',
+  'amenagement-territoire': 'expertise-amenagement',
+  'agriculture-developpement-rural': 'expertise-agriculture',
+  'economie-locale': 'expertise-economie-locale',
+  'tourisme-conservation': 'expertise-tourisme-conservation',
+  'formation-sensibilisation': 'expertise-formation',
+};
+
+// Prestations : liste simple, ou groupes par public (économie locale)
+const groups: { title?: string; items: Prestation[] }[] = page.prestationGroups?.length
+  ? page.prestationGroups
+  : [{ items: page.prestations }];
+const familyLabel = Object.fromEntries(prestationFamilies.map((f) => [f.id, f.id === 'etudes' ? 'Étude' : 'Accompagnement']));
+const livrables = livrablesParDomaine[page.slug] ?? [];
+
 const experts = page.experts.map((n) => team.find((m) => m.lastName === n)).filter(Boolean) as typeof team;
+const mission = page.mission ? missions[0] : undefined;
 const complementary = page.complementary.map((s) => expertises.find((e) => e.slug === s)!).filter(Boolean);
 const others = expertises.filter((e) => e.slug !== page.slug && !page.complementary.includes(e.slug));
-const initials = (m: (typeof team)[number]) => (m.firstName[0] + m.lastName[0]).toUpperCase();
-const nbPrestations = page.prestationGroups ? page.prestationGroups.reduce((n, g) => n + g.items.length, 0) : page.prestations.length;
 
-const toc = [
+let n = 0;
+const num = () => pad(++n);
+const sections = [
   { id: 'enjeux', label: 'Enjeux' },
-  { id: 'prestations', label: 'Ce que nous faisons' },
-  { id: 'demarche', label: 'Notre démarche' },
-  { id: 'publics', label: 'Pour qui ?' },
-  ...(experts.length ? [{ id: 'experts', label: 'Experts mobilisables' }] : []),
-  ...(page.mission ? [{ id: 'mission', label: 'Mission en cours' }] : []),
-  { id: 'complementaires', label: 'Domaines complémentaires' },
+  { id: 'prestations', label: 'Prestations' },
+  { id: 'demarche', label: 'Démarche' },
+  { id: 'publics', label: 'Pour qui' },
+  ...(experts.length ? [{ id: 'experts', label: 'Experts' }] : []),
+  ...(mission ? [{ id: 'mission', label: 'Mission en cours' }] : []),
+  { id: 'complementaires', label: 'Domaines liés' },
 ];
-const L = page.layout;
-const split = L.presentation !== 'quote';
 ---
 <BaseLayout title={page.seoTitle} description={page.seoDescription}>
   <PageHeader
-    eyebrow={`Domaine ${String(index + 1).padStart(2, '0')} · Nos expertises`}
+    eyebrow={`Domaine ${pad(index + 1)} / ${pad(expertises.length)}`}
     title={domain.title}
     intro={page.accroche}
     crumbs={[{ label: 'Nos expertises', href: '/expertises' }, { label: domain.title }]}
-  />
+  >
+    <figure slot="aside" class="domain-photo">
+      <Photo name={photos[page.slug]} priority sizes="(min-width: 64rem) 34rem, 100vw" />
+    </figure>
+  </PageHeader>
 
-  <!-- Sommaire cliquable (protocole, 4.2) -->
-  <nav aria-label="Sur cette page" class="border-b border-line bg-white">
-    <div class="container-site flex items-center gap-3 overflow-x-auto py-4 [scrollbar-width:none]">
-      <span class="shrink-0 text-eyebrow uppercase text-muted">Sur cette page</span>
-      <ul class="flex gap-2">
-        {toc.map((t) => <li class="shrink-0"><a href={`#${t.id}`} class="toc-chip">{t.label}</a></li>)}
+  <!-- Sommaire de la page -->
+  <nav aria-label="Sur cette page" class="toc">
+    <div class="container-site">
+      <ul class="toc__list">
+        {sections.map((s, i) => (
+          <li><a href={`#${s.id}`} class="toc__link"><span class="toc__n">{pad(i + 1)}</span>{s.label}</a></li>
+        ))}
       </ul>
     </div>
   </nav>
 
-  <!-- 2. Enjeux et contexte -->
-  <section id="enjeux" aria-labelledby="enjeux-title" class="section-y scroll-mt-24">
-    {split ? (
-      <div class="container-site grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
-        <div class:list={['lg:col-span-6', L.presentation === 'split-left' && 'lg:order-2']}>
-          <SectionHeading id="enjeux-title" title="Enjeux et contexte" />
-          {page.enjeux.map((p, i) => (
-            <p class:list={[i === 0 ? 'mt-8 text-lead text-ink/90' : 'mt-5 text-body text-muted']} data-reveal style={`--reveal-delay:${i * 80}ms`}>{p}</p>
-          ))}
+  <!-- 01 Enjeux -->
+  <section id="enjeux" aria-labelledby="enjeux-title" class="section-y scroll-mt-28">
+    <div class="container-site">
+      <SectionHead id="enjeux-title" index={num()} label="Enjeux" title="Enjeux et contexte">
+        <div class="mt-8 grid max-w-3xl gap-5 text-lead text-ink-soft" data-reveal>
+          {page.enjeux.map((p) => <p>{p}</p>)}
         </div>
-        <div class:list={['relative lg:col-span-6', L.presentation === 'split-left' && 'lg:order-1']} data-reveal style="--reveal-delay:120ms">
-          <div class="relative aspect-[4/3] overflow-hidden rounded-[1.5rem] shadow-lift ring-1 ring-black/5">
-            <SiteImage id={page.sideImage} sizes="(min-width: 64rem) 36rem, 100vw" />
-          </div>
-          <div class:list={['badge-domaine', L.presentation === 'split-left' ? 'badge-domaine--right' : 'badge-domaine--left']}>
-            <span class="badge-domaine__icon"><ExpertiseIcon name={domain.icon} size={20} /></span>
-            <span class="font-display text-small font-semibold leading-tight text-forest">{domain.title}</span>
-          </div>
-        </div>
-      </div>
-    ) : (
-      <div class="container-site">
-        <SectionHeading id="enjeux-title" title="Enjeux et contexte" />
-        <div class="mt-10 grid gap-10 lg:grid-cols-12 lg:gap-16">
-          <blockquote class="relative lg:col-span-7" data-reveal>
-            <Quote size={44} aria-hidden="true" class="text-brand/25" />
-            <p class="mt-3 font-display text-[clamp(1.375rem,1.1rem+1vw,2rem)] font-semibold leading-snug tracking-[-0.015em] text-forest">{page.enjeux[0]}</p>
-          </blockquote>
-          <div class="lg:col-span-5 lg:pt-14">
-            {page.enjeux.slice(1).map((p, i) => <p class="text-lead text-muted" data-reveal style={`--reveal-delay:${100 + i * 80}ms`}>{p}</p>)}
-          </div>
-        </div>
-        <div class="relative mt-12 aspect-[16/9] overflow-hidden rounded-[1.75rem] shadow-lift ring-1 ring-black/5 sm:aspect-[21/9]" data-reveal>
-          <SiteImage id={page.sideImage} sizes="(min-width: 80rem) 75rem, 100vw" />
-          <div class="badge-domaine badge-domaine--inside">
-            <span class="badge-domaine__icon"><ExpertiseIcon name={domain.icon} size={20} /></span>
-            <span class="font-display text-small font-semibold leading-tight text-forest">{domain.title}</span>
-          </div>
-        </div>
-      </div>
-    )}
+      </SectionHead>
+    </div>
   </section>
 
-  <!-- 3. Prestations -->
-  <section id="prestations" aria-labelledby="prestations-title" class="section-y scroll-mt-24">
+  <!-- 02 Prestations et livrables -->
+  <section id="prestations" aria-labelledby="prestations-title" class="section-y scroll-mt-28">
     <div class="container-site">
-      {page.prestationGroups ? (
-        <>
-          <SectionHeading id="prestations-title" title="Ce que nous faisons" intro="Nos prestations dans ce domaine." />
-          <div class="mt-12 grid gap-6 lg:grid-cols-2">
-            {page.prestationGroups.map((g, gi) => (
-              <div class:list={['groupe', gi === 1 && 'groupe--dark']} data-reveal style={`--reveal-delay:${gi * 100}ms`}>
-                <h3 class="groupe__title">{g.title}</h3>
-                <ul class="mt-6 grid gap-3">
-                  {g.items.map((p) => (
-                    <li class="groupe__item">
-                      <span class="groupe__icon"><Icon name={p.icon} size={20} /></span>
-                      <span class="font-display text-h4 leading-snug">{p.title}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </>
-      ) : L.prestations === 'list' ? (
-        <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
-          <div class="min-w-0 lg:col-span-5">
-            <div class="lg:sticky lg:top-28">
-              <SectionHeading id="prestations-title" title="Ce que nous faisons" intro="Nos prestations dans ce domaine." />
-              <div class="list-panel mt-10" data-reveal>
-                <span class="list-panel__icon"><ExpertiseIcon name={domain.icon} size={30} /></span>
-                <p class="mt-6 font-display text-[3.5rem] font-bold leading-none text-forest">{String(nbPrestations).padStart(2, '0')}</p>
-                <p class="mt-2 text-small font-semibold uppercase tracking-[0.12em] text-brand">prestations</p>
-              </div>
+      <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>
+      <SectionHead id="prestations-title" index={num()} label="Prestations" title="Ce que nous faisons" />
+      <div class="grid-site mt-12 gap-y-12 lg:mt-16">
+        <div class="col-span-full lg:col-span-8">
+          {groups.map((g) => (
+            <div class="presta-group" data-reveal>
+              {g.title && <h3 class="presta-group__title">{g.title}</h3>}
+              <ol class="presta-list">
+                {g.items.map((p, i) => (
+                  <li class="presta-item">
+                    <span class="presta-item__n">{pad(i + 1)}</span>
+                    <span class="presta-item__title">{p.title}</span>
+                    <span class="presta-item__fam">{familyLabel[p.family]}</span>
+                  </li>
+                ))}
+              </ol>
             </div>
-          </div>
-          <ol class="min-w-0 lg:col-span-7">
-            {page.prestations.map((p, i) => (
-              <li class="list-row" data-reveal style={`--reveal-delay:${i * 70}ms`}>
-                <span aria-hidden="true" class="list-row__num">{String(i + 1).padStart(2, '0')}</span>
-                <span class="list-row__icon"><Icon name={p.icon} size={20} /></span>
-                <h3 class="min-w-0 font-display text-h4 leading-snug text-forest [overflow-wrap:break-word] hyphens-auto">{p.title}</h3>
-              </li>
-            ))}
-          </ol>
+          ))}
         </div>
-      ) : L.prestations === 'bento' ? (
-        <>
-          <SectionHeading id="prestations-title" title="Ce que nous faisons" intro="Nos prestations dans ce domaine." />
-          <ul class="bento mt-12">
-            {page.prestations.map((p, i) => (
-              <li class:list={['bento__item', i === 0 && 'bento__item--lead']} data-reveal style={`--reveal-delay:${(i % 3) * 80}ms`}>
-                <span class="bento__icon"><Icon name={p.icon} size={i === 0 ? 26 : 22} /></span>
-                <h3 class:list={['mt-auto pt-8 font-display leading-snug', i === 0 ? 'text-h3 text-forest' : 'text-h4 text-forest']}>{p.title}</h3>
-              </li>
-            ))}
-          </ul>
-        </>
-      ) : (
-        <>
-          <SectionHeading id="prestations-title" title="Ce que nous faisons" intro="Nos prestations dans ce domaine." />
-          <ul class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {page.prestations.map((p, i) => (
-              <li class:list={['presta', i === 0 && page.prestations.length % 3 === 2 && 'lg:col-span-2']} data-reveal style={`--reveal-delay:${(i % 3) * 80}ms`}>
-                <span class="presta__icon"><Icon name={p.icon} size={22} /></span>
-                <span aria-hidden="true" class="presta__num">{String(i + 1).padStart(2, '0')}</span>
-                <h3 class="mt-6 text-h4 text-forest">{p.title}</h3>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-    </div>
-  </section>
-
-  <!-- 4. Démarche (méthodes) -->
-  <section id="demarche" aria-labelledby="demarche-title" class="section-y scroll-mt-24">
-    <div class="container-site">
-      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-        <SectionHeading id="demarche-title" title="Notre démarche" intro="Les grandes étapes d'une mission dans ce domaine." />
-        <div class="shrink-0" data-reveal><ArrowLink href="/cabinet/approche">Notre approche méthodologique</ArrowLink></div>
+        {livrables.length > 0 && (
+          <aside class="col-span-full lg:col-span-4" aria-labelledby="livrables-title" data-reveal>
+            <div class="livrables">
+              <h3 id="livrables-title" class="livrables__title">Livrables types</h3>
+              <ul class="livrables__list">
+                {livrables.map((l) => <li>{l}</li>)}
+              </ul>
+            </div>
+          </aside>
+        )}
       </div>
-
-      {L.demarche === 'timeline' && (
-        <ol class="frise mt-14" style={`--n:${page.steps.length}`}>
-          {page.steps.map((s, i) => (
-            <li class="frise__step" data-reveal style={`--reveal-delay:${i * 80}ms`}>
-              <span class="frise__dot">{i + 1}</span>
-              <p class="frise__label">{s}</p>
-            </li>
-          ))}
-        </ol>
-      )}
-      {L.demarche === 'vertical' && (
-        <ol class="vsteps mt-14">
-          {page.steps.map((s, i) => (
-            <li class="vsteps__item" data-reveal style={`--reveal-delay:${i * 80}ms`}>
-              <span class="vsteps__dot">{i + 1}</span>
-              <div class="vsteps__card">
-                <p class="text-eyebrow uppercase text-brand">Étape {i + 1}</p>
-                <p class="mt-1.5 font-display text-h4 text-forest">{s}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      )}
-      {L.demarche === 'cards' && (
-        <ol class="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {page.steps.map((s, i) => (
-            <li class="scard" data-reveal style={`--reveal-delay:${i * 80}ms`}>
-              <span aria-hidden="true" class="scard__num">{String(i + 1).padStart(2, '0')}</span>
-              <p class="relative font-display text-h4 leading-snug text-forest"><span class="sr-only">Étape {i + 1} : </span>{s}</p>
-            </li>
-          ))}
-        </ol>
-      )}
-
-      {page.stepsNote && (
-        <p class="mt-10 flex items-start gap-3 rounded-[1.25rem] bg-forest-soft p-5 text-body text-forest sm:p-6" data-reveal>
-          <Info size={20} aria-hidden="true" class="mt-0.5 shrink-0" />{page.stepsNote}
-        </p>
-      )}
     </div>
   </section>
 
-  <!-- 5. Publics -->
-  <section id="publics" aria-labelledby="publics-title" class="publics section-y scroll-mt-24">
+  <!-- 03 Démarche -->
+  <section id="demarche" aria-labelledby="demarche-title" class="section-y scroll-mt-28">
     <div class="container-site">
-      <SectionHeading id="publics-title" title="Pour qui ?" intro="Nous accompagnons les acteurs publics et privés." />
-      <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {publics.map((p, i) => (
-          <li class="public" data-reveal style={`--reveal-delay:${(i % 3) * 70}ms`}>
-            <span class="public__icon"><Icon name={p.icon} size={20} /></span>
-            <span class="font-display text-h4 text-forest">{p.label}</span>
+      <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>
+      <SectionHead id="demarche-title" index={num()} label="Démarche" title="Notre démarche dans ce domaine" />
+      <ol class="demarche mt-12 lg:mt-16" style={`--cols:${page.steps.length}`} data-reveal>
+        {page.steps.map((s, i) => (
+          <li class="demarche__step">
+            <span class="demarche__n">{pad(i + 1)}</span>
+            <span class="demarche__title">{s}</span>
           </li>
         ))}
+      </ol>
+      {page.stepsNote && (
+        <p class="demarche__note" data-reveal><span class="demarche__note-label">Note</span>{page.stepsNote}</p>
+      )}
+      <div class="mt-10" data-reveal>
+        <a href={url('/cabinet/approche')} class="link-arrow group">Notre démarche générale en cinq étapes <ArrowRight size={16} aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 Pour qui -->
+  <section id="publics" aria-labelledby="publics-title" class="section-y scroll-mt-28">
+    <div class="container-site">
+      <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>
+      <SectionHead id="publics-title" index={num()} label="Pour qui" title="Nous intervenons pour" />
+      <ul class="publics mt-12 lg:mt-16" data-reveal>
+        {publics.map((p, i) => <li><span class="publics__n">{pad(i + 1)}</span>{p.label}</li>)}
       </ul>
       {page.publicsSpecific && (
-        <div class="mt-10 flex flex-wrap items-center gap-2" data-reveal>
-          <span class="mr-2 text-eyebrow uppercase text-brand">Dans ce domaine, en particulier</span>
-          {page.publicsSpecific.map((p) => <span class="rounded-full bg-white px-3.5 py-1.5 text-small font-semibold text-forest ring-1 ring-forest/15">{p}</span>)}
-        </div>
+        <p class="mt-6 text-[0.9375rem] text-muted" data-reveal>Dans ce domaine en particulier : {page.publicsSpecific.join(', ').toLowerCase()}.</p>
       )}
     </div>
   </section>
 
-  <!-- 7. Experts mobilisables (si identifiés) -->
+  <!-- Experts (uniquement si la publication nominative est autorisée) -->
   {experts.length > 0 && (
-    <section id="experts" aria-labelledby="experts-title" class="section-y scroll-mt-24">
-      <div class="container-site grid gap-10 lg:grid-cols-12 lg:items-center">
-        <div class="lg:col-span-5">
-          <SectionHeading id="experts-title" title="Experts mobilisables" intro="Selon la nature de chaque mission, l'équipe est complétée par des experts associés." />
-        </div>
-        <ul class="grid gap-4 lg:col-span-7">
-          {experts.map((m, i) => (
-            <li data-reveal style={`--reveal-delay:${i * 80}ms`}>
-              <a href={url(`/cabinet/equipe#membre-${m.lastName.toLowerCase()}`)} class="expert group">
-                <span aria-hidden="true" class="expert__avatar">{initials(m)}</span>
-                <span class="flex-1">
-                  <span class="block font-display text-h4 text-forest">{m.firstName} {m.lastName}</span>
-                  <span class="block text-small font-semibold text-brand">{m.role}</span>
-                  <span class="mt-1 block text-small text-muted">{m.specialty}</span>
-                </span>
-                <span aria-hidden="true" class="expert__arrow"><ArrowUpRight size={18} /></span>
-              </a>
-            </li>
-          ))}
+    <section id="experts" aria-labelledby="experts-title" class="section-y scroll-mt-28">
+      <div class="container-site">
+        <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>
+        <SectionHead id="experts-title" index={num()} label="Experts" title="Experts mobilisables" />
+        <ul class="publics mt-12 lg:mt-16" data-reveal>
+          {experts.map((m) => <li><span class="publics__n">{m.degree}</span>{m.firstName} {m.lastName}, {m.specialty.toLowerCase()}</li>)}
         </ul>
       </div>
     </section>
   )}
 
-  <!-- 6. Mission en cours liée (décision du cabinet : affichée comme mission en cours) -->
-  {page.mission && (
-    <section id="mission" aria-labelledby="mission-title" class="section-y scroll-mt-24">
+  <!-- Mission en cours liée au domaine -->
+  {mission && (
+    <section id="mission" aria-labelledby="mission-title" class="section-y scroll-mt-28">
       <div class="container-site">
-        <SectionHeading id="mission-title" title="Mission en cours dans ce domaine" />
-        <article class="mission group mt-12" data-reveal>
-          <div class="relative aspect-[16/10] overflow-hidden lg:aspect-auto lg:min-h-[22rem]">
-            <div class="absolute inset-0"><SiteImage id="accueil.realisation-zakpota" sizes="(min-width: 64rem) 30rem, 100vw" class="transition-transform duration-700 group-hover:scale-[1.04]" /></div>
-          </div>
-          <div class="flex flex-col justify-center p-7 sm:p-10 lg:p-12">
-            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-small">
-              <span class="inline-flex items-center gap-2 rounded-ui bg-status-ongoing-bg px-3 py-1 font-semibold text-status-ongoing">
-                <span aria-hidden="true" class="size-2 rounded-full bg-sun-strong"></span> En cours
-              </span>
-              <span class="inline-flex items-center gap-2 text-muted"><CalendarDays size={16} aria-hidden="true" /> Contrat notifié en juillet 2026</span>
-            </div>
-            <h3 class="mt-6 text-h3 text-forest">
-              <a href={url('/realisations/missions-en-cours')} class="after:absolute after:inset-0 focus-visible:outline-none">
-                Formation de jeunes à la production piscicole et maraîchère intégrée et renforcement des capacités des responsables de filières agricoles
-              </a>
-            </h3>
-            <p class="mt-5 inline-flex items-center gap-2 text-body text-muted"><MapPin size={18} aria-hidden="true" class="shrink-0 text-forest" /> {missions[0].place}</p>
-            <span aria-hidden="true" class="mt-7 inline-flex items-center gap-2 font-semibold text-brand">Voir la mission <ArrowRight size={18} class="transition-transform group-hover:translate-x-1" /></span>
-          </div>
-        </article>
+        <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>
+        <SectionHead id="mission-title" index={num()} label="Référence" title="Mission en cours dans ce domaine" />
+        <a href={url('/realisations/missions-en-cours')} class="mission group mt-12 lg:mt-16" data-reveal>
+          <span class="mission__tag"><span aria-hidden="true" class="mission__dot"></span>En cours · {mission.duration ? `durée contractuelle ${mission.duration}` : mission.period[0]}</span>
+          <span class="mission__title">{mission.title}</span>
+          <span class="mission__meta">{mission.client} · {mission.place}</span>
+          <span class="mission__go">Voir la fiche <ArrowUpRight size={16} aria-hidden="true" class="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" /></span>
+        </a>
       </div>
     </section>
   )}
 
-  <!-- 8. Domaines complémentaires et autres expertises -->
-  <section id="complementaires" aria-labelledby="compl-title" class="section-y scroll-mt-24">
+  <!-- Domaines complémentaires -->
+  <section id="complementaires" aria-labelledby="compl-title" class="section-y scroll-mt-28">
     <div class="container-site">
-      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-        <SectionHeading id="compl-title" title="Domaines complémentaires" />
-        <div class="shrink-0" data-reveal><ArrowLink href="/expertises">Toutes nos expertises</ArrowLink></div>
-      </div>
-      <ul class="mt-12 grid gap-5 md:grid-cols-3">
-        {complementary.map((e, i) => (
-          <li data-reveal style={`--reveal-delay:${i * 80}ms`}>
-            <article class="compl group">
-              <div class="aspect-[16/10] overflow-hidden">
-                <SiteImage id={`expertise.${e.slug}` as any} sizes="(min-width: 48rem) 24rem, 100vw" class="transition-transform duration-700 group-hover:scale-[1.05]" />
-              </div>
-              <div class="flex flex-1 items-start justify-between gap-4 p-6">
-                <h3 class="text-h4 text-forest">
-                  <a href={url(`/expertises/${e.slug}`)} class="after:absolute after:inset-0 focus-visible:outline-none">{e.title}</a>
-                </h3>
-                <span aria-hidden="true" class="domaine-arrow"><ArrowRight size={18} /></span>
-              </div>
-            </article>
+      <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>
+      <SectionHead id="compl-title" index={num()} label="Domaines liés" title="Domaines complémentaires" />
+      <ul class="liens mt-12 lg:mt-16" data-reveal>
+        {complementary.map((e) => (
+          <li>
+            <a href={url(`/expertises/${e.slug}`)} class="liens__row group">
+              <span class="liens__n">{pad(expertises.indexOf(e) + 1)}</span>
+              <span class="liens__title">{e.title}</span>
+              <span class="liens__summary">{e.short}</span>
+              <ArrowUpRight size={18} aria-hidden="true" class="liens__go" />
+            </a>
           </li>
         ))}
       </ul>
-      <div class="mt-10 flex flex-wrap items-center gap-2" data-reveal>
-        <span class="mr-2 text-eyebrow uppercase text-muted">Autres domaines</span>
-        {others.map((e) => (
-          <a href={url(`/expertises/${e.slug}`)} class="toc-chip !bg-white max-w-full !whitespace-normal">
-            <ExpertiseIcon name={e.icon} size={15} /> {e.title}
-          </a>
-        ))}
-      </div>
+      <p class="mt-8 text-[0.9375rem] text-muted" data-reveal>
+        Autres domaines :{' '}
+        {others.map((e, i) => <><a href={url(`/expertises/${e.slug}`)} class="text-ink underline decoration-line-strong underline-offset-4 hover:text-accent-text hover:decoration-accent">{e.title}</a>{i < others.length - 1 ? ' · ' : '.'}</>)}
+      </p>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .toc-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.45rem 0.9rem;
-    border-radius: 999px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    white-space: nowrap;
-    color: var(--color-forest);
-    background: var(--color-mineral);
-    box-shadow: inset 0 0 0 1px var(--color-line);
-    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
-  }
-  .toc-chip:hover { color: #fff; background: var(--color-forest) !important; box-shadow: none; }
+  /* ---------- En-tête : photo ---------- */
+  .domain-photo { margin: 0; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radius-card); background: var(--color-sunken); }
+  @media (width >= 64rem) { .domain-photo { aspect-ratio: 5 / 4; } }
 
-  /* Badge du domaine posé sur l'image */
-  .badge-domaine {
-    position: absolute;
-    bottom: -1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    max-width: calc(100% - 2rem);
-    padding: 0.75rem 1.1rem 0.75rem 0.75rem;
-    border-radius: 1.1rem;
-    background: rgb(255 255 255 / 0.92);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lift);
-  }
-  .badge-domaine--left { left: 1rem; }
-  .badge-domaine--right { right: 1rem; }
-  .badge-domaine--inside { left: 1rem; bottom: 1rem; }
-  @media (width >= 40rem) {
-    .badge-domaine--left { left: -1.25rem; }
-    .badge-domaine--right { right: -1.25rem; }
-    .badge-domaine--inside { left: 1.5rem; bottom: 1.5rem; }
-  }
-  .badge-domaine__icon {
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 0.75rem;
-    color: #fff;
-    background: linear-gradient(135deg, var(--color-brand), var(--color-brand-deep));
-  }
+  /* ---------- Sommaire ---------- */
+  .toc__list { display: flex; gap: 0.25rem 1.5rem; overflow-x: auto; padding: 1.1rem 0; scrollbar-width: none; }
+  .toc__link { display: inline-flex; gap: 0.5rem; white-space: nowrap; font-size: 0.875rem; color: var(--color-muted); transition: color 0.2s; }
+  .toc__link:hover { color: var(--color-ink); }
+  .toc__n { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-accent-text); }
 
-  /* ---------- Prestations : cartes ---------- */
-  .presta {
-    position: relative;
-    overflow: hidden;
-    padding: 1.75rem;
-    border-radius: 1.5rem;
-    background: #fff;
-    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-card);
-    transition: transform 0.45s var(--ease-out-soft), box-shadow 0.45s var(--ease-out-soft);
+  /* ---------- Prestations ---------- */
+  .presta-group + .presta-group { margin-top: 2.5rem; }
+  .presta-group__title { margin-bottom: 1rem; font-family: var(--font-mono); font-size: var(--text-eyebrow); font-weight: 500; letter-spacing: var(--text-eyebrow--letter-spacing); text-transform: uppercase; color: var(--color-accent-text); }
+  .presta-list { border-top: 1px solid var(--color-line); }
+  .presta-item { display: grid; grid-template-columns: 2.5rem 1fr; gap: 0.35rem 0; padding: 1.25rem 0; border-bottom: 1px solid var(--color-line); }
+  .presta-item__n { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--color-muted); padding-top: 0.15rem; }
+  .presta-item__title { font-size: 1.0625rem; font-weight: 500; line-height: 1.4; color: var(--color-ink); }
+  .presta-item__fam { grid-column: 2; font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); }
+  @media (width >= 48rem) {
+    .presta-item { grid-template-columns: 3.5rem 1fr auto; align-items: baseline; column-gap: 1.5rem; }
+    .presta-item__fam { grid-column: 3; }
   }
-  .presta:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.25), var(--shadow-lift); }
-  .presta__icon {
-    display: grid;
-    place-items: center;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 0.9rem;
-    color: var(--color-forest);
-    background: var(--color-forest-soft);
-    transition: color 0.3s, background-color 0.3s;
-  }
-  .presta:hover .presta__icon { color: #fff; background: var(--color-brand); }
-  .presta__num {
-    position: absolute;
-    top: 0.75rem;
-    right: 1.25rem;
-    font-family: var(--font-display);
-    font-size: 3.25rem;
-    font-weight: 700;
-    line-height: 1;
-    color: transparent;
-    -webkit-text-stroke: 1.5px rgb(20 24 28 / 0.14);
-  }
+  .livrables { padding: 1.75rem; border-radius: var(--radius-card); background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-line); }
+  .livrables__title { font-family: var(--font-mono); font-size: var(--text-eyebrow); font-weight: 500; letter-spacing: var(--text-eyebrow--letter-spacing); text-transform: uppercase; color: var(--color-accent-text); }
+  .livrables__list { margin-top: 1.1rem; display: grid; gap: 0.85rem; }
+  .livrables__list li { position: relative; padding-left: 1.25rem; font-size: 0.9375rem; font-weight: 500; line-height: 1.45; color: var(--color-ink); }
+  .livrables__list li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 0.5rem; height: 0.5rem; border-radius: 1px; box-shadow: inset 0 0 0 1.5px var(--color-accent); }
+  @media (width >= 64rem) { .livrables { position: sticky; top: 7rem; } }
 
-  /* ---------- Prestations : liste illustrée ---------- */
-  .list-panel {
-    position: relative;
-    overflow: hidden;
-    padding: 2rem;
-    border-radius: 1.5rem;
-    background: radial-gradient(ellipse 70% 70% at 100% 0%, rgb(246 244 240 / 0), transparent 70%), #fff;
-    border-top: 4px solid var(--color-sun);
-    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lift);
-  }
-  .list-panel__icon {
-    display: grid;
-    place-items: center;
-    width: 4rem;
-    height: 4rem;
-    border-radius: 1.1rem;
-    color: var(--color-forest-deep);
-    background: var(--color-sun);
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5);
-  }
-  .list-row {
-    display: grid;
-    grid-template-columns: auto auto 1fr;
-    align-items: center;
-    gap: 1.25rem;
-    padding: 1.5rem 0.5rem;
-    border-bottom: 1px solid var(--color-line);
-    transition: transform 0.35s var(--ease-out-soft), background-color 0.3s;
-  }
-  .list-row:first-child { border-top: 1px solid var(--color-line); }
-  .list-row:hover { transform: translateX(6px); }
-  .list-row__num { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--color-brand); }
-  .list-row__icon {
-    display: grid;
-    place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 0.875rem;
-    color: var(--color-forest);
-    background: #fff;
-    box-shadow: inset 0 0 0 1px var(--color-line);
-  }
-
-  /* ---------- Prestations : bento ---------- */
-  .bento { display: grid; gap: 1rem; }
-  @media (width >= 40rem) { .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  /* ---------- Démarche ---------- */
+  .demarche { display: grid; border-top: 1px solid var(--color-line); }
+  .demarche__step { display: grid; grid-template-columns: 2.5rem 1fr; padding: 1.1rem 0; border-bottom: 1px solid var(--color-line); }
+  .demarche__n { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--color-accent-text); }
+  .demarche__title { font-weight: 500; color: var(--color-ink); }
   @media (width >= 64rem) {
-    .bento { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: minmax(11rem, auto); }
-    .bento__item--lead { grid-row: span 2; }
+    .demarche { grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); border-top: 0; }
+    .demarche__step { display: block; padding: 1.5rem 1.5rem 0 0; border-bottom: 0; border-top: 1px solid var(--color-ink); }
+    .demarche__step + .demarche__step { padding-left: 0; }
+    .demarche__n { display: block; margin-bottom: 0.75rem; }
+    .demarche__title { font-size: 1.0625rem; line-height: 1.35; }
   }
-  .bento__item {
-    display: flex;
-    flex-direction: column;
-    min-height: 11rem;
-    padding: 1.75rem;
-    border-radius: 1.5rem;
-    background: #fff;
-    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-card);
-    transition: transform 0.45s var(--ease-out-soft), box-shadow 0.45s;
-  }
-  .bento__item:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
-  .bento__item--lead {
-    background: radial-gradient(ellipse 70% 70% at 100% 0%, rgb(246 244 240 / 0), transparent 70%), #fff;
-    border-top: 4px solid var(--color-sun);
-    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lift);
-  }
-  .bento__icon {
-    display: grid;
-    place-items: center;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 0.9rem;
-    color: var(--color-forest);
-    background: var(--color-forest-soft);
-  }
-  .bento__item--lead .bento__icon { width: 3.5rem; height: 3.5rem; color: var(--color-forest-deep); background: var(--color-sun); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5); }
+  .demarche__note { margin-top: 2rem; max-width: 46rem; font-size: 0.9375rem; color: var(--color-muted); }
+  .demarche__note-label { margin-right: 0.75rem; font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent-text); }
+  .link-arrow { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 500; color: var(--color-ink); }
+  .link-arrow:hover { color: var(--color-accent-text); }
 
-  /* ---------- Prestations : groupes par public ---------- */
-  .groupe {
-    padding: 2rem;
-    border-radius: 1.5rem;
-    background: #fff;
-    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-card);
-  }
-  .groupe--dark { background: radial-gradient(ellipse 70% 70% at 100% 0%, rgb(246 244 240 / 0), transparent 70%), #fff; border-top: 4px solid var(--color-sun); box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lift); }
-  .groupe__title { font-family: var(--font-sans); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-brand); }
-  
-  .groupe__item { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 1rem; background: var(--color-mineral); color: var(--color-forest); }
-  .groupe--dark .groupe__item { background: var(--color-mineral); }
-  .groupe__icon { display: grid; place-items: center; flex-shrink: 0; width: 2.75rem; height: 2.75rem; border-radius: 0.875rem; color: #fff; background: var(--color-forest); }
-  .groupe--dark .groupe__icon { color: var(--color-forest-deep); background: var(--color-sun); }
-
-  /* ---------- Démarche : frise (verticale sur mobile, horizontale sur ordinateur) ---------- */
-  .frise { position: relative; display: grid; gap: 1.25rem; }
-  .frise::before {
-    content: '';
-    position: absolute;
-    left: 1.375rem;
-    top: 1.375rem;
-    bottom: 1.375rem;
-    width: 2px;
-    background: linear-gradient(var(--color-brand), var(--color-forest-mist));
-  }
-  .frise__step { position: relative; display: flex; align-items: center; gap: 1.25rem; }
-  .frise__dot {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 999px;
-    font-family: var(--font-display);
-    font-weight: 700;
-    color: #fff;
-    background: var(--color-brand);
-    box-shadow: 0 0 0 6px #fff, 0 8px 18px -8px rgb(20 24 28 / 0.12);
-  }
-  .frise__step:nth-child(even) .frise__dot { background: var(--color-forest); box-shadow: 0 0 0 6px #fff, 0 8px 18px -8px rgb(20 24 28 / 0.7); }
-  .frise__label { font-family: var(--font-display); font-size: 1.0625rem; font-weight: 600; line-height: 1.3; color: var(--color-ink); }
-  @media (width >= 64rem) {
-    .frise { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 1rem; }
-    .frise::before { left: calc(50% / var(--n)); right: calc(50% / var(--n)); top: 1.375rem; bottom: auto; width: auto; height: 2px; background: linear-gradient(90deg, var(--color-brand), var(--color-forest-mist)); }
-    .frise__step { flex-direction: column; text-align: center; gap: 1rem; }
-  }
-
-  /* ---------- Démarche : étapes verticales alternées ---------- */
-  .vsteps { position: relative; display: grid; gap: 1rem; }
-  .vsteps::before {
-    content: '';
-    position: absolute;
-    top: 1rem;
-    bottom: 1rem;
-    left: 1.375rem;
-    width: 2px;
-    background: linear-gradient(var(--color-brand), var(--color-forest-mist));
-  }
-  .vsteps__item { position: relative; display: grid; grid-template-columns: 2.75rem 1fr; align-items: center; gap: 1.25rem; }
-  .vsteps__dot {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 999px;
-    font-family: var(--font-display);
-    font-weight: 700;
-    color: #fff;
-    background: var(--color-forest);
-    box-shadow: 0 0 0 6px #fff;
-  }
-  .vsteps__item:nth-child(odd) .vsteps__dot { background: var(--color-brand); }
-  .vsteps__card { padding: 1.1rem 1.4rem; border-radius: 1.1rem; background: var(--color-mineral); box-shadow: inset 0 0 0 1px var(--color-line); }
-  @media (width >= 64rem) {
-    .vsteps::before { left: 50%; transform: translateX(-1px); }
-    .vsteps__item { grid-template-columns: 1fr 2.75rem 1fr; gap: 2rem; }
-    .vsteps__dot { grid-column: 2; grid-row: 1; }
-    .vsteps__card { grid-row: 1; }
-    .vsteps__item:nth-child(odd) .vsteps__card { grid-column: 1; text-align: right; }
-    .vsteps__item:nth-child(even) .vsteps__card { grid-column: 3; }
-  }
-
-  /* ---------- Démarche : cartes numérotées ---------- */
-  .scard {
-    position: relative;
-    overflow: hidden;
-    min-height: 9rem;
-    padding: 1.5rem;
-    border-radius: 1.25rem;
-    display: flex;
-    align-items: flex-end;
-    background: linear-gradient(160deg, #fff, var(--color-mineral));
-    box-shadow: inset 0 0 0 1px var(--color-line);
-  }
-  .scard__num {
-    position: absolute;
-    top: 0.25rem;
-    right: 0.9rem;
-    font-family: var(--font-display);
-    font-size: 4.25rem;
-    font-weight: 700;
-    line-height: 1;
-    color: transparent;
-    -webkit-text-stroke: 1.5px rgb(20 24 28 / 0.12);
-  }
-
-  /* ---------- Publics : bande vert très pâle ---------- */
-  .publics { background: radial-gradient(ellipse 50% 70% at 100% 0%, rgb(246 244 240 / 0), transparent 70%), var(--color-mineral); }
-  .public {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.25rem 1.4rem;
-    border-radius: 1.25rem;
-    background: #fff;
-    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-card);
-  }
-  .public__icon {
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 0.875rem;
-    color: var(--color-forest-deep);
-    background: var(--color-sun);
-  }
-
-  /* ---------- Experts ---------- */
-  .expert {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    padding: 1.25rem 1.5rem;
-    border-radius: 1.5rem;
-    background: var(--color-mineral);
-    box-shadow: inset 0 0 0 1px var(--color-line);
-    transition: box-shadow 0.3s, transform 0.4s var(--ease-out-soft);
-  }
-  .expert:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.3), var(--shadow-lift); }
-  .expert__avatar {
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    width: 4rem;
-    height: 4rem;
-    border-radius: 999px;
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--color-forest);
-    background: #fff;
-    box-shadow: inset 0 0 0 1px var(--color-line), 0 8px 18px -10px rgb(20 24 28 / 0.4);
-  }
-  .expert__arrow, .domaine-arrow {
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: 999px;
-    color: var(--color-brand);
-    background: var(--color-brand-soft);
-    transition: transform 0.35s var(--ease-out-soft), background-color 0.3s, color 0.3s;
-  }
-  .expert:hover .expert__arrow, .compl:hover .domaine-arrow { color: #fff; background: var(--color-brand); transform: rotate(-45deg); }
+  /* ---------- Publics ---------- */
+  .publics { display: grid; border-top: 1px solid var(--color-line); }
+  .publics li { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--color-line); font-weight: 500; color: var(--color-ink); }
+  .publics__n { flex-shrink: 0; min-width: 1.5rem; font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 400; color: var(--color-muted); padding-top: 0.1rem; }
+  @media (width >= 48rem) { .publics { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2rem; } }
+  @media (width >= 64rem) { .publics { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
   /* ---------- Mission ---------- */
-  .mission {
-    position: relative;
-    display: grid;
-    overflow: hidden;
-    border-radius: 1.5rem;
-    background: #fff;
-    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-card);
-    transition: box-shadow 0.4s;
-  }
-  @media (width >= 64rem) { .mission { grid-template-columns: 5fr 7fr; } }
-  .mission:hover { box-shadow: inset 0 0 0 1px rgb(20 24 28 / 0.3), var(--shadow-lift); }
-  .mission:has(a:focus-visible) { outline: 2px solid var(--color-brand); outline-offset: 3px; }
+  .mission { display: grid; gap: 0.75rem; padding: 1.75rem 0; border-top: 1px solid var(--color-ink); border-bottom: 1px solid var(--color-line); }
+  .mission__tag { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono); font-size: var(--text-eyebrow); letter-spacing: var(--text-eyebrow--letter-spacing); text-transform: uppercase; color: var(--color-accent-text); }
+  .mission__dot { width: 0.5rem; height: 0.5rem; border-radius: 999px; background: var(--color-accent); }
+  .mission__title { max-width: 48rem; font-size: var(--text-h3); line-height: var(--text-h3--line-height); letter-spacing: var(--text-h3--letter-spacing); font-weight: 500; color: var(--color-ink); transition: color 0.2s; }
+  .mission__meta { font-size: 0.9375rem; color: var(--color-muted); }
+  .mission__go { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.5rem; font-weight: 500; color: var(--color-ink); }
+  .mission:hover .mission__title { color: var(--color-accent-text); }
 
-  /* ---------- Domaines complémentaires ---------- */
-  .compl {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
-    border-radius: 1.5rem;
-    background: #fff;
-    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-card);
-    transition: transform 0.45s var(--ease-out-soft), box-shadow 0.45s;
-  }
-  .compl:hover { transform: translateY(-5px); box-shadow: var(--shadow-lift); }
-  .compl:has(a:focus-visible) { outline: 2px solid var(--color-brand); outline-offset: 3px; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .presta:hover, .expert:hover, .compl:hover, .bento__item:hover, .list-row:hover { transform: none; }
+  /* ---------- Domaines liés ---------- */
+  .liens { border-top: 1px solid var(--color-line); }
+  .liens__row { display: grid; grid-template-columns: 2.5rem 1fr auto; gap: 0.25rem 0; align-items: baseline; padding: 1.4rem 0; border-bottom: 1px solid var(--color-line); transition: background-color 0.25s; }
+  .liens__n { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--color-muted); }
+  .liens__title { font-size: 1.125rem; font-weight: 500; color: var(--color-ink); transition: color 0.2s; }
+  .liens__summary { grid-column: 2; font-size: 0.9375rem; color: var(--color-muted); }
+  :global(.liens__go) { grid-column: 3; grid-row: 1; color: var(--color-line-strong); transition: color 0.2s, transform 0.3s var(--ease-out-soft); }
+  .liens__row:hover .liens__title { color: var(--color-accent-text); }
+  .liens__row:hover :global(.liens__go) { color: var(--color-accent); transform: translate(2px, -2px); }
+  @media (width >= 64rem) {
+    .liens__row { grid-template-columns: 4rem 5fr 6fr auto; }
+    .liens__summary { grid-column: 3; grid-row: 1; }
+    :global(.liens__go) { grid-column: 4; }
   }
 </style>

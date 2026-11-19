@@ -9,13 +9,16 @@ import SectionHead from '../ui/SectionHead.astro';
 import ArrowLink from '../ui/ArrowLink.astro';
 import { steps } from '../../data/approche';
 import { livrablesParEtape } from '../../data/livrables';
+
+interface Props { index?: string }
+const { index = '02' } = Astro.props;
 ---
 <section aria-labelledby="methode-title" class="section-y">
   <div class="container-site">
     <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>
     <SectionHead
       id="methode-title"
-      index="02"
+      index={index}
       label="Méthode"
       title="Cinq étapes, un livrable à chacune"
       intro="De la lecture des termes de référence à l'évaluation : chaque étape se conclut par un document remis au maître d'ouvrage."

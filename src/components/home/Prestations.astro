@@ -10,13 +10,16 @@ import ArrowLink from '../ui/ArrowLink.astro';
 import { expertises } from '../../data/expertises';
 import { livrablesParDomaine } from '../../data/livrables';
 import { url } from '../../lib/url';
+
+interface Props { index?: string; link?: boolean; id?: string }
+const { index = '01', link = true, id = 'prestations' } = Astro.props;
 ---
-<section id="prestations" aria-labelledby="prestations-title" class="section-y">
+<section id={id} aria-labelledby="prestations-title" class="section-y scroll-mt-28">
   <div class="container-site">
     <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>
     <SectionHead
       id="prestations-title"
-      index="01"
+      index={index}
       label="Prestations"
       title="Huit domaines, des livrables précis"
       intro="Pour chaque domaine, les documents que nous produisons. Le détail des prestations figure sur la page de chaque domaine."
@@ -50,9 +53,11 @@ import { url } from '../../lib/url';
       </tbody>
     </table>
 
-    <div class="mt-10" data-reveal>
-      <ArrowLink href="/expertises#prestations">Toutes les prestations, par famille</ArrowLink>
-    </div>
+    {link && (
+      <div class="mt-10" data-reveal>
+        <ArrowLink href="/expertises#familles">Toutes les prestations, par famille</ArrowLink>
+      </div>
+    )}
   </div>
 </section>
 

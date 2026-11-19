@@ -2,8 +2,7 @@
 /**
  * En-tête des pages intérieures (refonte) : composition typographique sur le fond continu,
  * fil d'Ariane, surtitre technique (IBM Plex Mono), H1 de poids moyen, introduction, puis filet 1 px.
- * Plus d'illustration dessinée ni de photo : les visuels techniques (cartes, schémas) propres à chaque page
- * arriveront avec la refonte des pages (étapes 5 et 6).
+ * Emplacement facultatif « aside » : visuel à droite (photo ou schéma), le texte occupe alors 7 colonnes sur 12.
  * Le fil d'Ariane est aussi publié en données structurées (schema.org BreadcrumbList) pour le référencement.
  */
 import { ChevronRight } from '@lucide/astro';
@@ -16,6 +15,7 @@ interface Crumb { label: string; href?: string }
 interface Props { title: string; eyebrow?: string; intro?: string; crumbs: Crumb[]; image?: ImageId }
 const { title, eyebrow, intro, crumbs } = Astro.props;
 const trail: Crumb[] = [{ label: 'Accueil', href: '/' }, ...crumbs];
+const hasAside = Astro.slots.has('aside');
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -43,13 +43,14 @@ const jsonLd = {
       </ol>
     </nav>
 
-    <div class="grid-site mt-10 lg:mt-14">
-      <div class="col-span-full lg:col-span-9">
+    <div class="grid-site mt-10 gap-y-10 lg:mt-14 lg:items-center">
+      <div class:list={['col-span-full', hasAside ? 'lg:col-span-7' : 'lg:col-span-9']}>
         {eyebrow && <p class="page-in text-eyebrow uppercase text-accent-text" style="--d:40ms">{eyebrow}</p>}
         <h1 class="page-in mt-4 max-w-4xl text-h1 text-ink" style="--d:80ms">{title}</h1>
         {intro && <p class="page-in mt-6 max-w-2xl text-lead text-muted" style="--d:140ms">{intro}</p>}
         <slot />
       </div>
+      {hasAside && <div class="page-in col-span-full lg:col-span-5 lg:col-start-8" style="--d:200ms"><slot name="aside" /></div>}
     </div>
   </div>
   <div class="container-site"><div aria-hidden="true" class="rule-top"></div></div>

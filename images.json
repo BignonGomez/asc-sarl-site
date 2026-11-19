@@ -1,1 +1,146 @@
-[]
+[
+  {
+    "fichier": "expertise-etudes-environnementales",
+    "variantes": [
+      "/images/photos/expertise-etudes-environnementales-640.{avif,webp}",
+      "/images/photos/expertise-etudes-environnementales-1280.{avif,webp}"
+    ],
+    "largeurs": [
+      640,
+      1280
+    ],
+    "source": "Pixabay",
+    "auteur": "This_is_Engineering",
+    "url": "https://pixabay.com/photos/engineer-engineering-civil-engineer-4941168/",
+    "pixabayId": 4941168,
+    "page": "C:/Program Files/Git/expertises/etudes-environnementales-sociales",
+    "alt": "Deux ingénieurs relisent des plans techniques sur une table de travail",
+    "ajoute": "2026-11-19"
+  },
+  {
+    "fichier": "expertise-changements-climatiques",
+    "variantes": [
+      "/images/photos/expertise-changements-climatiques-640.{avif,webp}",
+      "/images/photos/expertise-changements-climatiques-1280.{avif,webp}"
+    ],
+    "largeurs": [
+      640,
+      1280
+    ],
+    "source": "Pixabay",
+    "auteur": "AlkeMade",
+    "url": "https://pixabay.com/photos/noorderleech-friesland-wad-5096162/",
+    "pixabayId": 5096162,
+    "page": "C:/Program Files/Git/expertises/changements-climatiques",
+    "alt": "Lit de cours d'eau asséché, sol craquelé par la sécheresse",
+    "ajoute": "2026-11-19"
+  },
+  {
+    "fichier": "expertise-hydraulique",
+    "variantes": [
+      "/images/photos/expertise-hydraulique-640.{avif,webp}",
+      "/images/photos/expertise-hydraulique-1280.{avif,webp}"
+    ],
+    "largeurs": [
+      640,
+      1280
+    ],
+    "source": "Pixabay",
+    "auteur": "Carola68",
+    "url": "https://pixabay.com/photos/water-level-advertisement-water-4880061/",
+    "pixabayId": 4880061,
+    "page": "C:/Program Files/Git/expertises/hydraulique-gire",
+    "alt": "Échelles limnimétriques graduées dans un plan d'eau en crue",
+    "ajoute": "2026-11-19"
+  },
+  {
+    "fichier": "expertise-amenagement",
+    "variantes": [
+      "/images/photos/expertise-amenagement-640.{avif,webp}",
+      "/images/photos/expertise-amenagement-1280.{avif,webp}"
+    ],
+    "largeurs": [
+      640,
+      1280
+    ],
+    "source": "Pixabay",
+    "auteur": "jennimh",
+    "url": "https://pixabay.com/photos/city-landscape-sky-2720641/",
+    "pixabayId": 2720641,
+    "page": "C:/Program Files/Git/expertises/amenagement-territoire",
+    "alt": "Vue en hauteur d'un tissu urbain peu dense en extension sur un plateau aride",
+    "ajoute": "2026-11-19"
+  },
+  {
+    "fichier": "expertise-agriculture",
+    "variantes": [
+      "/images/photos/expertise-agriculture-640.{avif,webp}",
+      "/images/photos/expertise-agriculture-1280.{avif,webp}"
+    ],
+    "largeurs": [
+      640,
+      1280
+    ],
+    "source": "Pixabay",
+    "auteur": "npTruong28",
+    "url": "https://pixabay.com/photos/palm-field-trees-valley-green-5404428/",
+    "pixabayId": 5404428,
+    "page": "C:/Program Files/Git/expertises/agriculture-developpement-rural",
+    "alt": "Vue aérienne d'un parcellaire agricole tropical entrecoupé d'arbres",
+    "ajoute": "2026-11-19"
+  },
+  {
+    "fichier": "expertise-economie-locale",
+    "variantes": [
+      "/images/photos/expertise-economie-locale-640.{avif,webp}",
+      "/images/photos/expertise-economie-locale-1280.{avif,webp}"
+    ],
+    "largeurs": [
+      640,
+      1280
+    ],
+    "source": "Pixabay",
+    "auteur": "MLbay",
+    "url": "https://pixabay.com/photos/rice-bags-of-rice-food-packaging-5223893/",
+    "pixabayId": 5223893,
+    "page": "C:/Program Files/Git/expertises/economie-locale",
+    "alt": "Sacs de production agricole empilés dans un entrepôt",
+    "ajoute": "2026-11-19"
+  },
+  {
+    "fichier": "expertise-tourisme-conservation",
+    "variantes": [
+      "/images/photos/expertise-tourisme-conservation-640.{avif,webp}",
+      "/images/photos/expertise-tourisme-conservation-1280.{avif,webp}"
+    ],
+    "largeurs": [
+      640,
+      1280
+    ],
+    "source": "Pixabay",
+    "auteur": "Curioso_Photography",
+    "url": "https://pixabay.com/photos/aerial-senegal-africa-above-drone-4812430/",
+    "pixabayId": 4812430,
+    "page": "C:/Program Files/Git/expertises/tourisme-conservation",
+    "alt": "Vue aérienne de chenaux de marée traversant une mangrove",
+    "ajoute": "2026-11-19"
+  },
+  {
+    "fichier": "expertise-formation",
+    "variantes": [
+      "/images/photos/expertise-formation-640.{avif,webp}",
+      "/images/photos/expertise-formation-1280.{avif,webp}"
+    ],
+    "largeurs": [
+      640,
+      1280
+    ],
+    "source": "Pixabay",
+    "auteur": "mwitt1337",
+    "url": "https://pixabay.com/photos/meeting-business-architect-office-2284501/",
+    "pixabayId": 2284501,
+    "page": "C:/Program Files/Git/expertises/formation-sensibilisation",
+    "alt": "Séance de travail vue du dessus : plans, ordinateur et documents techniques sur une table",
+    "ajoute": "2026-11-19"
+  }
+]

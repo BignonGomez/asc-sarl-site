@@ -8,6 +8,8 @@
  * Usage :
  *   node scripts/fetch-images.mjs search "river hydrology measurement" [--min 1920] [--orientation horizontal|vertical|all] [--n 12]
  *       → liste les candidats (identifiant, dimensions, auteur, mots-clés, aperçu) triés par résolution.
+ *   node scripts/fetch-images.mjs sheet "<mots-clés>" --out <fichier.jpg> [--n 9] [--min 1920] [--orientation …]
+ *       → planche-contact : les n meilleurs aperçus réunis dans une image, chacun avec son identifiant (pour choisir vite).
  *   node scripts/fetch-images.mjs get <id> --name <nom-fichier> --page "<page d'usage>" --alt "<texte alternatif>" [--min 1920]
  *       → télécharge l'image, la convertit en AVIF et WebP (640, 1280, 1920 px max selon l'original)
  *         dans public/images/photos/, et l'inscrit dans le registre images.json (racine du site).
@@ -93,6 +95,22 @@ async function search(q) {
   }
 }
 
+async function sheet(q) {
+  if (!q || !args.out) throw new Error('Usage : sheet "mots clés" --out planche.jpg');
+  const n = Math.min(12, Number(args.n ?? 9));
+  const data = await api({ q: q.slice(0, 100), orientation: args.orientation ?? 'horizontal', min_width: String(Number(args.min ?? 1280)), per_page: '30', order: 'popular' });
+  const hits = data.hits.slice(0, n);
+  const W = 420, H = 280, cols = 3, rows = Math.ceil(hits.length / cols);
+  const tiles = await Promise.all(hits.map(async (h, i) => {
+    const buf = Buffer.from(await (await fetch(h.webformatURL)).arrayBuffer());
+    const img = await sharp(buf).resize(W, H, { fit: 'cover' }).toBuffer();
+    const label = Buffer.from(`<svg width="${W}" height="${H}"><rect x="0" y="${H - 26}" width="${W}" height="26" fill="#000" fill-opacity="0.65"/><text x="8" y="${H - 8}" font-family="monospace" font-size="15" fill="#fff">#${h.id}  ${h.imageWidth}×${h.imageHeight}  ${h.user.slice(0, 18)}</text></svg>`);
+    return { input: await sharp(img).composite([{ input: label }]).toBuffer(), left: (i % cols) * W, top: Math.floor(i / cols) * H };
+  }));
+  await sharp({ create: { width: cols * W, height: Math.max(1, rows) * H, channels: 3, background: '#222' } }).composite(tiles).jpeg({ quality: 70 }).toFile(args.out);
+  console.log(`${data.totalHits} résultat(s) pour « ${q} » ; planche : ${args.out} (${hits.map((h) => h.id).join(', ')})`);
+}
+
 async function get(id) {
   if (!/^\d+$/.test(id ?? '')) throw new Error('Identifiant Pixabay numérique attendu : get <id>');
   for (const k of ['name', 'page', 'alt']) if (!args[k]) throw new Error(`Option --${k} obligatoire`);
@@ -141,8 +159,9 @@ async function get(id) {
 
 try {
   if (cmd === 'search') await search(args._.join(' '));
+  else if (cmd === 'sheet') await sheet(args._.join(' '));
   else if (cmd === 'get') await get(args._[0]);
-  else console.log('Commandes : search "<mots-clés>" | get <id> --name <nom> --page "<page>" --alt "<texte>"');
+  else console.log('Commandes : search "<mots-clés>" | sheet "<mots-clés>" --out <fichier> | get <id> --name <nom> --page "<page>" --alt "<texte>"');
 } catch (e) {
   console.error('Erreur :', String(e.message).replaceAll(KEY, '***'));
   process.exit(1);

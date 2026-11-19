@@ -1,0 +1,30 @@
+---
+/**
+ * Photo du registre images.json (scripts/fetch-images.mjs) : <picture> AVIF + WebP, 640 et 1280 px,
+ * chargement différé par défaut. Le texte alternatif vient du registre (modifiable via `alt`).
+ * Aucune mention de licence n'est affichée (registre : source, auteur, URL).
+ */
+import registre from '../../../images.json';
+import { url } from '../../lib/url';
+
+interface Props { name: string; alt?: string; sizes?: string; priority?: boolean; class?: string }
+const { name, alt, sizes = '(min-width: 64rem) 40vw, 100vw', priority = false, class: extra = '' } = Astro.props;
+const entry = (registre as { fichier: string; alt: string; largeurs: number[] }[]).find((e) => e.fichier === name);
+if (!entry) throw new Error(`Photo absente du registre images.json : ${name}`);
+const set = (fmt: string) => entry.largeurs.map((w) => `${url(`/images/photos/${name}-${w}.${fmt}`)} ${w}w`).join(', ');
+const largest = Math.max(...entry.largeurs);
+---
+<picture>
+  <source type="image/avif" srcset={set('avif')} sizes={sizes} />
+  <source type="image/webp" srcset={set('webp')} sizes={sizes} />
+  <img
+    src={url(`/images/photos/${name}-${largest}.webp`)}
+    alt={alt ?? entry.alt}
+    width={largest}
+    height={Math.round((largest * 2) / 3)}
+    loading={priority ? 'eager' : 'lazy'}
+    fetchpriority={priority ? 'high' : undefined}
+    decoding="async"
+    class:list={['h-full w-full object-cover', extra]}
+  />
+</picture>
