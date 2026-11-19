@@ -1,95 +1,83 @@
 ---
-/** 3.3 Notre équipe — protocole complet, section 3.3. Données : src/data/equipe.ts */
-import { Image } from 'astro:assets';
-import { GraduationCap, Clock, Users } from '@lucide/astro';
+/**
+ * 3.3 Notre équipe — protocole complet, section 3.3. Données : src/data/equipe.ts.
+ * Fiches nominatives (titre, diplôme, domaine) affichées seulement si publication.equipe (accords écrits) ;
+ * sinon, familles de compétences uniquement.
+ */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/page/PageHeader.astro';
 import CabinetLinks from '../../components/page/CabinetLinks.astro';
-import SectionHeading from '../../components/ui/SectionHeading.astro';
-import { team } from '../../data/equipe';
+import SectionHead from '../../components/ui/SectionHead.astro';
+import { team, competences } from '../../data/equipe';
 
-const initials = (m: (typeof team)[number]) =>
-  (m.firstName.split(/[\s-]/)[0][0] + m.lastName[0]).toUpperCase();
+const pad = (n: number) => String(n).padStart(2, '0');
+// Profils techniques d'abord
+const ordre = ['Environnement et changements climatiques', 'Agronomie et développement rural', 'Accompagnement des collectivités', 'Communication et sociologie du développement'];
+const familles = [...competences].sort((a, b) => ordre.indexOf(a.label) - ordre.indexOf(b.label));
 ---
 <BaseLayout
   title="Notre équipe"
   description="Les responsables et experts associés d'Alkebulan Services et Conseils : environnement et changements climatiques, agronomie, développement rural, communication et sociologie du développement."
 >
   <PageHeader
-    background="/images/hero-equipe.svg"
     eyebrow="Le Cabinet"
     title="Notre équipe"
     intro="Les missions d'Alkebulan Services et Conseils sont conduites par des professionnels aux compétences complémentaires : environnement et changements climatiques, agronomie et développement rural, communication et sociologie du développement, accompagnement des collectivités. Selon la nature de chaque mission, le cabinet constitue des équipes pluridisciplinaires associant ses responsables et des experts associés."
     crumbs={[{ label: 'Le Cabinet', href: '/cabinet' }, { label: 'Notre équipe' }]}
   />
 
-  {team.length > 0 && (
-  <section aria-labelledby="membres-title" class="section-y bg-mineral">
+  <section aria-labelledby="competences-title" class="section-y">
     <div class="container-site">
-      <h2 id="membres-title" class="sr-only">Membres de l'équipe</h2>
-      <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {team.map((m, i) => (
-          <li id={`membre-${m.lastName.toLowerCase()}`} class="scroll-mt-28" data-reveal style={`--reveal-delay:${(i % 3) * 80}ms`}>
-            <article class="flex h-full flex-col overflow-hidden rounded-card border border-line bg-white shadow-card transition-[box-shadow,transform] duration-300 hover:-translate-y-1 hover:shadow-lift" aria-labelledby={`m-${i}`}>
-              {m.photo ? (
-                <Image src={m.photo} alt={`Portrait de ${m.firstName} ${m.lastName}`} widths={[400, 800]} sizes="(min-width: 64rem) 24rem, (min-width: 40rem) 50vw, 100vw" class="aspect-[4/3] w-full object-cover" />
-              ) : (
-                <div aria-hidden="true" class="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[linear-gradient(135deg,var(--color-forest-soft),#e4ecd3)]">
-                  <span aria-hidden="true" class="absolute inset-0 opacity-[0.07] [background-image:repeating-linear-gradient(135deg,var(--color-forest)_0_1px,transparent_1px_12px)]"></span>
-                  <span aria-hidden="true" class="relative flex size-24 items-center justify-center rounded-full bg-white font-display text-3xl font-bold text-forest shadow-[0_8px_24px_-12px_rgb(15_38_24/0.4)] ring-4 ring-white/60">{initials(m)}</span>
-                </div>
-              )}
-              <div class="flex flex-1 flex-col p-6 sm:p-7">
-                <div class="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
-                  <h3 id={`m-${i}`} class="text-h4 text-forest">{m.firstName} <span class="whitespace-nowrap">{m.lastName}</span></h3>
-                  {m.badge && (
-                    <span class:list={['rounded-full px-2.5 py-1 text-xs font-bold', m.badge === 'Direction' ? 'bg-brand-soft text-brand' : 'bg-forest-soft text-forest']}>{m.badge}</span>
-                  )}
-                </div>
-                <p class="mt-1 text-small font-semibold text-brand">{m.role}</p>
-                <p class="mt-4 text-small font-medium text-ink">{m.specialty}</p>
-                {(m.degree || m.experience) && (
-                  <ul class="mt-4 flex flex-wrap gap-2">
-                    {m.degree && (
-                      <li class="inline-flex items-center gap-1.5 rounded-ui bg-mineral px-2.5 py-1.5 text-xs font-semibold text-ink/80">
-                        <GraduationCap size={14} aria-hidden="true" class="text-forest" />{m.degree}
-                      </li>
-                    )}
-                    {m.experience && (
-                      <li class="inline-flex items-center gap-1.5 rounded-ui bg-mineral px-2.5 py-1.5 text-xs font-semibold text-ink/80">
-                        <Clock size={14} aria-hidden="true" class="text-forest" />{m.experience} ans d'expérience
-                      </li>
-                    )}
-                  </ul>
-                )}
-                <p class="mt-5 border-t border-line pt-5 text-small text-muted">{m.bio}</p>
-              </div>
-            </article>
-          </li>
+      <SectionHead id="competences-title" index="01" label="Compétences" title="Des compétences complémentaires" />
+      <ul class="rows mt-12 lg:mt-16" data-reveal>
+        {familles.map((c, i) => (
+          <li class="grid grid-cols-[2.5rem_1fr] items-baseline text-h4 text-ink"><span class="num num--accent">{pad(i + 1)}</span>{c.label}</li>
         ))}
       </ul>
     </div>
   </section>
+
+  {team.length > 0 && (
+    <section aria-labelledby="membres-title" class="section-y">
+      <div class="container-site">
+        <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>
+        <SectionHead id="membres-title" index="02" label="Membres" title="Responsables et experts associés" />
+        <ul class="membres mt-12 lg:mt-16" data-reveal>
+          {team.map((m) => (
+            <li id={`membre-${m.lastName.toLowerCase()}`} class="membre scroll-mt-28">
+              <p class="label-mono">{m.badge ?? 'Expert'}</p>
+              <h3 class="membre__name">{m.firstName} {m.lastName}</h3>
+              <p class="membre__role">{m.role}</p>
+              <dl class="kv mt-4">
+                <div><dt>Domaine</dt><dd>{m.specialty}</dd></div>
+                {m.degree && <div><dt>Diplôme</dt><dd>{m.degree}</dd></div>}
+                {m.experience && <div><dt>Expérience</dt><dd>{m.experience} ans</dd></div>}
+              </dl>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   )}
 
-  <section aria-labelledby="constitution-title" class="section-y bg-white">
-    <div class="container-site grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-16">
-      <div class="lg:col-span-7">
-        <SectionHeading id="constitution-title" title="Des équipes adaptées à chaque mission" />
-        <p class="mt-8 text-lead text-ink/90" data-reveal>
-          En fonction de la nature et des exigences de chaque mission, Alkebulan Services et Conseils constitue des équipes adaptées, associant ses responsables et des experts associés aux spécialités complémentaires. La composition de l'équipe proposée est précisée dans chacune de nos offres techniques.
-        </p>
-      </div>
-      <div class="lg:col-span-5" data-reveal style="--reveal-delay:120ms">
-        <div class="flex items-center gap-5 rounded-card bg-mineral p-7 text-forest ring-1 ring-forest/10 sm:p-9">
-          <span class="flex size-14 shrink-0 items-center justify-center rounded-full bg-sun text-forest-deep">
-            <Users size={26} stroke-width={1.75} aria-hidden="true" />
-          </span>
-          <p class="font-display text-h4 leading-snug">Des équipes pluridisciplinaires, constituées selon les besoins de chaque mission.</p>
+  <section aria-labelledby="constitution-title" class="section-y">
+    <div class="container-site">
+      <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>
+      <SectionHead id="constitution-title" index={team.length > 0 ? '03' : '02'} label="Missions" title="Des équipes adaptées à chaque mission">
+        <div class="prose-site mt-8" data-reveal>
+          <p>En fonction de la nature et des exigences de chaque mission, Alkebulan Services et Conseils constitue des équipes adaptées, associant ses responsables et des experts associés aux spécialités complémentaires. La composition de l'équipe proposée est précisée dans chacune de nos offres techniques.</p>
         </div>
-      </div>
+      </SectionHead>
     </div>
   </section>
 
   <CabinetLinks current="/cabinet/equipe" links={['/cabinet/vision-mission-valeurs', '/cabinet/approche']} />
 </BaseLayout>
+
+<style>
+  .membres { display: grid; gap: 2.5rem; }
+  .membre { padding-top: 1.25rem; border-top: 1px solid var(--color-ink); }
+  .membre__name { margin-top: 0.6rem; font-size: var(--text-h3); font-weight: 500; letter-spacing: -0.015em; color: var(--color-ink); }
+  .membre__role { margin-top: 0.25rem; color: var(--color-muted); }
+  @media (width >= 64rem) { .membres { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 3rem; } }
+</style>

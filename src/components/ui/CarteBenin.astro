@@ -1,0 +1,22 @@
+---
+/**
+ * Carte de localisation du Bénin (Natural Earth, scripts/maps/benin.mjs → src/assets/carte-benin.svg) :
+ * siège à Cotonou et mission en cours dans le département du Zou. Couleurs portées par les jetons.
+ */
+import carte from '../../assets/carte-benin.svg?raw';
+---
+<div class="carte-benin" set:html={carte} />
+
+<style>
+  .carte-benin :global(svg) { display: block; width: 100%; height: auto; }
+  .carte-benin :global(.cb-grid) { fill: none; stroke: var(--color-map-grid); stroke-width: 0.75; }
+  .carte-benin :global(.cb-neighbors) { fill: none; stroke: var(--color-line-strong); stroke-width: 0.75; }
+  .carte-benin :global(.cb-country) { fill: var(--color-surface); stroke: var(--color-ink); stroke-width: 1.2; stroke-linejoin: round; }
+  .carte-benin :global(text) { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; fill: var(--color-muted); }
+  .carte-benin :global(.cb-sea) { font-style: italic; fill: var(--color-map-water); }
+  .carte-benin :global(.cb-pt--siege circle) { fill: var(--color-ink); }
+  .carte-benin :global(.cb-pt--siege text) { fill: var(--color-ink); }
+  .carte-benin :global(.cb-pt--mission rect) { fill: var(--color-accent); }
+  .carte-benin :global(.cb-pt--mission text) { fill: var(--color-accent-text); font-weight: 500; }
+  .carte-benin :global(.cb-ring) { fill: none; stroke: var(--color-accent); stroke-width: 1; opacity: 0.45; }
+</style>

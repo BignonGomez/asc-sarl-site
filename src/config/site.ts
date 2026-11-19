@@ -23,7 +23,7 @@ export const site = {
   email: 'contact@asc-sarl.com',
   rccm: 'RB/COT/25 B 40462',
   copyrightYear: 2026,
-  cta: { label: 'Parlons de votre projet', href: '/contact' },
+  cta: { label: 'Transmettre vos termes de référence', href: '/contact#formulaire' },
   // À RENSEIGNER : adresses des pages officielles. Une icône est masquée tant que son lien est vide (null).
   social: [
     { name: 'LinkedIn', icon: 'linkedin', href: null as string | null },
@@ -48,15 +48,6 @@ export const publication = {
 };
 
 export const noindex = import.meta.env.PUBLIC_NOINDEX !== 'false';
-
-/**
- * Sections de l'accueil soumises à condition (annexe E du protocole).
- * Visibles pendant la phase de démonstration ; à masquer au lancement si les conditions ne sont pas réunies.
- */
-export const features = {
-  homeNews: true,      // Section 6 : seulement si la rubrique Actualités est lancée
-  homePartners: false, // masqué : autorisation de la commune non obtenue (19/11/2026)  // Section 7 : seulement avec l'accord écrit de la Commune de Za-Kpota
-};
 
 export type NavChild = { label: string; href: string; desc?: string; icon?: string };
 /** hideAll : masque le lien « Découvrir … » du sous-menu quand la rubrique n'a pas de page d'accueil propre */

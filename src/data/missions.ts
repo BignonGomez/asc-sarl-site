@@ -4,7 +4,6 @@
  * imputation budgétaire ni résultat annoncé pour une mission en cours.
  * Une mission achevée passera dans « Projets et références » sur présentation de l'attestation de bonne exécution.
  */
-import type { ImageId } from '../config/images';
 import { publication } from '../config/site';
 
 export type Mission = {
@@ -22,7 +21,8 @@ export type Mission = {
   duration?: string;
   team: { lastName: string; role?: string }[];
   volets: { title: string; public: string; items: string[]; extra?: string }[];
-  images: ImageId[];
+  /** Photos de terrain (non publiées : personnes identifiables ; à réactiver avec leur accord) */
+  images: string[];
   /**
    * Résultats obtenus : UNIQUEMENT pour une mission achevée, sur la base de l'attestation de bonne exécution.
    * Laisser vide pour une mission en cours (règle du protocole : aucun résultat annoncé avant l'achèvement).

@@ -4,7 +4,7 @@ import { ArrowRight } from '@lucide/astro';
 import { url } from '../../lib/url';
 interface Props { href: string; tone?: 'forest' | 'brand' | 'white'; class?: string; label?: string }
 const { href, tone = 'forest', class: extra = '', label } = Astro.props;
-const tones = { forest: 'text-forest', brand: 'text-brand', white: 'text-white' };
+const tones = { forest: 'text-ink', brand: 'text-accent-text', white: 'text-white' }; // noms de tons conservés (compatibilité des appels)
 ---
 <a href={url(href)} aria-label={label} class:list={['group/link inline-flex items-center gap-2 font-semibold', tones[tone], extra]}>
   <span class="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1.5px] bg-left-bottom bg-no-repeat pb-0.5 transition-[background-size] duration-300 group-hover/link:bg-[length:100%_1.5px]"><slot /></span>

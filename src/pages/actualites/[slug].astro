@@ -5,7 +5,7 @@
  * Contenu : src/content/actualites/<slug>.md
  */
 import { render } from 'astro:content';
-import { ChevronRight, CalendarDays, UserPen, Tag, Link as LinkIcon, Mail, ArrowLeft } from '@lucide/astro';
+import { ChevronRight, Link as LinkIcon, Mail, ArrowLeft } from '@lucide/astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteImage from '../../components/ui/SiteImage.astro';
 import SocialIcon from '../../components/ui/SocialIcon.astro';
@@ -51,35 +51,33 @@ const cover = images[d.cover as ImageId];
 ---
 <BaseLayout title={d.title} description={d.summary}>
   <article>
-    <header class="article-head relative isolate overflow-hidden bg-mineral pb-14 pt-32 sm:pt-36 lg:pb-20 lg:pt-40">
-      <div class="container-site max-w-4xl text-center">
-        <nav aria-label="Fil d'Ariane">
-          <ol class="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 text-small text-muted">
-            <li><a href={url('/')} class="hover:text-forest hover:underline hover:underline-offset-4">Accueil</a></li>
-            <li class="flex items-center gap-1.5"><ChevronRight size={14} aria-hidden="true" /><a href={url('/actualites')} class="hover:text-forest hover:underline hover:underline-offset-4">Actualités</a></li>
-            <li class="flex items-center gap-1.5"><ChevronRight size={14} aria-hidden="true" /><span aria-current="page" class="font-semibold text-ink">{d.title}</span></li>
-          </ol>
-        </nav>
-        <p class="mt-8 inline-flex items-center gap-2 rounded-full bg-forest px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-white">
-          <Tag size={13} aria-hidden="true" /> {d.category}
+    <header class="container-site pt-28 pb-12 sm:pt-32 lg:pt-44 lg:pb-16">
+      <nav aria-label="Fil d'Ariane">
+        <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-small text-muted">
+          <li><a href={url('/')} class="hover:text-ink hover:underline hover:underline-offset-4">Accueil</a></li>
+          <li class="flex items-center gap-1.5"><ChevronRight size={14} aria-hidden="true" class="text-line-strong" /><a href={url('/actualites')} class="hover:text-ink hover:underline hover:underline-offset-4">Actualités</a></li>
+          <li class="flex items-center gap-1.5"><ChevronRight size={14} aria-hidden="true" class="text-line-strong" /><span aria-current="page" class="text-ink">{d.title}</span></li>
+        </ol>
+      </nav>
+      <div class="mt-10 max-w-4xl lg:mt-14">
+        <p class="flex flex-wrap gap-x-5 gap-y-1 text-eyebrow uppercase text-muted">
+          <span class="text-accent-text">{d.category}</span>
+          <time datetime={iso}>{formatDateFr(d.date)}</time>
+          <span><span class="sr-only">Auteur : </span>{d.author}</span>
         </p>
-        <h1 class="mt-6 text-h1 text-forest">{d.title}</h1>
-        <p class="mx-auto mt-6 max-w-2xl text-lead text-muted">{d.summary}</p>
-        <ul class="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-small text-muted">
-          <li class="inline-flex items-center gap-2"><CalendarDays size={16} aria-hidden="true" class="text-brand" /> <time datetime={iso}>{formatDateFr(d.date)}</time></li>
-          <li class="inline-flex items-center gap-2"><UserPen size={16} aria-hidden="true" class="text-brand" /> <span><span class="sr-only">Auteur : </span>{d.author}</span></li>
-        </ul>
+        <h1 class="mt-4 text-h1 text-ink">{d.title}</h1>
+        <p class="mt-6 max-w-2xl text-lead text-muted">{d.summary}</p>
       </div>
     </header>
 
     <div class="container-site">
-      <figure class="cover -mt-6 lg:-mt-10" data-reveal>
+      <figure class="cover" data-reveal>
         <div class:list={['aspect-[1200/630] overflow-hidden', cover.fit === 'contain' ? 'bg-white p-6 sm:p-10' : '']}>
           <SiteImage id={d.cover as ImageId} sizes="(min-width: 64rem) 60rem, 100vw" priority />
         </div>
       </figure>
 
-      <div class="mx-auto grid max-w-5xl gap-10 py-14 lg:grid-cols-[4rem_1fr] lg:gap-12 lg:py-20">
+      <div class="grid max-w-5xl gap-10 py-14 lg:grid-cols-[4rem_1fr] lg:gap-12 lg:py-20">
         <!-- Partage -->
         <aside aria-label="Partager l'article" class="order-2 lg:order-1">
           <div class="flex flex-wrap items-center gap-2 lg:sticky lg:top-28 lg:flex-col lg:flex-nowrap">
@@ -105,10 +103,11 @@ const cover = images[d.cover as ImageId];
   </article>
 
   {related.length > 0 && (
-    <section aria-labelledby="related-title" class="section-y bg-mineral">
+    <section aria-labelledby="related-title" class="section-y">
       <div class="container-site">
-        <h2 id="related-title" class="text-h2 text-forest">Articles apparentés</h2>
-        <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div aria-hidden="true" class="rule-top mb-12 lg:mb-16"></div>
+        <h2 id="related-title" class="text-h2 text-ink">Articles apparentés</h2>
+        <ul class="mt-10 border-t border-ink">
           {related.map((a) => (
             <li><ArticleCard slug={a.id} title={a.data.title} date={a.data.date} category={a.data.category} summary={a.data.summary} cover={a.data.cover} headingLevel="h3" /></li>
           ))}
@@ -118,7 +117,7 @@ const cover = images[d.cover as ImageId];
   )}
 
   <div class="container-site pb-16">
-    <a href={url('/actualites')} class="inline-flex items-center gap-2 font-semibold text-forest hover:text-brand">
+    <a href={url('/actualites')} class="inline-flex items-center gap-2 font-medium text-ink hover:text-accent-text">
       <ArrowLeft size={18} aria-hidden="true" /> Toutes les actualités
     </a>
   </div>
@@ -127,46 +126,20 @@ const cover = images[d.cover as ImageId];
 </BaseLayout>
 
 <style>
-  .article-head::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: radial-gradient(ellipse 50% 70% at 100% 0%, rgb(74 115 32 / 0.1), transparent 70%), radial-gradient(ellipse 45% 60% at 0% 100%, rgb(252 209 42 / 0.05), transparent 70%);
-  }
-  .cover {
-    position: relative;
-    max-width: 60rem;
-    margin-inline: auto;
-    overflow: hidden;
-    border-radius: 1.75rem;
-    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lift);
-    background: #fff;
-  }
-  .share {
-    display: grid;
-    place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 0.875rem;
-    color: var(--color-forest);
-    background: var(--color-mineral);
-    box-shadow: inset 0 0 0 1px var(--color-line);
-    transition: color 0.2s, background-color 0.2s, transform 0.3s var(--ease-out-soft);
-  }
-  .share:hover { color: #fff; background: var(--color-brand); transform: translateY(-2px); }
-  .share[data-copied] { color: #fff; background: var(--color-forest); }
+  .cover { max-width: 60rem; overflow: hidden; border-radius: var(--radius-card); box-shadow: inset 0 0 0 1px var(--color-line); background: var(--color-paper); }
+  .share { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: var(--radius-ui); color: var(--color-ink); box-shadow: inset 0 0 0 1px var(--color-line); transition: color 0.2s, background-color 0.2s, box-shadow 0.2s; }
+  .share:hover { color: #fff; background: var(--color-accent); box-shadow: none; }
+  .share[data-copied] { color: #fff; background: var(--color-ink); }
 
   /* Texte de l'article */
-  .prose-asc { max-width: var(--container-prose); font-size: 1.0625rem; line-height: 1.8; color: rgb(28 42 33 / 0.9); }
+  .prose-asc { max-width: var(--container-prose); font-size: 1.0625rem; line-height: 1.8; color: var(--color-ink-soft); }
   .prose-asc :global(p + p) { margin-top: 1.25em; }
   .prose-asc :global(p:first-child) { font-size: var(--text-lead); color: var(--color-ink); }
-  .prose-asc :global(h2) { margin-top: 2em; font-size: var(--text-h3); color: var(--color-forest); }
-  .prose-asc :global(h3) { margin-top: 1.6em; font-size: var(--text-h4); color: var(--color-forest); }
+  .prose-asc :global(h2) { margin-top: 2em; font-size: var(--text-h3); font-weight: 500; color: var(--color-ink); }
+  .prose-asc :global(h3) { margin-top: 1.6em; font-size: var(--text-h4); color: var(--color-ink); }
   .prose-asc :global(ul) { margin-top: 1em; padding-left: 1.25em; list-style: disc; }
   .prose-asc :global(li + li) { margin-top: 0.4em; }
-  .prose-asc :global(a) { color: var(--color-brand); text-decoration: underline; text-underline-offset: 3px; }
-  @media (prefers-reduced-motion: reduce) { .share:hover { transform: none; } }
+  .prose-asc :global(a) { color: var(--color-accent-text); text-decoration: underline; text-underline-offset: 3px; }
 </style>
 
 <script>

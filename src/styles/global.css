@@ -9,7 +9,8 @@
     scroll-padding-top: 6.5rem;
   }
   body {
-    @apply bg-paper font-sans text-body text-ink antialiased;
+    @apply bg-canvas font-sans text-body text-ink antialiased;
+    font-feature-settings: "kern", "liga";
     text-rendering: optimizeLegibility;
   }
   h1, h2, h3, h4 {
@@ -17,10 +18,12 @@
     hyphens: manual;
   }
   p { text-wrap: pretty; }
-  ::selection { background: var(--color-sun); color: var(--color-forest-deep); }
+  ::selection { background: var(--color-accent); color: #fff; }
+  /* Chiffres alignés dans les tableaux et données */
+  table, .tabular { font-variant-numeric: tabular-nums; }
 
   :focus-visible {
-    outline: 2px solid var(--color-brand);
+    outline: 2px solid var(--color-accent);
     outline-offset: 3px;
     border-radius: 4px;
   }
@@ -49,37 +52,53 @@
   }
 }
 
+/* Chaque section porte la moitié de l'écart : deux sections voisines sont séparées de 80 px (mobile),
+   96 px (tablette) et 140 px (bureau). */
 @utility section-y {
   padding-block: var(--spacing-section);
+  @media (width >= 48rem) {
+    padding-block: var(--spacing-section-md);
+  }
   @media (width >= 64rem) {
     padding-block: var(--spacing-section-lg);
   }
 }
 
-/* ---------- Reflet glissant des boutons principaux ---------- */
-@layer components {
-  .btn-sheen { position: relative; isolation: isolate; overflow: hidden; }
-  .btn-sheen::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.45) 50%, transparent 65%) 130% 0 / 250% 100% no-repeat;
-    transition: background-position 0.9s var(--ease-out-soft);
-    pointer-events: none;
+/* Grille stricte de 12 colonnes (bureau), 4 colonnes sur mobile, 8 sur tablette */
+@utility grid-site {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 1rem;
+  @media (width >= 48rem) {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    column-gap: 1.5rem;
   }
-  .btn-sheen:hover::after { background-position: -30% 0; }
+  @media (width >= 64rem) {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 2rem;
+  }
+}
+
+/* Filet de séparation 1 px entre sections (dans le conteneur) */
+@utility rule-top {
+  border-top: 1px solid var(--color-line);
+}
+
+/* ---------- Surtitres et repères techniques : IBM Plex Mono ---------- */
+@layer components {
+  .text-eyebrow { font-family: var(--font-mono); }
+  .btn-sheen { position: relative; }
 }
 
 /* ---------- Apparition discrète au défilement ---------- */
 @layer components {
+  /* Opacité de départ 0,01 (invisible à l'œil) : les blocs comptent comme affichés pour la mesure du contenu principal */
   .js [data-reveal] {
-    opacity: 0;
-    transform: translateY(18px);
+    opacity: 0.01;
+    transform: translateY(24px);
     transition:
-      opacity 0.7s var(--ease-out-soft),
-      transform 0.7s var(--ease-out-soft);
+      opacity var(--duration-reveal) var(--ease-out-soft),
+      transform var(--duration-reveal) var(--ease-out-soft);
     transition-delay: var(--reveal-delay, 0ms);
   }
   .js [data-reveal].is-visible {
@@ -112,12 +131,59 @@
   .eyebrow-framed::after { margin-inline-start: calc(-1 * var(--text-eyebrow--letter-spacing, 0em)); }
 }
 
-/* Voile de lisibilité des en-têtes à image d'arrière-plan (accueil, recrutement) :
-   sur mobile et tablette il couvre toute l'image (le texte occupe toute la largeur) ;
-   sur grand écran il est sombre à gauche et s'efface vers la droite. */
+/* ---------- Transitions de page (navigation entre documents, sans JavaScript) ----------
+   Fondu court de la page ; le menu en capsule reste en place. Navigateurs non compatibles : navigation normale. */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vt-out 0.22s var(--ease-out-soft) both; }
+::view-transition-new(root) { animation: vt-in 0.42s var(--ease-out-soft) both; }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(12px); } }
+.site-header { view-transition-name: site-header; }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+
+/* ---------- Curseur discret (ordinateur) : anneau qui suit le pointeur, agrandi sur les liens ---------- */
+.cursor-ring {
+  position: fixed; left: 0; top: 0; z-index: 200;
+  width: 28px; height: 28px; margin: -14px 0 0 -14px;
+  border-radius: 999px; border: 1px solid var(--color-accent);
+  pointer-events: none; opacity: 0;
+  transition: opacity 0.3s, width 0.3s var(--ease-out-soft), height 0.3s var(--ease-out-soft), margin 0.3s var(--ease-out-soft), background-color 0.3s;
+}
+.cursor-ring.is-active { opacity: 0.5; }
+.cursor-ring.is-link { width: 44px; height: 44px; margin: -22px 0 0 -22px; opacity: 0.35; background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+
+/* ---------- Motifs communs des pages (refonte) : listes à filets, lignes clé/valeur, lignes-liens ---------- */
 @layer components {
-  .veil-left { background: linear-gradient(180deg, rgb(15 38 24 / 0.82) 0%, rgb(15 38 24 / 0.72) 55%, rgb(15 38 24 / 0.8) 100%); }
+  /* Liste à filets : .rows > li (ou div) */
+  .rows { border-top: 1px solid var(--color-line); }
+  .rows > * { padding-block: 1.1rem; border-bottom: 1px solid var(--color-line); }
+  .rows--strong { border-top-color: var(--color-ink); }
+  /* Numéro technique en IBM Plex Mono */
+  .num { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 400; color: var(--color-muted); }
+  .num--accent { color: var(--color-accent-text); }
+  /* Étiquette technique (dt, intitulés) */
+  .label-mono { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); }
+  /* Lignes clé / valeur : <dl class="kv"><div><dt/><dd/></div></dl> */
+  .kv { border-top: 1px solid var(--color-line); }
+  .kv > div { display: grid; gap: 0.25rem; padding-block: 0.95rem; border-bottom: 1px solid var(--color-line); }
+  .kv dt { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); }
+  .kv dd { color: var(--color-ink); }
+  @media (width >= 48rem) { .kv > div { grid-template-columns: 14rem 1fr; gap: 2rem; align-items: baseline; } }
+  /* Lignes-liens : <ul class="link-rows"><li><a class="link-row">…</a></li></ul> */
+  .link-rows { border-top: 1px solid var(--color-line); }
+  .link-row { position: relative; display: grid; grid-template-columns: 2.5rem 1fr auto; gap: 0.25rem 0; align-items: baseline; padding-block: 1.35rem; border-bottom: 1px solid var(--color-line); }
+  .link-row__title { font-size: 1.125rem; font-weight: 500; color: var(--color-ink); transition: color 0.2s; }
+  .link-row__text { grid-column: 2; font-size: 0.9375rem; color: var(--color-muted); }
+  .link-row__go { grid-column: 3; grid-row: 1; color: var(--color-line-strong); transition: color 0.2s, transform 0.3s var(--ease-out-soft); }
+  .link-row:hover .link-row__title { color: var(--color-accent-text); }
+  .link-row:hover .link-row__go { color: var(--color-accent); transform: translate(2px, -2px); }
   @media (width >= 64rem) {
-    .veil-left { background: linear-gradient(90deg, rgb(15 38 24 / 0.9) 0%, rgb(15 38 24 / 0.78) 32%, rgb(15 38 24 / 0.4) 55%, rgb(15 38 24 / 0) 75%); }
+    .link-row { grid-template-columns: 4rem 5fr 6fr auto; }
+    .link-row__text { grid-column: 3; grid-row: 1; }
+    .link-row__go { grid-column: 4; }
   }
+  /* Texte courant d'une section (colonne de lecture) */
+  .prose-site { max-width: 46rem; display: grid; gap: 1.1rem; font-size: var(--text-lead); line-height: var(--text-lead--line-height); color: var(--color-ink-soft); }
 }
