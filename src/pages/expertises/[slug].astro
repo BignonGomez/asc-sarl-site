@@ -119,14 +119,14 @@ const sections = [
           ))}
         </div>
         {livrables.length > 0 && (
-          <aside class="col-span-full lg:col-span-4" aria-labelledby="livrables-title" data-reveal>
+          <section class="col-span-full lg:col-span-4" aria-labelledby="livrables-title" data-reveal>
             <div class="livrables">
               <h3 id="livrables-title" class="livrables__title">Livrables types</h3>
               <ul class="livrables__list">
                 {livrables.map((l) => <li>{l}</li>)}
               </ul>
             </div>
-          </aside>
+          </section>
         )}
       </div>
     </div>

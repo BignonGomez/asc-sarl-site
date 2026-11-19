@@ -34,10 +34,10 @@ const words = title.split(' ');
             </>
           ))}
         </h1>
-        <p class="hero-rise mt-6 max-w-[36rem] text-lead text-muted lg:mt-8" style="--d:620ms">
+        <p class="hero-rise mt-6 max-w-[36rem] text-lead text-muted lg:mt-8" style="--d:280ms">
           Cabinet d'études et de conseil à Cotonou, au service des acteurs publics et privés.
         </p>
-        <div class="hero-rise mt-9 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:gap-8 lg:mt-11" style="--d:760ms">
+        <div class="hero-rise mt-9 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:gap-8 lg:mt-11" style="--d:400ms">
           <Button href={site.cta.href} size="lg" arrow>{site.cta.label}</Button>
           <a href={url('/expertises')} class="hero-link group">
             Nos domaines d'expertise
@@ -81,10 +81,11 @@ const words = title.split(' ');
 
   /* ---------- Titre mot par mot ---------- */
   .w { display: inline-block; overflow: clip; overflow-clip-margin: 0.2em; vertical-align: top; }
-  .wi { display: inline-block; animation: word-up 1s var(--ease-out-soft) both; animation-delay: calc(120ms + var(--wi) * 60ms); }
+  .wi { display: inline-block; animation: word-up 0.8s var(--ease-out-soft) both; animation-delay: calc(40ms + var(--wi) * 40ms); }
   @keyframes word-up { from { transform: translateY(110%); } to { transform: none; } }
-  .hero-rise { animation: hero-rise 0.8s var(--ease-out-soft) var(--d, 0ms) both; }
-  @keyframes hero-rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+  /* Opacité de départ 0,01 (et non 0) : le texte compte tout de suite comme affiché pour la mesure du contenu principal */
+  .hero-rise { animation: hero-rise 0.7s var(--ease-out-soft) var(--d, 0ms) both; }
+  @keyframes hero-rise { from { opacity: 0.01; transform: translateY(24px); } to { opacity: 1; transform: none; } }
 
   /* ---------- Carte : couches et couleurs (jetons cartographiques) ---------- */
   .hero-map :global(.hm path),

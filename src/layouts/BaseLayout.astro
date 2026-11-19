@@ -1,5 +1,6 @@
 ---
 import '@fontsource-variable/ibm-plex-sans/wght.css';
+import plexLatin from '@fontsource-variable/ibm-plex-sans/files/ibm-plex-sans-latin-wght-normal.woff2?url';
 import '@fontsource/ibm-plex-mono/latin-400.css';
 import '@fontsource/ibm-plex-mono/latin-500.css';
 import '../styles/global.css';
@@ -11,7 +12,11 @@ import { site, noindex } from '../config/site';
 /** robots : force la directive (ex. « noindex, nofollow » pour une page de confirmation) */
 interface Props { title?: string; description?: string; cta?: { title?: string; text?: string } | false; robots?: string }
 const { title, description = site.description, cta, robots } = Astro.props;
-const fullTitle = title ? `${title} | ${site.shortName}` : `${site.shortName} | Études et conseil en environnement, climat et développement territorial`;
+// Titres courts (≤ 65 caractères, au-delà Google tronque) : le nom du cabinet n'est ajouté que s'il tient
+const suffixed = title ? `${title} | ${site.shortName}` : '';
+const fullTitle = title
+  ? (suffixed.length <= 65 ? suffixed : title)
+  : `${site.shortName} | Bureau d'études, Cotonou`;
 // URL canonique toujours rattachée au domaine officiel asc-sarl.com (même sur la version de test)
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const path = Astro.url.pathname.startsWith(base) ? Astro.url.pathname.slice(base.length) || '/' : Astro.url.pathname;
@@ -21,6 +26,7 @@ const canonical = new URL(path, site.url).href;
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
+    <link rel="preload" href={plexLatin} as="font" type="font/woff2" crossorigin />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />

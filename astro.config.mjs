@@ -36,7 +36,8 @@ export default defineConfig({
   integrations: [sitemap()],
   output: 'static',
   trailingSlash: 'ignore',
-  build: { format: 'directory' },
+  // CSS intégrée dans chaque page : une requête bloquante de moins (premier affichage plus rapide en 3G)
+  build: { format: 'directory', inlineStylesheets: 'always' },
   compressHTML: true,
   // « Projets et références » est masquée au lancement (protocole 5.2) : la rubrique ouvre sur les missions en cours
   // (Astro n'ajoute pas le chemin de base aux redirections : on le préfixe ici)

@@ -92,8 +92,9 @@
 
 /* ---------- Apparition discrète au défilement ---------- */
 @layer components {
+  /* Opacité de départ 0,01 (invisible à l'œil) : les blocs comptent comme affichés pour la mesure du contenu principal */
   .js [data-reveal] {
-    opacity: 0;
+    opacity: 0.01;
     transform: translateY(24px);
     transition:
       opacity var(--duration-reveal) var(--ease-out-soft),

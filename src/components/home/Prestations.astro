@@ -71,8 +71,7 @@ const { index = '01', link = true, id = 'prestations' } = Astro.props;
   .presta__row > :nth-child(3) { grid-column: 2; }
   .presta__domain { font-size: 1.125rem; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; color: var(--color-ink); }
   .presta__link::after { content: ''; position: absolute; inset: 0; }
-  .presta__link:focus-visible { outline: none; }
-  .presta__row:has(.presta__link:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  .presta__link:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; border-radius: 2px; }
   .presta__livrables { margin-top: 0.5rem; display: grid; gap: 0.3rem; font-size: 0.9375rem; color: var(--color-muted); }
   .presta__livrables li { position: relative; padding-left: 1rem; }
   .presta__livrables li::before { content: ''; position: absolute; left: 0; top: 0.7em; width: 0.4rem; height: 1px; background: var(--color-line-strong); }
