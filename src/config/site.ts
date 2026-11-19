@@ -23,7 +23,7 @@ export const site = {
   email: 'contact@asc-sarl.com',
   rccm: 'RB/COT/25 B 40462',
   copyrightYear: 2026,
-  cta: { label: 'Parlons de votre projet', href: '/contact' },
+  cta: { label: 'Transmettre vos termes de référence', href: '/contact#formulaire' },
   // À RENSEIGNER : adresses des pages officielles. Une icône est masquée tant que son lien est vide (null).
   social: [
     { name: 'LinkedIn', icon: 'linkedin', href: null as string | null },

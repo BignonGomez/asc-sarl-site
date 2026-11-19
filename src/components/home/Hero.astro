@@ -1,102 +1,126 @@
 ---
 /**
- * Héro de l'accueil : illustration en arrière-plan sur toute la surface (cover, centrée),
- * voile vert sombre à gauche pour la lisibilité du texte (sur toute la surface sur mobile).
- * Texte à gauche (étiquette, titre mot par mot, filet soleil, introduction, deux actions, chiffres clés).
- * Image propre à l'accueil : public/images/hero-accueil.svg (les autres pages gardent leur en-tête, PageHeader).
+ * Héro de l'accueil (refonte, étape 2).
+ * Une phrase, beaucoup de vide, un seul visuel : la carte technique schématique d'un bassin versant
+ * (src/assets/hero-map.svg, générée par scripts/hero-map/generate.mjs), intégrée dans la page pour être animée
+ * et colorée par les jetons (--color-map-*, accent). Aucun chiffre, aucun bandeau, aucune photo.
+ * Animations : transform et opacity uniquement ; désactivées avec « réduire les animations ».
  */
+import { ArrowRight } from '@lucide/astro';
 import Button from '../ui/Button.astro';
 import { site } from '../../config/site';
 import { url } from '../../lib/url';
+import mapSvg from '../../assets/hero-map.svg?raw';
 
-// Titre découpé en mots pour l'animation (les mots « accent » sont en vert feuille)
-const segments = [
-  { text: 'Bâtir ensemble des territoires', accent: false },
-  { text: 'durables et résilients', accent: true },
-];
-// Chiffres clés : uniquement des faits vérifiables (protocole, RCCM)
-const facts = [
-  { value: '8', label: "domaines d'expertise" },
-  { value: '2025', label: 'création à Cotonou' },
-  { value: 'SARL', label: 'de droit béninois' },
-];
-let wi = 0;
-const words = segments.flatMap((s) => s.text.split(' ').map((w) => ({ w, accent: s.accent, i: wi++ })));
+const title = 'Études environnementales, hydrologie et aménagement du territoire';
+const words = title.split(' ');
 ---
-<section aria-labelledby="hero-title" class="hero relative isolate overflow-clip bg-forest-night text-white">
-  <!-- Arrière-plan : illustration sur toute la surface du héro (décorative) -->
-  <img src={url('/images/hero-accueil.svg')} alt="" width="1600" height="900" fetchpriority="high" decoding="async" class="absolute inset-0 -z-20 h-full w-full object-cover object-center" />
-  <!-- Voile sombre à gauche : lisibilité du texte -->
-  <div aria-hidden="true" class="veil-left absolute inset-0 -z-10"></div>
+<section aria-labelledby="hero-title" class="hero relative isolate overflow-clip">
+  <!-- Visuel : carte technique (décor informatif, décrit par son titre SVG) -->
+  <figure class="hero-map">
+    <div class="hero-map__svg" set:html={mapSvg} />
+    <figcaption class="hero-map__caption text-eyebrow uppercase">
+      <span class="text-ink">Fig. 01</span> Bassin versant type · schéma illustratif
+    </figcaption>
+  </figure>
 
-  <div class="container-site grid items-center gap-12 pb-16 pt-32 sm:pt-36 lg:grid-cols-12 lg:gap-10 lg:pb-20 lg:pt-36">
-    <div class="lg:col-span-6 xl:col-span-6">
-      <p class="hero-rise inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-eyebrow uppercase text-white backdrop-blur-sm" style="--d:50ms">
-        <span aria-hidden="true" class="hero-pulse"></span>
-        Cabinet d'études et de conseil · Cotonou, Bénin
-      </p>
-
-      <h1 id="hero-title" class="mt-7 max-w-[34rem] text-display text-white [text-shadow:0_2px_20px_rgb(15_38_24/0.35)]">
-        {words.map(({ w, accent, i }) => (
-          <>
-            <span class="w"><span class:list={['wi', accent && 'text-leaf-light']} style={`--wi:${i}`}>{w}</span></span>{' '}
-          </>
-        ))}
-      </h1>
-
-      <span aria-hidden="true" class="hero-rise mt-8 block h-[3px] w-10 rounded-full bg-sun" style="--d:460ms"></span>
-
-      <p class="hero-rise mt-7 max-w-[34rem] text-lead text-white/90" style="--d:520ms">
-        <strong class="font-semibold text-white">{site.name}</strong> accompagne les institutions publiques, les collectivités, les organisations et les entreprises face aux enjeux environnementaux, climatiques et territoriaux : du diagnostic des besoins aux solutions techniques adaptées, jusqu'à l'accompagnement de vos projets.
-      </p>
-      <div class="hero-rise mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4" style="--d:640ms">
-        <Button href={site.cta.href} size="lg" arrow>{site.cta.label}</Button>
-        <Button href="/expertises" variant="light" size="lg">Découvrir nos expertises</Button>
+  <div class="container-site hero__inner">
+    <div class="grid-site">
+      <div class="col-span-full lg:col-span-9 xl:col-span-8">
+        <h1 id="hero-title" class="text-display text-ink">
+          {words.map((w, i) => (
+            <>
+              <span class="w"><span class="wi" style={`--wi:${i}`}>{w}</span></span>{' '}
+            </>
+          ))}
+        </h1>
+        <p class="hero-rise mt-6 max-w-[36rem] text-lead text-muted lg:mt-8" style="--d:620ms">
+          Cabinet d'études et de conseil à Cotonou, au service des acteurs publics et privés.
+        </p>
+        <div class="hero-rise mt-9 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:gap-8 lg:mt-11" style="--d:760ms">
+          <Button href={site.cta.href} size="lg" arrow>{site.cta.label}</Button>
+          <a href={url('/expertises')} class="hero-link group">
+            Nos domaines d'expertise
+            <ArrowRight size={16} aria-hidden="true" class="transition-transform duration-300 ease-[var(--ease-out-soft)] group-hover:translate-x-1" />
+          </a>
+        </div>
       </div>
-
-      <dl class="hero-rise mt-10 grid max-w-xl grid-cols-3 gap-4 border-t border-white/20 pt-7 sm:gap-6" style="--d:760ms">
-        {facts.map((f) => (
-          <div class="flex flex-col">
-            <dt class="order-2 mt-1 text-[0.8125rem] leading-snug text-white/75 sm:text-small">{f.label}</dt>
-            <dd class="order-1 font-display text-[1.375rem] font-bold leading-tight text-white sm:text-[1.75rem]">{f.value}</dd>
-          </div>
-        ))}
-      </dl>
     </div>
-
   </div>
 </section>
 
 <style>
-  /* ---------- Cascade d'apparition ---------- */
-  .hero-rise { animation: hero-rise 0.9s var(--ease-out-soft) var(--d, 0ms) both; }
-  @keyframes hero-rise {
-    from { opacity: 0; transform: translateY(18px); }
-    to { opacity: 1; transform: none; }
+  /* ---------- Mise en page ---------- */
+  .hero { display: flex; flex-direction: column; }
+  .hero__inner { position: relative; z-index: 1; order: 1; padding-top: 7.5rem; padding-bottom: 1.5rem; }
+  .hero-map { position: relative; order: 2; margin: 0; height: min(78vw, 22rem); }
+  .hero-map__svg { position: absolute; inset: 0; -webkit-mask-image: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent); mask-image: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent); }
+  .hero-map__caption { position: absolute; left: var(--spacing-gutter); bottom: 0.25rem; display: flex; gap: 0.75rem; white-space: nowrap; font-size: 0.6875rem; color: var(--color-muted); }
+
+  @media (width >= 64rem) {
+    .hero { display: block; min-height: max(100svh, 46rem); }
+    .hero__inner { display: flex; align-items: center; min-height: max(100svh, 46rem); padding-top: 8rem; padding-bottom: 6rem; }
+    .hero-map { position: absolute; inset: 0 0 0 auto; width: 50%; height: auto; }
+    .hero-map__svg {
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.55) 30%, #000 60%), linear-gradient(180deg, transparent 4%, #000 22%, #000 82%, transparent);
+      mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.55) 30%, #000 60%), linear-gradient(180deg, transparent 4%, #000 22%, #000 82%, transparent);
+      -webkit-mask-composite: source-in;
+      mask-composite: intersect;
+    }
+    .hero-map__caption { left: auto; right: var(--spacing-gutter-lg); bottom: 2.5rem; }
+  }
+  @media (width >= 80rem) {
+    .hero-map { width: 62%; }
   }
 
-  /* Pastille animée de l'étiquette */
-  .hero-pulse { position: relative; width: 8px; height: 8px; border-radius: 999px; background: var(--color-sun-strong); }
-  .hero-pulse::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: var(--color-sun);
-    animation: hero-pulse 2.4s var(--ease-out-soft) 3;
-  }
-  @keyframes hero-pulse { to { transform: scale(3); opacity: 0; } }
+  .hero-map__svg :global(svg) { width: 100%; height: 100%; display: block; }
+
+  /* ---------- Lien secondaire discret ---------- */
+  .hero-link { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 3rem; font-weight: 500; color: var(--color-ink); }
+  .hero-link:hover { color: var(--color-accent-text); }
 
   /* ---------- Titre mot par mot ---------- */
-  .w { display: inline-block; overflow: clip; overflow-clip-margin: 0.18em; vertical-align: top; }
-  .wi {
-    display: inline-block;
-    animation: word-up 0.95s var(--ease-out-soft) both;
-    animation-delay: calc(150ms + var(--wi) * 55ms);
-  }
-  @keyframes word-up { from { transform: translateY(108%); } to { transform: none; } }
+  .w { display: inline-block; overflow: clip; overflow-clip-margin: 0.2em; vertical-align: top; }
+  .wi { display: inline-block; animation: word-up 1s var(--ease-out-soft) both; animation-delay: calc(120ms + var(--wi) * 60ms); }
+  @keyframes word-up { from { transform: translateY(110%); } to { transform: none; } }
+  .hero-rise { animation: hero-rise 0.8s var(--ease-out-soft) var(--d, 0ms) both; }
+  @keyframes hero-rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- Carte : couches et couleurs (jetons cartographiques) ---------- */
+  .hero-map :global(.hm path),
+  .hero-map :global(.hm rect),
+  .hero-map :global(.hm circle) { vector-effect: non-scaling-stroke; }
+  .hero-map :global(.hm-grid path) { fill: none; stroke: var(--color-map-grid); stroke-width: 1; }
+  .hero-map :global(.hm-soil) { fill: var(--color-map-soil-soft); opacity: 0.32; }
+  .hero-map :global(.hm-veg) { fill: url(#hm-hatch); }
+  .hero-map :global(.hm-hatch-line) { stroke: var(--color-map-vegetation); stroke-width: 1.1; opacity: 0.4; }
+  .hero-map :global(.hm-relief path) { fill: none; stroke: var(--color-map-relief); stroke-width: 0.8; opacity: 0.5; }
+  .hero-map :global(.hm-relief .hm-master) { stroke-width: 1.3; opacity: 0.75; }
+  .hero-map :global(.hm-water path) { fill: none; stroke: var(--color-map-water); stroke-linecap: round; stroke-linejoin: round; }
+  .hero-map :global(.hm-o3) { stroke-width: 2.2; }
+  .hero-map :global(.hm-o2) { stroke-width: 1.4; }
+  .hero-map :global(.hm-o1) { stroke-width: 0.9; opacity: 0.7; }
+  .hero-map :global(.hm text) { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; fill: var(--color-muted); }
+  .hero-map :global(.hm-st rect) { fill: var(--color-canvas); stroke: var(--color-accent); stroke-width: 1.6; }
+  .hero-map :global(.hm-st text) { fill: var(--color-ink); font-weight: 500; }
+  .hero-map :global(.hm-st-ring) { fill: none; stroke: var(--color-accent); stroke-width: 1; opacity: 0; }
+  .hero-map :global(.hm-north) { fill: var(--color-ink); }
+
+  /* ---------- Carte : animation d'entrée (transform et opacity uniquement) ---------- */
+  /* Opacité seule : certains groupes portent un attribut transform (position) que la propriété CSS écraserait */
+  .hero-map :global(.hm-layer) { animation: hm-in 1.4s var(--ease-out-soft) both; animation-delay: calc(200ms + var(--i) * 260ms); }
+  @keyframes hm-in { from { opacity: 0; } to { opacity: 1; } }
+  /* Réseau hydrographique révélé de l'amont vers l'aval (masque mis à l'échelle verticalement) */
+  .hero-map :global(.hm-river-reveal) { transform-box: fill-box; transform-origin: 50% 0; animation: hm-flow 2.6s cubic-bezier(0.45, 0, 0.2, 1) 900ms both; }
+  @keyframes hm-flow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  /* Stations : apparition puis pulsation lente */
+  .hero-map :global(.hm-st) { animation: hm-in 0.8s var(--ease-out-soft) both; animation-delay: calc(2200ms + var(--n) * 180ms); }
+  .hero-map :global(.hm-st-ring) { transform-box: fill-box; transform-origin: center; animation: hm-ping 3.6s var(--ease-out-soft) infinite; animation-delay: calc(3000ms + var(--n) * 900ms); }
+  @keyframes hm-ping { 0% { opacity: 0.7; transform: scale(0.5); } 70%, 100% { opacity: 0; transform: scale(1.8); } }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-rise, .wi, .hero-pulse::after { animation: none !important; }
+    .wi, .hero-rise,
+    .hero-map :global(.hm-layer), .hero-map :global(.hm-st), .hero-map :global(.hm-river-reveal),
+    .hero-map :global(.hm-st-ring) { animation: none !important; }
   }
 </style>

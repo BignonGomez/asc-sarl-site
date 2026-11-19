@@ -57,6 +57,7 @@ export type ImageSlot = {
 // Les emplacements « *.hero » de ces pages ne sont plus affichés en en-tête ; les autres photos restent utilisées.
 export const images = {
   // ---------------- Accueil ----------------
+  // (Ancien arrière-plan du héro, retiré à la refonte : le héro affiche désormais la carte src/assets/hero-map.svg.)
   // Arrière-plan du héro de l'accueil : illustration vectorielle public/images/hero-accueil.svg
   // (fournie par le cabinet le 15/11/2026 sous le nom hero-asc-exemple.svg), utilisée directement par Hero.astro.
   // L'emplacement ci-dessous n'est plus affiché depuis ce changement ; conservé pour un éventuel retour à la photo.
