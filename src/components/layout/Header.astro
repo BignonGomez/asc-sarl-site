@@ -133,7 +133,9 @@ const panelId = (href: string) => `menu-${href.replace(/\W/g, '') || 'accueil'}`
       <div class="mt-6"><Button href={site.cta.href} size="lg" class="w-full !rounded-full" arrow>{site.cta.label}</Button></div>
       <div class="drawer__contact">
         <a href={`mailto:${site.email}`}><Mail size={18} aria-hidden="true" /> {site.email}</a>
-        <span><Phone size={18} aria-hidden="true" /> {site.phone.display}</span>
+        {site.phone.href
+          ? <a href={site.phone.href}><Phone size={18} aria-hidden="true" /> {site.phone.display}</a>
+          : <span><Phone size={18} aria-hidden="true" /> {site.phone.display}</span>}
       </div>
     </div>
   </div>

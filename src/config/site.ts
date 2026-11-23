@@ -17,8 +17,7 @@ export const site = {
     lines: ['Cotonou, 12e arrondissement', 'quartier Cadjéhoun Aupiais', 'îlot 621 F, Maison MR International'],
     oneLine: 'Cotonou, 12e arrondissement, quartier Cadjéhoun Aupiais, îlot 621 F, Maison MR International',
   },
-  // À VALIDER : numéro officiel à choisir parmi les trois connus (annexe C du protocole)
-  phone: { display: '+229 XX XX XX XX', href: null as string | null },
+  phone: { display: '+229 01 47 34 20 56', href: 'tel:+2290147342056' as string | null }, // communiqué le 23/11/2026
   // À VALIDER : adresse à créer après l'achat de l'hébergement
   email: 'contact@asc-sarl.com',
   rccm: 'RB/COT/25 B 40462',

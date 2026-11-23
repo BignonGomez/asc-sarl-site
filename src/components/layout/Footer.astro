@@ -85,7 +85,9 @@ const socials = [
           </li>
           <li>
             <span class="sf-icon"><Phone size={17} aria-hidden="true" /></span>
-            <span><span class="sr-only">Téléphone : </span>{site.phone.display}</span>
+            {site.phone.href
+              ? <a href={site.phone.href} class="sf-link !text-white"><span class="sr-only">Téléphone : </span>{site.phone.display}</a>
+              : <span><span class="sr-only">Téléphone : </span>{site.phone.display}</span>}
           </li>
           <li>
             <span class="sf-icon"><Mail size={17} aria-hidden="true" /></span>
