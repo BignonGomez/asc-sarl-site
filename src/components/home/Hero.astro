@@ -1,127 +1,298 @@
 ---
 /**
- * Héro de l'accueil (refonte, étape 2).
- * Une phrase, beaucoup de vide, un seul visuel : la carte technique schématique d'un bassin versant
- * (src/assets/hero-map.svg, générée par scripts/hero-map/generate.mjs), intégrée dans la page pour être animée
- * et colorée par les jetons (--color-map-*, accent). Aucun chiffre, aucun bandeau, aucune photo.
- * Animations : transform et opacity uniquement ; désactivées avec « réduire les animations ».
+ * Héro de l'accueil (23/11/2026), d'après le modèle fourni par le cabinet (Model_hero.png), adapté :
+ * - fond : diaporama plein écran de photos d'ingénieurs et d'études de terrain (Pixabay, registre images.json),
+ *   fondu enchaîné et zoom lent ; « Photo d'illustration » indiqué (ce ne sont pas des photos du cabinet) ;
+ * - panneau en verre dépoli à gauche : pastille, titre, sous-titre, bouton principal en capsule, lien secondaire ;
+ * - étiquette sur la photo : légende de l'image affichée ;
+ * - carte de contrôle (ordinateur) : légende, miniatures cliquables, pause/lecture, progression ;
+ * - bande des 8 domaines (à la place des logos du modèle : aucun partenaire publiable, aucun avis inventé).
+ * Performance : seule la 1re photo est chargée d'emblée (640 px mobile, 1280 px ordinateur) ; les suivantes après
+ * le chargement de la page, et pas du tout en mode économie de données. Accessibilité : pause visible (WCAG 2.2.2),
+ * défilement automatique désactivé avec « réduire les animations ».
  */
-import { ArrowRight } from '@lucide/astro';
-import Button from '../ui/Button.astro';
+import { ArrowUpRight, ArrowRight, Pause, Play } from '@lucide/astro';
 import { site } from '../../config/site';
+import { expertises } from '../../data/expertises';
 import { url } from '../../lib/url';
-import mapSvg from '../../assets/hero-map.svg?raw';
+import registre from '../../../images.json';
 
+const slides = [
+  { name: 'hero-ingenieurs-ouvrage', caption: 'Revue de plans · ouvrage hydraulique', pos: 'center 40%' },
+  { name: 'hero-releve-drone', caption: 'Relevé par drone · périmètre agricole', pos: '70% center' },
+  { name: 'hero-forage-sols', caption: 'Reconnaissance des sols · forage', pos: '65% center' },
+  { name: 'hero-controle-chantier', caption: 'Contrôle sur plans · chantier', pos: '65% center' },
+  { name: 'hero-ingenieure-site', caption: 'Visite de site · prise de notes', pos: '75% 30%' },
+];
+const alt = (name: string) => (registre as { fichier: string; alt: string }[]).find((e) => e.fichier === name)?.alt ?? '';
+const src = (name: string, w: number, fmt: string) => url(`/images/photos/${name}-${w}.${fmt}`);
+const set = (name: string, fmt: string) => `${src(name, 640, fmt)} 640w, ${src(name, 1280, fmt)} 1280w`;
+const pad = (n: number) => String(n).padStart(2, '0');
 const title = 'Études environnementales, hydrologie et aménagement du territoire';
-const words = title.split(' ');
 ---
-<section aria-labelledby="hero-title" class="hero relative isolate overflow-clip">
-  <!-- Visuel : carte technique (décor informatif, décrit par son titre SVG) -->
-  <figure class="hero-map">
-    <div class="hero-map__svg" data-parallax="0.12" set:html={mapSvg} />
-    <figcaption class="hero-map__caption text-eyebrow uppercase">
-      <span class="text-ink">Fig. 01</span> Bassin versant type · schéma illustratif
-    </figcaption>
-  </figure>
+<section aria-labelledby="hero-title" class="hero" data-hero>
+  <!-- Diaporama -->
+  <div class="hero__slides" aria-hidden="false">
+    {slides.map((s, i) => (
+      <picture class:list={['hero__slide', i === 0 && 'is-active']} data-slide={i} data-caption-text={s.caption}>
+        {i === 0 ? (
+          <>
+            <source type="image/avif" srcset={set(s.name, 'avif')} sizes="100vw" />
+            <img src={src(s.name, 1280, 'webp')} srcset={set(s.name, 'webp')} sizes="100vw" alt={alt(s.name)} width="1280" height="853" fetchpriority="high" decoding="async" style={`object-position:${s.pos}`} />
+          </>
+        ) : (
+          <>
+            <source type="image/avif" data-srcset={set(s.name, 'avif')} sizes="100vw" />
+            <img data-srcset={set(s.name, 'webp')} sizes="100vw" alt={alt(s.name)} width="1280" height="853" decoding="async" style={`object-position:${s.pos}`} />
+          </>
+        )}
+      </picture>
+    ))}
+    <span class="hero__shade" aria-hidden="true"></span>
+  </div>
+
+  <!-- Étiquette posée sur la photo -->
+  <p class="hero__tag" aria-hidden="true"><span class="hero__tag-dot"></span><span data-caption>{slides[0].caption}</span></p>
 
   <div class="container-site hero__inner">
-    <div class="grid-site">
-      <div class="col-span-full lg:col-span-9 xl:col-span-8">
-        <h1 id="hero-title" class="text-display text-ink">
-          {words.map((w, i) => (
-            <>
-              <span class="w"><span class="wi" style={`--wi:${i}`}>{w}</span></span>{' '}
-            </>
-          ))}
-        </h1>
-        <p class="hero-rise mt-6 max-w-[36rem] text-lead text-muted lg:mt-8" style="--d:280ms">
-          Cabinet d'études et de conseil à Cotonou, au service des acteurs publics et privés.
-        </p>
-        <div class="hero-rise mt-9 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:gap-8 lg:mt-11" style="--d:400ms">
-          <Button href={site.cta.href} size="lg" arrow>{site.cta.label}</Button>
-          <a href={url('/expertises')} class="hero-link group">
-            Nos domaines d'expertise
-            <ArrowRight size={16} aria-hidden="true" class="transition-transform duration-300 ease-[var(--ease-out-soft)] group-hover:translate-x-1" />
-          </a>
-        </div>
+    <!-- Panneau en verre dépoli -->
+    <div class="hero__panel">
+      <p class="hero__badge hero-rise" style="--d:0ms"><span class="hero__badge-dot" aria-hidden="true"></span>Bureau d'études · Cotonou, Bénin</p>
+      <h1 id="hero-title" class="hero__title">
+        {title.split(' ').map((w, i) => <><span class="w"><span class="wi" style={`--wi:${i}`}>{w}</span></span>{' '}</>)}
+      </h1>
+      <p class="hero__lead hero-rise" style="--d:240ms">Cabinet d'études et de conseil à Cotonou, au service des acteurs publics et privés.</p>
+      <div class="hero__actions hero-rise" style="--d:360ms">
+        <a href={url(site.cta.href)} class="hero__cta" data-magnetic>
+          {site.cta.label}
+          <span class="hero__cta-arrow" aria-hidden="true"><ArrowUpRight size={17} /></span>
+        </a>
+        <a href={url('/expertises')} class="hero__link group">Nos domaines d'expertise <ArrowRight size={16} aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1" /></a>
+      </div>
+
+      <!-- Commandes compactes (mobile) -->
+      <div class="hero__mini" role="group" aria-label="Diaporama">
+        <button type="button" class="hero__play" data-toggle aria-label="Mettre en pause le diaporama"><Pause size={15} class="i-pause" aria-hidden="true" /><Play size={15} class="i-play" aria-hidden="true" /></button>
+        <span class="hero__dots">{slides.map((_, i) => <button type="button" class:list={['hero__dot', i === 0 && 'is-active']} data-go={i} aria-label={`Photo ${i + 1} sur ${slides.length}`} aria-current={i === 0 ? 'true' : undefined}></button>)}</span>
       </div>
     </div>
+  </div>
+
+  <!-- Carte de contrôle (ordinateur) -->
+  <div class="container-site hero__bottom">
+    <div class="hero__card" role="group" aria-label="Diaporama">
+      <div class="hero__card-head">
+        <p class="hero__card-label">Photo d'illustration</p>
+        <p class="hero__card-count"><span data-index>{pad(1)}</span> / {pad(slides.length)}</p>
+      </div>
+      <p class="hero__card-caption" data-caption>{slides[0].caption}</p>
+      <div class="hero__thumbs">
+        {slides.map((s, i) => (
+          <button type="button" class:list={['hero__thumb', i === 0 && 'is-active']} data-go={i} aria-label={`Afficher la photo ${i + 1} : ${s.caption}`} aria-current={i === 0 ? 'true' : undefined}>
+            <picture>
+              <source type="image/avif" srcset={src(s.name, 320, 'avif')} />
+              <img src={src(s.name, 320, 'webp')} alt="" width="320" height="213" loading="lazy" decoding="async" />
+            </picture>
+          </button>
+        ))}
+        <button type="button" class="hero__play" data-toggle aria-label="Mettre en pause le diaporama"><Pause size={15} class="i-pause" aria-hidden="true" /><Play size={15} class="i-play" aria-hidden="true" /></button>
+      </div>
+      <span class="hero__progress" aria-hidden="true"><span data-progress></span></span>
+    </div>
+
+    <!-- Bande des domaines (à la place des logos du modèle) -->
+    <nav class="hero__domains" aria-label="Nos domaines d'expertise">
+      <ul>
+        {expertises.map((e, i) => (
+          <li><a href={url(`/expertises/${e.slug}`)}><span class="hero__domains-n">{pad(i + 1)}</span>{e.short}</a></li>
+        ))}
+      </ul>
+    </nav>
   </div>
 </section>
 
 <style>
-  /* ---------- Mise en page ---------- */
-  .hero { display: flex; flex-direction: column; }
-  .hero__inner { position: relative; z-index: 1; order: 1; padding-top: 7.5rem; padding-bottom: 1.5rem; }
-  .hero-map { position: relative; order: 2; margin: 0; height: min(78vw, 22rem); }
-  .hero-map__svg { position: absolute; inset: 0; -webkit-mask-image: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent); mask-image: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent); }
-  .hero-map__caption { position: absolute; left: var(--spacing-gutter); bottom: 0.25rem; display: flex; gap: 0.75rem; white-space: nowrap; font-size: 0.6875rem; color: var(--color-muted); }
+  /* ---------- Structure ---------- */
+  .hero { position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: flex-end; min-height: max(100svh, 40rem); padding-top: 7rem; overflow: clip; }
+  .hero__slides { position: absolute; inset: 0; z-index: -1; background: var(--color-night); }
+  .hero__slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s var(--ease-out-soft); }
+  .hero__slide.is-active { opacity: 1; }
+  .hero__slide img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.08); transition: transform 8s linear; }
+  .hero__slide.is-active img { transform: scale(1); }
+  /* Ombre légère en haut (lisibilité du menu) et en bas (carte et domaines) */
+  .hero__shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(17 20 23 / 0.28) 0%, transparent 22%, transparent 62%, rgb(17 20 23 / 0.35) 100%); }
+
+  .hero__inner { position: relative; padding-bottom: 1.25rem; }
+  /* Mobile et tablette : la photo occupe le haut de l'écran, le panneau la chevauche par le bas */
+  @media (width < 64rem) {
+    .hero { min-height: 0; justify-content: flex-start; padding-top: calc(min(58svh, 30rem) - 5rem); background: var(--color-canvas); }
+    .hero__slides { inset: 0 0 auto 0; height: min(58svh, 30rem); -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent); mask-image: linear-gradient(180deg, #000 70%, transparent); }
+    .hero__shade { background: linear-gradient(180deg, rgb(17 20 23 / 0.3) 0%, transparent 35%); }
+    /* Pas de flou sur mobile (coûteux pour les processeurs modestes) : fond presque opaque */
+    .hero__panel { background: rgb(246 244 240 / 0.95); -webkit-backdrop-filter: none; backdrop-filter: none; }
+    .hero__domains { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-line); }
+  }
+
+  /* ---------- Panneau en verre dépoli ---------- */
+  .hero__panel {
+    max-width: 40rem;
+    padding: clamp(1.25rem, 0.9rem + 1.8vw, 2.5rem);
+    border-radius: 1.25rem;
+    background: rgb(246 244 240 / 0.78);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.55), 0 24px 60px -30px rgb(17 20 23 / 0.55);
+  }
+  .hero__badge { display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.4rem 0.85rem; border-radius: 999px; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink); background: rgb(255 255 255 / 0.75); box-shadow: inset 0 0 0 1px var(--color-line); }
+  .hero__badge-dot { width: 0.45rem; height: 0.45rem; border-radius: 999px; background: var(--color-accent); }
+  .hero__title { margin-top: 1.25rem; font-size: clamp(2.25rem, 1.7rem + 1.9vw, 3.4rem); font-weight: 500; line-height: 1.03; letter-spacing: -0.035em; color: var(--color-ink); }
+  .hero__lead { margin-top: 1.1rem; max-width: 30rem; font-size: var(--text-lead); line-height: 1.55; color: var(--color-ink-soft); }
+  .hero__actions { margin-top: 1.75rem; display: flex; flex-direction: column; align-items: stretch; gap: 1rem; }
+  .hero__cta { display: inline-flex; align-items: center; justify-content: space-between; gap: 0.9rem; min-height: 3.25rem; padding: 0.4rem 0.45rem 0.4rem 1.4rem; border-radius: 999px; font-weight: 500; color: #fff; background: var(--color-ink); transition: background-color 0.2s, transform 0.2s var(--ease-out-soft); }
+  .hero__cta:hover { background: var(--color-accent); }
+  .hero__cta-arrow { display: grid; place-items: center; flex-shrink: 0; width: 2.4rem; height: 2.4rem; border-radius: 999px; background: var(--color-accent); transition: transform 0.35s var(--ease-out-soft), background-color 0.2s; }
+  .hero__cta:hover .hero__cta-arrow { transform: rotate(45deg); background: var(--color-ink); }
+  .hero__link { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.75rem; font-weight: 500; color: var(--color-ink); }
+  .hero__link:hover { color: var(--color-accent-text); }
+  @media (width >= 40rem) {
+    .hero__actions { flex-direction: row; align-items: center; gap: 1.75rem; }
+    .hero__cta, .hero__link { white-space: nowrap; }
+  }
+
+  /* ---------- Étiquette sur la photo ---------- */
+  .hero__tag { display: none; }
+  @media (width >= 64rem) {
+    .hero__tag {
+      position: absolute; top: 44%; right: 12%; z-index: 1; display: inline-flex; align-items: center; gap: 0.55rem;
+      padding: 0.45rem 0.9rem 0.45rem 0.6rem; border-radius: 999px; font-size: 0.8125rem; font-weight: 500; color: var(--color-ink);
+      background: rgb(255 255 255 / 0.82); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 10px 30px -14px rgb(17 20 23 / 0.5);
+    }
+    .hero__tag-dot { position: relative; width: 0.6rem; height: 0.6rem; border-radius: 999px; background: var(--color-accent); }
+    .hero__tag-dot::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: var(--color-accent); animation: tag-ping 2.4s var(--ease-out-soft) infinite; }
+  }
+  @keyframes tag-ping { 0% { transform: scale(1); opacity: 0.6; } 80%, 100% { transform: scale(3); opacity: 0; } }
+
+  /* ---------- Commandes compactes (mobile) ---------- */
+  .hero__mini { margin-top: 1.5rem; display: flex; align-items: center; gap: 0.9rem; }
+  .hero__dots { display: flex; gap: 0.15rem; }
+  .hero__dot { position: relative; width: 1.75rem; height: 2.25rem; }
+  .hero__dot::before { content: ''; position: absolute; left: 0.2rem; right: 0.2rem; top: 50%; height: 3px; margin-top: -1.5px; border-radius: 2px; background: rgb(20 24 28 / 0.2); transition: background-color 0.3s; }
+  .hero__dot.is-active::before { background: var(--color-accent); }
+  .hero__play { display: grid; place-items: center; flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 999px; color: var(--color-ink); background: rgb(255 255 255 / 0.85); box-shadow: inset 0 0 0 1px var(--color-line); }
+  .hero__play:hover { color: #fff; background: var(--color-accent); box-shadow: none; }
+  .hero__play .i-play { display: none; }
+  :global([data-hero][data-paused]) .hero__play .i-play { display: block; }
+  :global([data-hero][data-paused]) .hero__play .i-pause { display: none; }
+
+  /* ---------- Bas du héro : carte de contrôle et domaines ---------- */
+  .hero__bottom { position: relative; padding-bottom: 1.25rem; }
+  .hero__card { display: none; }
+  .hero__domains { overflow-x: auto; scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); border-radius: 1rem; background: rgb(255 255 255 / 0.88); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: 0 16px 40px -24px rgb(17 20 23 / 0.5); }
+  .hero__domains ul { display: flex; width: max-content; }
+  .hero__domains a { display: inline-flex; align-items: baseline; gap: 0.5rem; padding: 0.95rem 1.1rem; white-space: nowrap; font-size: 0.875rem; font-weight: 500; color: var(--color-ink); transition: color 0.2s; }
+  .hero__domains li + li a { box-shadow: inset 1px 0 0 var(--color-line); }
+  .hero__domains a:hover { color: var(--color-accent-text); }
+  .hero__domains-n { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--color-accent-text); }
 
   @media (width >= 64rem) {
-    .hero { display: block; min-height: max(100svh, 46rem); }
-    .hero__inner { display: flex; align-items: center; min-height: max(100svh, 46rem); padding-top: 8rem; padding-bottom: 6rem; }
-    .hero-map { position: absolute; inset: 0 0 0 auto; width: 50%; height: auto; }
-    .hero-map__svg {
-      -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.55) 30%, #000 60%), linear-gradient(180deg, transparent 4%, #000 22%, #000 82%, transparent);
-      mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.55) 30%, #000 60%), linear-gradient(180deg, transparent 4%, #000 22%, #000 82%, transparent);
-      -webkit-mask-composite: source-in;
-      mask-composite: intersect;
-    }
-    .hero-map__caption { left: auto; right: var(--spacing-gutter-lg); bottom: 2.5rem; }
+    .hero { min-height: max(100svh, 46rem); padding-top: 8rem; justify-content: space-between; }
+    .hero__inner { padding-bottom: 0; }
+    .hero__mini { display: none; }
+    .hero__bottom { display: grid; grid-template-columns: 22rem 1fr; align-items: end; gap: 1.5rem; padding-bottom: 1.75rem; }
+    .hero__card { display: block; position: relative; overflow: hidden; padding: 1.1rem 1.1rem 1.25rem; border-radius: 1.1rem; background: rgb(255 255 255 / 0.9); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 20px 50px -26px rgb(17 20 23 / 0.6); }
+    .hero__card-head { display: flex; justify-content: space-between; align-items: baseline; }
+    .hero__card-label, .hero__card-count { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); }
+    .hero__card-count { color: var(--color-accent-text); }
+    .hero__card-caption { margin-top: 0.45rem; font-weight: 500; color: var(--color-ink); }
+    .hero__thumbs { margin-top: 0.9rem; display: flex; align-items: center; gap: 0.45rem; }
+    .hero__thumb { width: 2.9rem; height: 2.2rem; overflow: hidden; border-radius: 0.45rem; opacity: 0.55; box-shadow: inset 0 0 0 1px var(--color-line); transition: opacity 0.25s, box-shadow 0.25s, transform 0.25s var(--ease-out-soft); }
+    .hero__thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .hero__thumb:hover { opacity: 0.9; transform: translateY(-1px); }
+    .hero__thumb.is-active { opacity: 1; box-shadow: 0 0 0 2px var(--color-accent); }
+    .hero__thumbs .hero__play { margin-left: auto; }
+    .hero__progress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--color-line); }
+    .hero__progress span { position: absolute; inset: 0; background: var(--color-accent); transform-origin: left; transform: scaleX(0); }
+    :global([data-hero].is-playing) .hero__progress span { animation: hero-progress var(--interval, 6500ms) linear forwards; }
+    .hero__domains { justify-self: end; max-width: 100%; }
   }
-  @media (width >= 80rem) {
-    .hero-map { width: 62%; }
-  }
+  @keyframes hero-progress { to { transform: scaleX(1); } }
 
-  .hero-map__svg :global(svg) { width: 100%; height: 100%; display: block; }
-
-  /* ---------- Lien secondaire discret ---------- */
-  .hero-link { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 3rem; font-weight: 500; color: var(--color-ink); }
-  .hero-link:hover { color: var(--color-accent-text); }
-
-  /* ---------- Titre mot par mot ---------- */
+  /* ---------- Entrée du texte ---------- */
   .w { display: inline-block; overflow: clip; overflow-clip-margin: 0.2em; vertical-align: top; }
   .wi { display: inline-block; animation: word-up 0.8s var(--ease-out-soft) both; animation-delay: calc(40ms + var(--wi) * 40ms); }
   @keyframes word-up { from { transform: translateY(110%); } to { transform: none; } }
-  /* Opacité de départ 0,01 (et non 0) : le texte compte tout de suite comme affiché pour la mesure du contenu principal */
   .hero-rise { animation: hero-rise 0.7s var(--ease-out-soft) var(--d, 0ms) both; }
-  @keyframes hero-rise { from { opacity: 0.01; transform: translateY(24px); } to { opacity: 1; transform: none; } }
-
-  /* ---------- Carte : couches et couleurs (jetons cartographiques) ---------- */
-  .hero-map :global(.hm path),
-  .hero-map :global(.hm rect),
-  .hero-map :global(.hm circle) { vector-effect: non-scaling-stroke; }
-  .hero-map :global(.hm-grid path) { fill: none; stroke: var(--color-map-grid); stroke-width: 1; }
-  .hero-map :global(.hm-soil) { fill: var(--color-map-soil-soft); opacity: 0.32; }
-  .hero-map :global(.hm-veg) { fill: url(#hm-hatch); }
-  .hero-map :global(.hm-hatch-line) { stroke: var(--color-map-vegetation); stroke-width: 1.1; opacity: 0.4; }
-  .hero-map :global(.hm-relief path) { fill: none; stroke: var(--color-map-relief); stroke-width: 0.8; opacity: 0.5; }
-  .hero-map :global(.hm-relief .hm-master) { stroke-width: 1.3; opacity: 0.75; }
-  .hero-map :global(.hm-water path) { fill: none; stroke: var(--color-map-water); stroke-linecap: round; stroke-linejoin: round; }
-  .hero-map :global(.hm-o3) { stroke-width: 2.2; }
-  .hero-map :global(.hm-o2) { stroke-width: 1.4; }
-  .hero-map :global(.hm-o1) { stroke-width: 0.9; opacity: 0.7; }
-  .hero-map :global(.hm text) { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; fill: var(--color-muted); }
-  .hero-map :global(.hm-st rect) { fill: var(--color-canvas); stroke: var(--color-accent); stroke-width: 1.6; }
-  .hero-map :global(.hm-st text) { fill: var(--color-ink); font-weight: 500; }
-  .hero-map :global(.hm-st-ring) { fill: none; stroke: var(--color-accent); stroke-width: 1; opacity: 0; }
-  .hero-map :global(.hm-north) { fill: var(--color-ink); }
-
-  /* ---------- Carte : animation d'entrée (transform et opacity uniquement) ---------- */
-  /* Opacité seule : certains groupes portent un attribut transform (position) que la propriété CSS écraserait */
-  .hero-map :global(.hm-layer) { animation: hm-in 1.4s var(--ease-out-soft) both; animation-delay: calc(200ms + var(--i) * 260ms); }
-  @keyframes hm-in { from { opacity: 0; } to { opacity: 1; } }
-  /* Réseau hydrographique révélé de l'amont vers l'aval (masque mis à l'échelle verticalement) */
-  .hero-map :global(.hm-river-reveal) { transform-box: fill-box; transform-origin: 50% 0; animation: hm-flow 2.6s cubic-bezier(0.45, 0, 0.2, 1) 900ms both; }
-  @keyframes hm-flow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-  /* Stations : apparition puis pulsation lente */
-  .hero-map :global(.hm-st) { animation: hm-in 0.8s var(--ease-out-soft) both; animation-delay: calc(2200ms + var(--n) * 180ms); }
-  .hero-map :global(.hm-st-ring) { transform-box: fill-box; transform-origin: center; animation: hm-ping 3.6s var(--ease-out-soft) infinite; animation-delay: calc(3000ms + var(--n) * 900ms); }
-  @keyframes hm-ping { 0% { opacity: 0.7; transform: scale(0.5); } 70%, 100% { opacity: 0; transform: scale(1.8); } }
+  @keyframes hero-rise { from { opacity: 0.01; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 
   @media (prefers-reduced-motion: reduce) {
-    .wi, .hero-rise,
-    .hero-map :global(.hm-layer), .hero-map :global(.hm-st), .hero-map :global(.hm-river-reveal),
-    .hero-map :global(.hm-st-ring) { animation: none !important; }
+    .wi, .hero-rise { animation: none; }
+    .hero__slide, .hero__slide img { transition: opacity 0.3s; transform: none !important; }
+    .hero__tag-dot::after { animation: none; }
   }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-hero]').forEach((hero) => {
+    const slides = [...hero.querySelectorAll<HTMLElement>('[data-slide]')];
+    const gos = [...hero.querySelectorAll<HTMLButtonElement>('[data-go]')];
+    const toggles = [...hero.querySelectorAll<HTMLButtonElement>('[data-toggle]')];
+    const captions = [...hero.querySelectorAll<HTMLElement>('[data-caption]')];
+    const index = hero.querySelector<HTMLElement>('[data-index]');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const conn = (navigator as any).connection;
+    const saveData = !!conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType ?? ''));
+    const INTERVAL = 6500;
+    hero.style.setProperty('--interval', `${INTERVAL}ms`);
+    let current = 0, timer = 0;
+    let paused = reduce || saveData; // pas de défilement automatique si « réduire les animations » ou économie de données
+    let visible = true;
+
+    const load = (i: number) => new Promise<void>((resolve) => {
+      const pic = slides[i];
+      const img = pic.querySelector('img')!;
+      pic.querySelectorAll<HTMLElement>('[data-srcset]').forEach((el) => { el.setAttribute('srcset', el.dataset.srcset!); el.removeAttribute('data-srcset'); });
+      if (img.complete && img.naturalWidth) return resolve();
+      img.addEventListener('load', () => resolve(), { once: true });
+      img.addEventListener('error', () => resolve(), { once: true });
+    });
+
+    const show = async (i: number) => {
+      i = (i + slides.length) % slides.length;
+      if (i === current) return;
+      await load(i);
+      slides[current].classList.remove('is-active');
+      slides[i].classList.add('is-active');
+      current = i;
+      gos.forEach((b) => { const on = Number(b.dataset.go) === i; b.classList.toggle('is-active', on); if (on) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+      captions.forEach((c) => (c.textContent = slides[i].dataset.captionText ?? ''));
+      if (index) index.textContent = String(i + 1).padStart(2, '0');
+      restart();
+    };
+
+    const restart = () => {
+      window.clearTimeout(timer);
+      hero.classList.remove('is-playing');
+      if (paused || !visible) return;
+      void hero.offsetWidth; // relance la barre de progression
+      hero.classList.add('is-playing');
+      load((current + 1) % slides.length); // précharge la suivante
+      timer = window.setTimeout(() => show(current + 1), INTERVAL);
+    };
+
+    const setPaused = (p: boolean) => {
+      paused = p;
+      hero.toggleAttribute('data-paused', p);
+      toggles.forEach((t) => t.setAttribute('aria-label', p ? 'Reprendre le diaporama' : 'Mettre en pause le diaporama'));
+      restart();
+    };
+
+    gos.forEach((b) => b.addEventListener('click', () => show(Number(b.dataset.go))));
+    toggles.forEach((t) => t.addEventListener('click', () => setPaused(!paused)));
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; restart(); }, { threshold: 0.2 }).observe(hero);
+    document.addEventListener('visibilitychange', () => { visible = !document.hidden; restart(); });
+
+    setPaused(paused);
+    // Les photos suivantes sont chargées une fois la page prête (jamais en mode économie de données)
+    if (!saveData) window.addEventListener('load', () => window.setTimeout(() => load(1), 800), { once: true });
+  });
+</script>

@@ -1,263 +1,188 @@
 ---
 /**
- * Pied de page : section d'appel à l'action (Contact, termes de référence), puis bloc sombre :
- * 5 colonnes (présentation, navigation, expertises, siège social, informations légales),
- * grand mot en contour « ALKEBULAN » animé au défilement, barre du bas.
- * Fond du bloc : nuit #111417 et léger grain, atteint par un dégradé depuis le fond continu.
+ * Pied de page (refonte, 23/11/2026).
+ * 1. Section d'appel à l'action « termes de référence » (claire), sauf sur l'accueil et la page Contact.
+ * 2. Bloc sombre, atteint par un dégradé depuis le fond continu, sur un motif discret de courbes de niveau
+ *    (tiré de la carte du héro : src/assets/footer-contours.svg) :
+ *    - bandeau : logo, positionnement, et contacts directs en grand (téléphone, e-mail) avec le bouton principal ;
+ *    - colonnes : Cabinet, Expertises (numérotées), Ressources, Siège ;
+ *    - barre du bas : copyright et RCCM, liens légaux, retour en haut.
  */
-import { MapPin, Phone, Mail, ArrowUpRight } from '@lucide/astro';
+import { ArrowUp, ArrowUpRight } from '@lucide/astro';
 import SocialIcon from '../ui/SocialIcon.astro';
 import ContactTdr from '../home/ContactTdr.astro';
 import logoWhite from '../../assets/logo/logo-full-white.svg';
-import { site, footerLinks, legalLinks } from '../../config/site';
+import { site, legalLinks } from '../../config/site';
 import { expertises } from '../../data/expertises';
 import { url } from '../../lib/url';
 
-/** cta = false : masque la carte d'appel (page Contact, qui est elle-même l'appel à l'action) */
+/** cta = false : masque la section d'appel (accueil et page Contact, qui ont la leur) */
 interface Props { cta?: { title?: string; text?: string } | false }
 const { cta = {} } = Astro.props;
 const showCta = cta !== false;
 const ctaTitle = (cta || {}).title ?? 'Transmettez vos termes de référence';
 const ctaText = (cta || {}).text ?? 'Joignez vos termes de référence ou votre cahier des charges au formulaire : nous étudions votre demande et revenons vers vous.';
 
-const socials = [
-  ...site.social.filter((s) => s.href).map((s) => ({ name: s.name, icon: s.icon, href: s.href as string, external: true })),
-  { name: 'E-mail', icon: 'mail', href: `mailto:${site.email}`, external: false },
+const pad = (n: number) => String(n).padStart(2, '0');
+const cabinet = [
+  { label: 'Présentation', href: '/cabinet' },
+  { label: 'Vision, mission et valeurs', href: '/cabinet/vision-mission-valeurs' },
+  { label: 'Notre équipe', href: '/cabinet/equipe' },
+  { label: 'Notre approche', href: '/cabinet/approche' },
+  { label: 'Missions en cours', href: '/realisations/missions-en-cours' },
 ];
+const ressources = [
+  { label: 'Actualités', href: '/actualites' },
+  { label: 'Foire aux questions', href: '/ressources/faq' },
+  { label: 'Recrutement', href: '/ressources/recrutement' },
+  { label: 'Contact', href: '/contact' },
+];
+const socials = site.social.filter((s) => s.href);
 ---
 <footer class="site-footer">
-  <!-- Appel à l'action (masqué sur l'accueil, qui a sa propre section, et sur la page Contact) -->
   {showCta && <ContactTdr title={ctaTitle} intro={ctaText} id="footer-cta-title" />}
 
-  <!-- Bloc vert forêt : informations structurantes -->
-  <!-- Transition en dégradé du fond continu vers le pied de page (seule zone sombre) -->
   <div aria-hidden="true" class="sf-fade"></div>
-  <div class="sf-dark relative isolate overflow-clip text-white">
-  <div aria-hidden="true" class="sf-bg absolute inset-0 -z-10">
-    <span class="sf-grain"></span>
-  </div>
-
-  <!-- Colonnes -->
-  <div class="container-site">
-    <div class="sf-main">
-      <div class="sf-brand">
-        <a href={url('/')} class="inline-flex rounded-ui">
-          <img src={logoWhite.src} alt={`${site.name} – accueil`} width="174" height="80" class="h-20 w-auto" />
-        </a>
-        <p class="mt-5 max-w-sm text-[0.9375rem] leading-relaxed text-white/85">Cabinet béninois d'études et de conseil en environnement, changements climatiques, gestion des ressources en eau, aménagement du territoire et développement local.</p>
-        <ul class="mt-6 flex flex-wrap gap-2.5" aria-label="Nous suivre et nous écrire">
-          {socials.map((s) => (
-            <li>
-              <a
-                href={s.href}
-                class="sf-social"
-                aria-label={s.external ? `${s.name} (nouvel onglet)` : `Nous écrire : ${site.email}`}
-                target={s.external ? '_blank' : undefined}
-                rel={s.external ? 'noopener noreferrer' : undefined}
-              >
-                {s.icon === 'mail' ? <Mail size={18} aria-hidden="true" /> : <SocialIcon name={s.icon as any} />}
-              </a>
-            </li>
-          ))}
-        </ul>
+  <div class="sf-dark">
+    <div class="container-site">
+      <!-- Bandeau : identité et contacts directs -->
+      <div class="sf-top">
+        <div class="sf-id">
+          <a href={url('/')} class="inline-flex rounded-ui">
+            <img src={logoWhite.src} alt={`${site.name} – accueil`} width="174" height="80" class="h-16 w-auto" loading="lazy" />
+          </a>
+          <p class="sf-pitch">Bureau d'études et de conseil en environnement, climat, eau et développement territorial.</p>
+          <p class="sf-place">Cotonou · Bénin</p>
+        </div>
+        <div class="sf-direct">
+          <p class="sf-label">Nous joindre</p>
+          {site.phone.href && <a href={site.phone.href} class="sf-big"><span class="sr-only">Téléphone : </span>{site.phone.display}</a>}
+          <a href={`mailto:${site.email}`} class="sf-big"><span class="sr-only">E-mail : </span>{site.email}</a>
+          <a href={url(site.cta.href)} class="sf-cta group">
+            {site.cta.label}
+            <span class="sf-cta__arrow" aria-hidden="true"><ArrowUpRight size={16} /></span>
+          </a>
+        </div>
       </div>
 
-      <nav aria-labelledby="sf-nav" class="sf-col">
-        <h2 id="sf-nav" class="sf-title">Navigation</h2>
-        <ul>
-          {footerLinks.map((l) => <li><a href={url(l.href)} class="sf-link">{l.label}</a></li>)}
-        </ul>
-      </nav>
-
-      <nav aria-labelledby="sf-exp" class="sf-col sf-col--wide">
-        <h2 id="sf-exp" class="sf-title">Nos expertises</h2>
-        <ul>
-          {expertises.map((e) => <li><a href={url(`/expertises/${e.slug}`)} class="sf-link">{e.title}</a></li>)}
-        </ul>
-      </nav>
-
-      <div class="sf-col sf-col--wide">
-        <h2 class="sf-title">Siège social</h2>
-        <ul class="sf-contact">
-          <li>
-            <span class="sf-icon"><MapPin size={17} aria-hidden="true" /></span>
-            <address class="not-italic">{site.address.oneLine}</address>
-          </li>
-          <li>
-            <span class="sf-icon"><Phone size={17} aria-hidden="true" /></span>
-            {site.phone.href
-              ? <a href={site.phone.href} class="sf-link !text-white"><span class="sr-only">Téléphone : </span>{site.phone.display}</a>
-              : <span><span class="sr-only">Téléphone : </span>{site.phone.display}</span>}
-          </li>
-          <li>
-            <span class="sf-icon"><Mail size={17} aria-hidden="true" /></span>
-            <a href={`mailto:${site.email}`} class="sf-link !text-white">{site.email}</a>
-          </li>
-        </ul>
+      <!-- Colonnes -->
+      <div class="sf-cols">
+        <nav aria-labelledby="sf-cab" class="sf-col">
+          <h2 id="sf-cab" class="sf-label">Cabinet</h2>
+          <ul>{cabinet.map((l) => <li><a href={url(l.href)} class="sf-link">{l.label}</a></li>)}</ul>
+        </nav>
+        <nav aria-labelledby="sf-exp" class="sf-col sf-col--exp">
+          <h2 id="sf-exp" class="sf-label">Expertises</h2>
+          <ul>
+            {expertises.map((e, i) => (
+              <li><a href={url(`/expertises/${e.slug}`)} class="sf-link sf-link--num"><span class="sf-n">{pad(i + 1)}</span>{e.title}</a></li>
+            ))}
+          </ul>
+        </nav>
+        <nav aria-labelledby="sf-res" class="sf-col">
+          <h2 id="sf-res" class="sf-label">Ressources</h2>
+          <ul>{ressources.map((l) => <li><a href={url(l.href)} class="sf-link">{l.label}</a></li>)}</ul>
+        </nav>
+        <div class="sf-col">
+          <h2 class="sf-label">Siège social</h2>
+          <address class="sf-address">{site.address.lines.map((l) => <span class="block">{l}</span>)}</address>
+          {socials.length > 0 && (
+            <ul class="mt-5 flex gap-2.5" aria-label="Réseaux sociaux">
+              {socials.map((s) => (
+                <li>
+                  <a href={s.href!} class="sf-social" aria-label={`${s.name} (nouvel onglet)`} target="_blank" rel="noopener noreferrer">
+                    <SocialIcon name={s.icon as any} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
 
-      <nav aria-labelledby="sf-legal" class="sf-col">
-        <h2 id="sf-legal" class="sf-title">Informations légales</h2>
-        <ul>
+      <!-- Barre du bas -->
+      <div class="sf-bottom">
+        <p>© {site.copyrightYear} {site.name} · SARL · RCCM {site.rccm}</p>
+        <ul class="flex flex-wrap items-center gap-x-6 gap-y-2">
           {legalLinks.map((l) => <li><a href={url(l.href)} class="sf-link">{l.label}</a></li>)}
-          <li class="pt-2 text-[0.8125rem] text-white/75">RCCM {site.rccm}</li>
+          <li>
+            <a href="#contenu" class="sf-top-link group">
+              Haut de page <ArrowUp size={15} aria-hidden="true" class="transition-transform duration-300 group-hover:-translate-y-0.5" />
+            </a>
+          </li>
         </ul>
-      </nav>
+      </div>
     </div>
-  </div>
-
-  <!-- Grand mot en contour -->
-  <p class="sf-word" aria-hidden="true" data-footer-word>ALKEBULAN</p>
-
-  <!-- Barre du bas -->
-  <div class="container-site">
-    <div class="sf-bottom">
-      <p>© {site.copyrightYear} {site.name}. Tous droits réservés.</p>
-      <ul class="flex flex-wrap items-center gap-x-5 gap-y-2">
-        {legalLinks.map((l) => <li><a href={url(l.href)} class="sf-link">{l.label}</a></li>)}
-        <li><a href={url('/')} class="sf-link inline-flex items-center gap-1">{site.domain}<ArrowUpRight size={14} aria-hidden="true" /></a></li>
-      </ul>
-    </div>
-  </div>
   </div>
 </footer>
 
 <style>
-  /* ---------- Fond du bloc vert ---------- */
   .sf-fade {
     height: clamp(4rem, 10vw, 8rem);
     background: linear-gradient(180deg, var(--color-canvas) 0%, color-mix(in srgb, var(--color-night) 18%, var(--color-canvas)) 45%, var(--color-night) 100%);
   }
-  .sf-bg {
+  .sf-dark {
+    position: relative;
+    isolation: isolate;
+    color: #fff;
     background: var(--color-night);
-    overflow: hidden;
   }
-  .sf-grain {
+  /* Motif de courbes de niveau, estompé vers le haut */
+  .sf-dark::before {
+    content: '';
     position: absolute;
     inset: 0;
-    opacity: 0.05;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    z-index: -1;
+    background: url('../../assets/footer-contours.svg') center 30% / cover no-repeat;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 35%);
+    mask-image: linear-gradient(180deg, transparent, #000 35%);
+    opacity: 0.9;
   }
 
-  /* ---------- Colonnes ---------- */
-  .sf-main {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2.5rem 1.5rem;
-    padding-block: clamp(3.5rem, 7vw, 5rem) 2.75rem;
-  }
-  .sf-brand, .sf-col--wide { grid-column: 1 / -1; }
+  /* Bandeau */
+  .sf-top { display: grid; gap: 2.5rem; padding-block: 1rem 3rem; border-bottom: 1px solid rgb(255 255 255 / 0.12); }
+  .sf-pitch { margin-top: 1.25rem; max-width: 26rem; font-size: 1.0625rem; line-height: 1.55; color: rgb(255 255 255 / 0.85); }
+  .sf-place { margin-top: 0.75rem; font-family: var(--font-mono); font-size: var(--text-eyebrow); letter-spacing: var(--text-eyebrow--letter-spacing); text-transform: uppercase; color: var(--color-accent-on-dark); }
+  .sf-direct { display: grid; justify-items: start; gap: 0.35rem; }
+  .sf-label { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(255 255 255 / 0.6); }
+  .sf-direct .sf-label { margin-bottom: 0.4rem; }
+  .sf-big { font-size: clamp(1.375rem, 1.1rem + 1.2vw, 2rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.25; color: #fff; overflow-wrap: anywhere; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size 0.4s var(--ease-out-soft), color 0.2s; }
+  .sf-big:hover { color: var(--color-accent-on-dark); background-size: 100% 1px; }
+  .sf-cta { display: inline-flex; align-items: center; gap: 0.75rem; margin-top: 1.25rem; padding: 0.45rem 0.5rem 0.45rem 1.25rem; border-radius: 999px; font-weight: 500; color: var(--color-night); background: #fff; transition: background-color 0.2s; }
+  .sf-cta:hover { background: var(--color-accent-on-dark); }
+  .sf-cta__arrow { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px; color: #fff; background: var(--color-accent); transition: transform 0.3s var(--ease-out-soft); }
+  .sf-cta:hover .sf-cta__arrow { transform: rotate(45deg); }
+
+  /* Colonnes */
+  .sf-cols { display: grid; gap: 2.5rem 2rem; padding-block: 3rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sf-col ul { margin-top: 1rem; display: grid; gap: 0.6rem; }
+  .sf-col--exp { grid-column: 1 / -1; }
+  .sf-link { font-size: 0.9375rem; color: rgb(255 255 255 / 0.82); transition: color 0.2s; }
+  .sf-link:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--color-accent-on-dark); }
+  .sf-link--num { display: inline-flex; gap: 0.75rem; }
+  .sf-n { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-accent-on-dark); padding-top: 0.15rem; }
+  .sf-address { margin-top: 1rem; font-style: normal; font-size: 0.9375rem; line-height: 1.6; color: rgb(255 255 255 / 0.82); }
+  .sf-social { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: var(--radius-ui); color: #fff; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.25); transition: background-color 0.2s, box-shadow 0.2s; }
+  .sf-social:hover { background: rgb(255 255 255 / 0.1); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.6); }
+
+  /* Barre du bas */
+  .sf-bottom { display: flex; flex-direction: column; gap: 1rem; padding-block: 1.75rem 2.25rem; border-top: 1px solid rgb(255 255 255 / 0.12); font-size: 0.8125rem; color: rgb(255 255 255 / 0.65); }
+  .sf-bottom .sf-link { font-size: 0.8125rem; }
+  .sf-top-link { display: inline-flex; align-items: center; gap: 0.35rem; color: #fff; }
+
   @media (width >= 48rem) {
-    .sf-main { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .sf-brand { grid-column: 1 / -1; }
-    .sf-col--wide { grid-column: auto; }
+    .sf-cols { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .sf-col--exp { grid-column: span 2; }
+    .sf-col--exp ul { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.5rem; }
+    .sf-bottom { flex-direction: row; align-items: center; justify-content: space-between; }
   }
   @media (width >= 64rem) {
-    .sf-main { grid-template-columns: 1.35fr 0.8fr 1.25fr 1.15fr 0.95fr; gap: 2rem; }
-    .sf-brand { grid-column: auto; }
+    .sf-top { grid-template-columns: 6fr 6fr; align-items: end; padding-bottom: 4rem; }
+    .sf-direct { justify-items: end; text-align: right; }
+    .sf-cols { grid-template-columns: 2fr 4fr 2fr 3fr; padding-block: 3.5rem; }
+    .sf-col--exp { grid-column: auto; }
   }
-  .sf-title {
-    margin-bottom: 1.125rem;
-    font-family: var(--font-sans);
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--color-accent-on-dark);
-  }
-  .sf-col li + li { margin-top: 0.625rem; }
-  .sf-link {
-    font-size: 0.9375rem;
-    color: rgb(255 255 255 / 0.85);
-    transition: color 0.2s;
-  }
-  .sf-link:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--color-accent); }
-  .sf-contact li { display: flex; gap: 0.75rem; font-size: 0.9375rem; line-height: 1.55; color: rgb(255 255 255 / 0.88); }
-  .sf-contact li + li { margin-top: 0.875rem; }
-  .sf-icon {
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 0.625rem;
-    color: var(--color-accent-on-dark);
-    background: rgb(255 255 255 / 0.1);
-    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16);
-  }
-  .sf-social {
-    display: grid;
-    place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 0.75rem;
-    color: #fff;
-    background: rgb(255 255 255 / 0.1);
-    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.2);
-    transition: color 0.2s, background-color 0.2s, box-shadow 0.2s, transform 0.3s var(--ease-out-soft);
-  }
-  .sf-social:hover {
-    color: var(--color-ink);
-    background: #fff;
-    transform: translateY(-3px);
-    box-shadow: 0 10px 22px -10px rgb(0 0 0 / 0.6);
-  }
-
-  /* ---------- Grand mot en contour ---------- */
-  .sf-word {
-    margin: 0.5rem 0 -0.06em;
-    font-family: var(--font-display);
-    font-size: clamp(3.5rem, 16.5vw, 15rem);
-    font-weight: 700;
-    line-height: 0.85;
-    letter-spacing: -0.04em;
-    text-align: center;
-    white-space: nowrap;
-    color: transparent;
-    -webkit-text-stroke: 1px rgb(255 255 255 / 0.14);
-    background: linear-gradient(180deg, rgb(246 244 240 / 0), rgb(246 244 240 / 0) 70%, transparent);
-    -webkit-background-clip: text;
-    background-clip: text;
-    user-select: none;
-    pointer-events: none;
-    transform: translateX(var(--shift, 0px));
-    will-change: transform;
-  }
-
-  /* ---------- Barre du bas ---------- */
-  .sf-bottom {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem 1.5rem;
-    padding-block: 1.5rem 2rem;
-    border-top: 1px solid rgb(255 255 255 / 0.14);
-    font-size: 0.84rem;
-    color: rgb(255 255 255 / 0.78);
-  }
-  .sf-bottom .sf-link { font-size: 0.84rem; color: rgb(255 255 255 / 0.8); }
-
   @media (prefers-reduced-motion: reduce) {
-    .sf-word { transform: none; }
-    .sf-social:hover, .sf-mail-btn:hover { transform: none; }
+    .sf-cta__arrow, .sf-big { transition: none; }
   }
 </style>
-
-<script>
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  // Léger glissement horizontal du grand mot pendant le défilement
-  const word = document.querySelector<HTMLElement>('[data-footer-word]');
-  if (word && !reduce.matches) {
-    let visible = false, ticking = false;
-    const update = () => {
-      ticking = false;
-      const r = word.getBoundingClientRect();
-      const progress = 1 - Math.min(Math.max((r.top + r.height) / (window.innerHeight + r.height), 0), 1); // 0 → 1 pendant la traversée
-      word.style.setProperty('--shift', `${((0.5 - progress) * 8).toFixed(2)}vw`);
-    };
-    new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) update(); }).observe(word);
-    window.addEventListener('scroll', () => { if (visible && !ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
-  }
-</script>

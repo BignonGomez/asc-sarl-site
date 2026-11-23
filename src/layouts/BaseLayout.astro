@@ -50,6 +50,7 @@ const canonical = new URL(path, site.url).href;
     <link rel="apple-touch-icon" href={`${base}/favicon/apple-touch-icon.png`} />
     <link rel="manifest" href={`${base}/favicon/site.webmanifest`} />
     <script is:inline>document.documentElement.classList.add('js');</script>
+    <slot name="head" />
   </head>
   <body class="flex min-h-dvh flex-col">
     <a href="#contenu" class="sr-only z-[60] rounded-ui bg-ink px-4 py-3 font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Aller au contenu</a>

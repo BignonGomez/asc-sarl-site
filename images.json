@@ -158,5 +158,105 @@
     "page": "C:/Program Files/Git/expertises/formation-sensibilisation",
     "alt": "Séance de travail vue du dessus : plans, ordinateur et documents techniques sur une table",
     "ajoute": "2026-11-19"
+  },
+  {
+    "fichier": "hero-ingenieurs-ouvrage",
+    "variantes": [
+      "/images/photos/hero-ingenieurs-ouvrage-320.{avif,webp}",
+      "/images/photos/hero-ingenieurs-ouvrage-640.{avif,webp}",
+      "/images/photos/hero-ingenieurs-ouvrage-1280.{avif,webp}"
+    ],
+    "largeurs": [
+      320,
+      640,
+      1280
+    ],
+    "source": "Pixabay",
+    "auteur": "This_is_Engineering",
+    "url": "https://pixabay.com/photos/engineer-engineering-teamwork-4941160/",
+    "pixabayId": 4941160,
+    "page": "C:/Program Files/Git/ (héro, diaporama)",
+    "alt": "Deux ingénieurs examinent des plans au bord d'un ouvrage hydraulique",
+    "ajoute": "2026-11-23"
+  },
+  {
+    "fichier": "hero-releve-drone",
+    "variantes": [
+      "/images/photos/hero-releve-drone-320.{avif,webp}",
+      "/images/photos/hero-releve-drone-640.{avif,webp}",
+      "/images/photos/hero-releve-drone-1280.{avif,webp}"
+    ],
+    "largeurs": [
+      320,
+      640,
+      1280
+    ],
+    "source": "Pixabay",
+    "auteur": "DJI-Agras",
+    "url": "https://pixabay.com/photos/dji-drone-plant-protection-drone-4204800/",
+    "pixabayId": 4204800,
+    "page": "C:/Program Files/Git/ (héro, diaporama)",
+    "alt": "Opérateur pilotant un drone de relevé au-dessus d'un périmètre agricole",
+    "ajoute": "2026-11-23"
+  },
+  {
+    "fichier": "hero-forage-sols",
+    "variantes": [
+      "/images/photos/hero-forage-sols-320.{avif,webp}",
+      "/images/photos/hero-forage-sols-640.{avif,webp}",
+      "/images/photos/hero-forage-sols-1280.{avif,webp}"
+    ],
+    "largeurs": [
+      320,
+      640,
+      1280
+    ],
+    "source": "Pixabay",
+    "auteur": "anita_starzycka",
+    "url": "https://pixabay.com/photos/seismic-surveys-search-geophysics-863307/",
+    "pixabayId": 863307,
+    "page": "C:/Program Files/Git/ (héro, diaporama)",
+    "alt": "Engin de forage pour la reconnaissance des sols sur un site",
+    "ajoute": "2026-11-23"
+  },
+  {
+    "fichier": "hero-controle-chantier",
+    "variantes": [
+      "/images/photos/hero-controle-chantier-320.{avif,webp}",
+      "/images/photos/hero-controle-chantier-640.{avif,webp}",
+      "/images/photos/hero-controle-chantier-1280.{avif,webp}"
+    ],
+    "largeurs": [
+      320,
+      640,
+      1280
+    ],
+    "source": "Pixabay",
+    "auteur": "borevina",
+    "url": "https://pixabay.com/photos/architect-plan-construction-3979490/",
+    "pixabayId": 3979490,
+    "page": "C:/Program Files/Git/ (héro, diaporama)",
+    "alt": "Trois ingénieurs en équipement de sécurité consultent des plans sur un chantier",
+    "ajoute": "2026-11-23"
+  },
+  {
+    "fichier": "hero-ingenieure-site",
+    "variantes": [
+      "/images/photos/hero-ingenieure-site-320.{avif,webp}",
+      "/images/photos/hero-ingenieure-site-640.{avif,webp}",
+      "/images/photos/hero-ingenieure-site-1280.{avif,webp}"
+    ],
+    "largeurs": [
+      320,
+      640,
+      1280
+    ],
+    "source": "Pixabay",
+    "auteur": "sagoodi",
+    "url": "https://pixabay.com/photos/engineer-female-engineering-woman-1612104/",
+    "pixabayId": 1612104,
+    "page": "C:/Program Files/Git/ (héro, diaporama)",
+    "alt": "Ingénieure casquée prenant des notes lors d'une visite de site",
+    "ajoute": "2026-11-23"
   }
 ]
